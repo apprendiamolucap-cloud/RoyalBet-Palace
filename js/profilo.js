@@ -1,5 +1,5 @@
 // ============================================================
-//  PROFILO UTENTE
+//  PROFILO UTENTE — fix attesa window.RB
 // ============================================================
 (function() {
 
@@ -11,34 +11,48 @@
     if (!btnProfilo) return;
 
     btnProfilo.addEventListener('click', apriProfilo);
-    chiudi.addEventListener('click', () => modale.classList.remove('show'));
-    salva.addEventListener('click', salvaProfilo);
+    if (chiudi) chiudi.addEventListener('click', () => modale.classList.remove('show'));
+    if (salva) salva.addEventListener('click', salvaProfilo);
   }
 
   function apriProfilo() {
     if (!window.RB.profiloCorrente) return;
     const p = window.RB.profiloCorrente;
 
-    document.getElementById('profiloAvatarImg').src =
-      p.avatarUrl || window.RB.utenteCorrente?.photoURL || 'https://cdn-icons-png.flaticon.com/512/1077/1077114.png';
-    document.getElementById('profiloNome').value = p.nome || '';
-    document.getElementById('profiloAvatarUrl').value = p.avatarUrl || '';
-    document.getElementById('profiloBio').value = p.bio || '';
-    document.getElementById('profiloCrediti').textContent = window.RB.saldo;
+    const avatarImg = document.getElementById('profiloAvatarImg');
+    if (avatarImg) {
+      avatarImg.src = p.avatarUrl || (window.RB.utenteCorrente && window.RB.utenteCorrente.photoURL) ||
+        'https://cdn-icons-png.flaticon.com/512/1077/1077114.png';
+    }
+    const nomeInput = document.getElementById('profiloNome');
+    if (nomeInput) nomeInput.value = p.nome || '';
+    const avatarInput = document.getElementById('profiloAvatarUrl');
+    if (avatarInput) avatarInput.value = p.avatarUrl || '';
+    const bioInput = document.getElementById('profiloBio');
+    if (bioInput) bioInput.value = p.bio || '';
+    const creditiDiv = document.getElementById('profiloCrediti');
+    if (creditiDiv) creditiDiv.textContent = window.RB.saldo;
 
     // Renderizza selettori colore/badge
-    if (window.RB.renderizzaPersonalizzazioni) window.RB.renderizzaPersonalizzazioni();
+    if (window.RB.renderizzaPersonalizzazioni) {
+      window.RB.renderizzaPersonalizzazioni();
+    }
 
-    document.getElementById('modaleProfilo').classList.add('show');
+    const modale = document.getElementById('modaleProfilo');
+    if (modale) modale.classList.add('show');
   }
 
   async function salvaProfilo() {
     if (!window.RB.utenteCorrente) return;
     const p = window.RB.profiloCorrente;
 
-    p.nome = document.getElementById('profiloNome').value.trim() || 'Giocatore';
-    p.avatarUrl = document.getElementById('profiloAvatarUrl').value.trim();
-    p.bio = document.getElementById('profiloBio').value.trim();
+    const nomeInput = document.getElementById('profiloNome');
+    const avatarInput = document.getElementById('profiloAvatarUrl');
+    const bioInput = document.getElementById('profiloBio');
+
+    p.nome = (nomeInput && nomeInput.value.trim()) || 'Giocatore';
+    p.avatarUrl = (avatarInput && avatarInput.value.trim()) || '';
+    p.bio = (bioInput && bioInput.value.trim()) || '';
 
     try {
       const r = window.RB.ref(window.RB.db, 'utenti/' + window.RB.utenteCorrente.uid);
@@ -52,13 +66,17 @@
 
       window.RB.aggiornaNomeUI();
       window.RB.mostraPopup('PROFILO SALVATO', 'Le tue modifiche sono online', 'vittoria');
-      document.getElementById('modaleProfilo').classList.remove('show');
+
+      const modale = document.getElementById('modaleProfilo');
+      if (modale) modale.classList.remove('show');
+
       if (window.RB.aggiornaClassifica) window.RB.aggiornaClassifica();
     } catch (e) {
       console.error('Errore salvataggio profilo:', e);
     }
   }
 
+  // Aspetta che window.RB esista
   function attesaRB(callback) {
     if (window.RB) callback();
     else setTimeout(() => attesaRB(callback), 50);
@@ -66,6 +84,7 @@
 
   attesaRB(() => {
     window.RB.initProfilo = initProfilo;
+
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', initProfilo);
     } else {
