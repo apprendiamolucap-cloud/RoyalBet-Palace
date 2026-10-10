@@ -44,7 +44,7 @@
         <div class="feature-card">
           <div class="feature-icon">🎰</div>
           <div class="feature-title">Ruota della Fortuna</div>
-          <div class="feature-desc">Un giro gratis al giorno con premi fino a 1000 crediti</div>
+          <div class="feature-desc">Un giro al giorno con premi fino a 1000 crediti</div>
         </div>
         <div class="feature-card">
           <div class="feature-icon">⚽</div>
@@ -139,7 +139,7 @@
       </nav>
     </header>
 
-    <!-- ===== PAGINA HOME ===== -->
+    <!-- ===== HOME ===== -->
     <section class="page active" id="page-home">
       <div class="page-title">
         <h2>BENVENUTO AL PALAZZO</h2>
@@ -150,7 +150,7 @@
         <div class="home-card" data-goto="ruota">
           <div class="home-card-icon">🎰</div>
           <h3>Ruota della Fortuna</h3>
-          <p>Gira una volta al giorno e vinci crediti o codici segreti</p>
+          <p>Gira una volta al giorno e vinci crediti, gemme o codici</p>
         </div>
         <div class="home-card" data-goto="calcio">
           <div class="home-card-icon">⚽</div>
@@ -172,14 +172,19 @@
           <h3>Gemme Premium</h3>
           <p>Moltiplicatori, case e cosmetici esclusivi</p>
         </div>
+        <div class="home-card" data-goto="halloween">
+          <div class="home-card-icon">🎃</div>
+          <h3>Evento Halloween</h3>
+          <p>Dolcetto o Scherzetto e shop a tempo</p>
+        </div>
       </div>
     </section>
 
-    <!-- ===== PAGINA RUOTA ===== -->
+    <!-- ===== RUOTA ===== -->
     <section class="page" id="page-ruota">
       <div class="page-title">
         <h2>🎰 RUOTA DELLA FORTUNA</h2>
-        <p>Un giro gratis ogni giorno · Vinci crediti o codici segreti</p>
+        <p>Un giro gratis ogni giorno · Vinci crediti, gemme o codici</p>
       </div>
 
       <div class="ruota-container">
@@ -200,7 +205,7 @@
         <div class="premio-tag"><span style="background:#1e5631"></span>+100 crediti</div>
         <div class="premio-tag"><span style="background:#7a2c2c"></span>Codice segreto</div>
         <div class="premio-tag"><span style="background:#1e5631"></span>+250 crediti</div>
-        <div class="premio-tag"><span style="background:#3a3a3a"></span>Niente</div>
+        <div class="premio-tag"><span style="background:#4a2a8a"></span>💎 Gemma</div>
         <div class="premio-tag"><span style="background:#1e5631"></span>+500 crediti</div>
         <div class="premio-tag"><span style="background:#a67c00"></span>+1000 crediti</div>
       </div>
@@ -208,7 +213,7 @@
       <div class="gioco-stats" id="statsRuota"></div>
     </section>
 
-    <!-- ===== PAGINA CALCIO ===== -->
+    <!-- ===== CALCIO ===== -->
     <section class="page" id="page-calcio">
       <div class="page-title">
         <h2>⚽ SCHEDINE CALCIO</h2>
@@ -229,7 +234,7 @@
       <div class="gioco-stats" id="statsCalcio"></div>
     </section>
 
-    <!-- ===== PAGINA FANTASMINI ===== -->
+    <!-- ===== FANTASMINI ===== -->
     <section class="page" id="page-fantasmini">
       <div class="page-title">
         <h2>👻 CORSA FANTASMINI</h2>
@@ -251,7 +256,7 @@
       <div class="gioco-stats" id="statsFantasmini"></div>
     </section>
 
-    <!-- ===== PAGINA BANCA ===== -->
+    <!-- ===== BANCA ===== -->
     <section class="page" id="page-banca">
       <div class="page-title">
         <h2>🏦 BANCA ROYALBET</h2>
@@ -273,7 +278,7 @@
 
         <div class="banca-card">
           <h3>📄 Prestito</h3>
-          <p>Chiedi fino a <strong>500 crediti</strong>, restituisci con <strong>+20% interesse in 7 giorni</strong></p>
+          <p>Chiedi fino a <strong>500 crediti</strong>, restituisci con <strong>+20% interesse</strong></p>
           <div class="banca-saldo">Prestito attuale: <span id="prestitoTotale">0</span> cr.</div>
           <div class="banca-azioni">
             <input type="number" id="importoPrestito" placeholder="Importo" min="100" max="500">
@@ -295,7 +300,7 @@
       </div>
     </section>
 
-    <!-- ===== PAGINA GEMME ===== -->
+    <!-- ===== GEMME ===== -->
     <section class="page" id="page-gemme">
       <div class="page-title">
         <h2>💎 GEMME</h2>
@@ -316,7 +321,7 @@
           <div class="gemma-info-card">
             <div class="gemma-info-icon">🎰</div>
             <div class="gemma-info-title">Ruota della Fortuna</div>
-            <div class="gemma-info-desc">5% di probabilità ad ogni giro</div>
+            <div class="gemma-info-desc">1 spicchio su 8 regala una gemma</div>
           </div>
           <div class="gemma-info-card">
             <div class="gemma-info-icon">🎁</div>
@@ -324,14 +329,14 @@
             <div class="gemma-info-desc">1 gemma ogni 7 giorni di fila</div>
           </div>
           <div class="gemma-info-card">
-            <div class="gemma-info-icon">🏆</div>
-            <div class="gemma-info-title">Trofei</div>
-            <div class="gemma-info-desc">Sblocca obiettivi per gemme bonus</div>
-          </div>
-          <div class="gemma-info-card">
             <div class="gemma-info-icon">🎃</div>
             <div class="gemma-info-title">Evento Halloween</div>
             <div class="gemma-info-desc">Compra gemme con le Zucche a ottobre</div>
+          </div>
+          <div class="gemma-info-card">
+            <div class="gemma-info-icon">👑</div>
+            <div class="gemma-info-title">Trofei</div>
+            <div class="gemma-info-desc">Sblocca obiettivi per gemme bonus</div>
           </div>
         </div>
 
@@ -393,97 +398,99 @@
         </div>
       </div>
     </section>
-<!-- ===== PAGINA HALLOWEEN ===== -->
-<section class="page" id="page-halloween">
-  <div class="page-title">
-    <h2>🎃 EVENTO HALLOWEEN</h2>
-    <p>Attivo solo dal 1 al 31 ottobre</p>
-  </div>
 
-  <div class="halloween-container">
-    <div class="halloween-header">
-      <img src="https://i.imgur.com/bBYgnL0.png" alt="zucca" class="zucca-big-icon">
-      <div class="zucche-count">
-        <span class="zucche-label">LE TUE ZUCche</span>
-        <span id="zuccheGrandiDisplay" class="zucche-value">0</span>
+    <!-- ===== HALLOWEEN ===== -->
+    <section class="page" id="page-halloween">
+      <div class="page-title">
+        <h2>🎃 EVENTO HALLOWEEN</h2>
+        <p>Attivo solo dal 1 al 31 ottobre</p>
       </div>
-    </div>
 
-    <div class="dolcetto-box">
-      <h3 class="halloween-titolo">🍬 DOLCETTO O SCHERZETTO</h3>
-      <p class="dolcetto-desc">Bussa alla porta una volta ogni 3 ore. Puoi ricevere Dolcetti (Zucche) o Scherzetti (perdita crediti)</p>
-      <button class="play-btn big" id="btnDolcetto">🍬 BUSSA ALLA PORTA</button>
-      <div class="dolcetto-timer" id="timerDolcetto">Disponibile ora!</div>
-    </div>
+      <div class="halloween-container">
+        <div class="halloween-header">
+          <img src="https://i.imgur.com/bBYgnL0.png" alt="zucca" class="zucca-big-icon">
+          <div class="zucche-count">
+            <span class="zucche-label">LE TUE ZUCche</span>
+            <span id="zuccheGrandiDisplay" class="zucche-value">0</span>
+          </div>
+        </div>
 
-    <h3 class="halloween-titolo">🛒 SHOP HALLOWEEN</h3>
-    <p class="shop-halloween-desc">Compra crediti, gemme o cosmetici esclusivi con le tue Zucche</p>
+        <div class="dolcetto-box">
+          <h3 class="halloween-titolo">🍬 DOLCETTO O SCHERZETTO</h3>
+          <p class="dolcetto-desc">Bussa alla porta una volta ogni 3 ore. Puoi ricevere Dolcetti (Zucche) o Scherzetti (perdita crediti)</p>
+          <button class="play-btn big" id="btnDolcetto">🍬 BUSSA ALLA PORTA</button>
+          <div class="dolcetto-timer" id="timerDolcetto">Disponibile ora!</div>
+        </div>
 
-    <div class="halloween-shop-grid">
-      <div class="halloween-card">
-        <div class="halloween-card-title">💰 500 Crediti</div>
-        <div class="halloween-card-price">20 🎃</div>
-        <button class="play-btn small btn-halloween" data-halloween="soldi-500">COMPRA</button>
+        <h3 class="halloween-titolo">🛒 SHOP HALLOWEEN</h3>
+        <p class="shop-halloween-desc">Compra crediti, gemme o cosmetici esclusivi con le tue Zucche</p>
+
+        <div class="halloween-shop-grid">
+          <div class="halloween-card">
+            <div class="halloween-card-title">💰 500 Crediti</div>
+            <div class="halloween-card-price">20 🎃</div>
+            <button class="play-btn small btn-halloween" data-halloween="soldi-500">COMPRA</button>
+          </div>
+          <div class="halloween-card">
+            <div class="halloween-card-title">💰 2000 Crediti</div>
+            <div class="halloween-card-price">60 🎃</div>
+            <button class="play-btn small btn-halloween" data-halloween="soldi-2000">COMPRA</button>
+          </div>
+          <div class="halloween-card">
+            <div class="halloween-card-title">💰 10000 Crediti</div>
+            <div class="halloween-card-price">200 🎃</div>
+            <button class="play-btn small btn-halloween" data-halloween="soldi-10000">COMPRA</button>
+          </div>
+          <div class="halloween-card">
+            <div class="halloween-card-title">💎 1 Gemma</div>
+            <div class="halloween-card-price">15 🎃</div>
+            <button class="play-btn small btn-halloween" data-halloween="gemma-1">COMPRA</button>
+          </div>
+          <div class="halloween-card">
+            <div class="halloween-card-title">💎 5 Gemme</div>
+            <div class="halloween-card-price">60 🎃</div>
+            <button class="play-btn small btn-halloween" data-halloween="gemma-5">COMPRA</button>
+          </div>
+          <div class="halloween-card">
+            <div class="halloween-card-title">💎 15 Gemme</div>
+            <div class="halloween-card-price">150 🎃</div>
+            <button class="play-btn small btn-halloween" data-halloween="gemma-15">COMPRA</button>
+          </div>
+          <div class="halloween-card">
+            <div class="halloween-card-title">🎃 Cornice Zucca</div>
+            <div class="halloween-card-price">40 🎃</div>
+            <button class="play-btn small btn-halloween" data-halloween="cornice-zucca">COMPRA</button>
+          </div>
+          <div class="halloween-card">
+            <div class="halloween-card-title">🕸️ Cornice Ragnatela</div>
+            <div class="halloween-card-price">60 🎃</div>
+            <button class="play-btn small btn-halloween" data-halloween="cornice-ragno">COMPRA</button>
+          </div>
+          <div class="halloween-card">
+            <div class="halloween-card-title">🦇 Badge Pipistrello</div>
+            <div class="halloween-card-price">80 🎃</div>
+            <button class="play-btn small btn-halloween" data-halloween="badge-pipistrello">COMPRA</button>
+          </div>
+          <div class="halloween-card">
+            <div class="halloween-card-title">💀 Badge Teschio</div>
+            <div class="halloween-card-price">100 🎃</div>
+            <button class="play-btn small btn-halloween" data-halloween="badge-teschio">COMPRA</button>
+          </div>
+          <div class="halloween-card">
+            <div class="halloween-card-title">🌑 Tema Scuro</div>
+            <div class="halloween-card-price">150 🎃</div>
+            <button class="play-btn small btn-halloween" data-halloween="tema-scuro">COMPRA</button>
+          </div>
+          <div class="halloween-card">
+            <div class="halloween-card-title">👻 Skin Fantasma</div>
+            <div class="halloween-card-price">200 🎃</div>
+            <button class="play-btn small btn-halloween" data-halloween="skin-fantasmino">COMPRA</button>
+          </div>
+        </div>
       </div>
-      <div class="halloween-card">
-        <div class="halloween-card-title">💰 2000 Crediti</div>
-        <div class="halloween-card-price">60 🎃</div>
-        <button class="play-btn small btn-halloween" data-halloween="soldi-2000">COMPRA</button>
-      </div>
-      <div class="halloween-card">
-        <div class="halloween-card-title">💰 10000 Crediti</div>
-        <div class="halloween-card-price">200 🎃</div>
-        <button class="play-btn small btn-halloween" data-halloween="soldi-10000">COMPRA</button>
-      </div>
-      <div class="halloween-card">
-        <div class="halloween-card-title">💎 1 Gemma</div>
-        <div class="halloween-card-price">15 🎃</div>
-        <button class="play-btn small btn-halloween" data-halloween="gemma-1">COMPRA</button>
-      </div>
-      <div class="halloween-card">
-        <div class="halloween-card-title">💎 5 Gemme</div>
-        <div class="halloween-card-price">60 🎃</div>
-        <button class="play-btn small btn-halloween" data-halloween="gemma-5">COMPRA</button>
-      </div>
-      <div class="halloween-card">
-        <div class="halloween-card-title">💎 15 Gemme</div>
-        <div class="halloween-card-price">150 🎃</div>
-        <button class="play-btn small btn-halloween" data-halloween="gemma-15">COMPRA</button>
-      </div>
-      <div class="halloween-card">
-        <div class="halloween-card-title">🎃 Cornice Zucca</div>
-        <div class="halloween-card-price">40 🎃</div>
-        <button class="play-btn small btn-halloween" data-halloween="cornice-zucca">COMPRA</button>
-      </div>
-      <div class="halloween-card">
-        <div class="halloween-card-title">🕸️ Cornice Ragnatela</div>
-        <div class="halloween-card-price">60 🎃</div>
-        <button class="play-btn small btn-halloween" data-halloween="cornice-ragno">COMPRA</button>
-      </div>
-      <div class="halloween-card">
-        <div class="halloween-card-title">🦇 Badge Pipistrello</div>
-        <div class="halloween-card-price">80 🎃</div>
-        <button class="play-btn small btn-halloween" data-halloween="badge-pipistrello">COMPRA</button>
-      </div>
-      <div class="halloween-card">
-        <div class="halloween-card-title">💀 Badge Teschio</div>
-        <div class="halloween-card-price">100 🎃</div>
-        <button class="play-btn small btn-halloween" data-halloween="badge-teschio">COMPRA</button>
-      </div>
-      <div class="halloween-card">
-        <div class="halloween-card-title">🌑 Tema Scuro</div>
-        <div class="halloween-card-price">150 🎃</div>
-        <button class="play-btn small btn-halloween" data-halloween="tema-scuro">COMPRA</button>
-      </div>
-      <div class="halloween-card">
-        <div class="halloween-card-title">👻 Skin Fantasma</div>
-        <div class="halloween-card-price">200 🎃</div>
-        <button class="play-btn small btn-halloween" data-halloween="skin-fantasmino">COMPRA</button>
-      </div>
-    </div>
-  </div>
-</section>
-    <!-- ===== PAGINA CLASSIFICA ===== -->
+    </section>
+
+    <!-- ===== CLASSIFICA ===== -->
     <section class="page" id="page-classifica">
       <div class="page-title">
         <h2>🏆 CLASSIFICA GLOBALE</h2>
@@ -498,7 +505,7 @@
       <div class="classifica-list" id="classificaList">Caricamento...</div>
     </section>
 
-    <!-- ===== PAGINA CODICI ===== -->
+    <!-- ===== CODICI ===== -->
     <section class="page" id="page-codici">
       <div class="page-title">
         <h2>🎟️ RISCATTA CODICE</h2>
@@ -525,7 +532,7 @@
       </div>
     </section>
 
-    <!-- ===== PAGINA CREATORE ===== -->
+    <!-- ===== CREATORE ===== -->
     <section class="page" id="page-creatore">
       <div class="page-title">
         <h2>👑 IL CREATORE</h2>
@@ -546,7 +553,7 @@
 
         <div class="creatore-stats">
           <div class="creatore-stat">
-            <div class="stat-num">9</div>
+            <div class="stat-num">10</div>
             <div class="stat-label">Giochi</div>
           </div>
           <div class="creatore-stat">
@@ -604,13 +611,18 @@
     </div>
 
     <div class="profilo-field">
-      <label>Colore nome (sbloccabile con codici o gemme)</label>
+      <label>Colore nome</label>
       <div class="profilo-colori" id="profiloColori"></div>
     </div>
 
     <div class="profilo-field">
-      <label>Badge (sbloccabile con codici o gemme)</label>
+      <label>Badge</label>
       <div class="profilo-badge" id="profiloBadge"></div>
+    </div>
+
+    <div class="profilo-field">
+      <label>Cornice avatar (shop Halloween)</label>
+      <div class="profilo-badge" id="profiloCornici"></div>
     </div>
 
     <div class="profilo-field readonly">
