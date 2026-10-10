@@ -1,5 +1,5 @@
 // ============================================================
-//  SCHEDINE CALCIO — pagina dedicata
+//  SCHEDINE CALCIO — v3 con moltiplicatori attivi
 // ============================================================
 (function() {
 
@@ -123,7 +123,10 @@
     selezioni.forEach(p => quotaTotale *= parseFloat(p.quote[p.selected]));
     quotaTotale = Math.round(quotaTotale * 100) / 100;
 
-    // Simula risultati
+    // Moltiplicatore attivo
+    const moltiplicatore = window.RB.getMoltiplicatoreAttivo ? window.RB.getMoltiplicatoreAttivo() : 1;
+
+    // Simula
     let vittoria = true;
     for (const p of partite) {
       if (p.selected) {
@@ -145,10 +148,18 @@
 
     window.RB.saldo -= puntata;
     if (vittoria) {
-      const vincita = Math.floor(puntata * quotaTotale);
+      let vincita = Math.floor(puntata * quotaTotale);
+      if (moltiplicatore > 1) {
+        vincita = vincita * moltiplicatore;
+      }
       window.RB.saldo += vincita;
       p.stats.calcio.vinte++;
-      window.RB.mostraPopup('HAI VINTO!', '+' + vincita + ' crediti (quota ' + quotaTotale + ')', 'vittoria');
+
+      let testo = '+' + vincita + ' crediti (quota ' + quotaTotale + ')';
+      if (moltiplicatore > 1) {
+        testo += ' · MOLTIPLICATORE x' + moltiplicatore;
+      }
+      window.RB.mostraPopup('HAI VINTO!', testo, 'vittoria');
     } else {
       window.RB.mostraPopup('HAI PERSO', 'Riprova con una nuova schedina', 'sconfitta');
     }
@@ -165,7 +176,6 @@
       console.error('Errore salvataggio calcio:', e);
     }
 
-    // Nuova schedina
     partite = generaPartite();
     renderCalcio();
     aggiornaStatsCalcio();
@@ -206,7 +216,6 @@
     `;
   }
 
-  // Aspetta che window.RB esista
   function attesaRB(callback) {
     if (window.RB) callback();
     else setTimeout(() => attesaRB(callback), 50);
