@@ -59,11 +59,17 @@
     }
   }
 
-  window.RB.initProfilo = initProfilo;
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initProfilo);
-  } else {
-    initProfilo();
+  function attesaRB(callback) {
+    if (window.RB) callback();
+    else setTimeout(() => attesaRB(callback), 50);
   }
+
+  attesaRB(() => {
+    window.RB.initProfilo = initProfilo;
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initProfilo);
+    } else {
+      initProfilo();
+    }
+  });
 })();
