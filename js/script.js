@@ -1,13 +1,18 @@
 (function() {
   let saldo = 500;
 
+  // ---------- LINK IMMAGINI (tutti online) ----------
+  const IMG_PALLONE    = 'https://cdn-icons-png.flaticon.com/128/12065/12065246.png';
+  const IMG_FANTASMINO = 'https://cdn-icons-png.flaticon.com/128/706/706023.png';
+  const IMG_GETTONI    = 'https://cdn-icons-png.flaticon.com/128/2331/2331941.png';
+
   const squadre = [
-    { nome: 'Juventus', img: 'images/pallone.png' },
-    { nome: 'Inter',    img: 'images/pallone.png' },
-    { nome: 'Milan',    img: 'images/pallone.png' },
-    { nome: 'Roma',     img: 'images/pallone.png' },
-    { nome: 'Napoli',   img: 'images/pallone.png' },
-    { nome: 'Lazio',    img: 'images/pallone.png' }
+    { nome: 'Juventus', img: IMG_PALLONE },
+    { nome: 'Inter',    img: IMG_PALLONE },
+    { nome: 'Milan',    img: IMG_PALLONE },
+    { nome: 'Roma',     img: IMG_PALLONE },
+    { nome: 'Napoli',   img: IMG_PALLONE },
+    { nome: 'Lazio',    img: IMG_PALLONE }
   ];
 
   function generaPartite() {
@@ -36,11 +41,11 @@
   let partite = generaPartite();
 
   const fantasmini = [
-    { nome: 'Blinky',  img: 'images/fantasmino.png', quota: 2.5 },
-    { nome: 'Pinky',   img: 'images/fantasmino.png', quota: 3.2 },
-    { nome: 'Inky',    img: 'images/fantasmino.png', quota: 4.0 },
-    { nome: 'Clyde',   img: 'images/fantasmino.png', quota: 5.5 },
-    { nome: 'Spettro', img: 'images/fantasmino.png', quota: 6.0 }
+    { nome: 'Blinky',  img: IMG_FANTASMINO, quota: 2.5 },
+    { nome: 'Pinky',   img: IMG_FANTASMINO, quota: 3.2 },
+    { nome: 'Inky',    img: IMG_FANTASMINO, quota: 4.0 },
+    { nome: 'Clyde',   img: IMG_FANTASMINO, quota: 5.5 },
+    { nome: 'Spettro', img: IMG_FANTASMINO, quota: 6.0 }
   ];
   let fantasminoSelezionato = null;
 
