@@ -1,14 +1,12 @@
 // ============================================================
-//  EVENTO HALLOWEEN — Zucche, Dolcetto o Scherzetto, Shop
+//  EVENTO HALLOWEEN — v4 con cosmetici applicabili
 // ============================================================
 (function() {
 
-  // Attivo solo a ottobre (mese 9)
   function eventoAttivo() {
-    return new Date().getMonth() === 9;
+    return new Date().getMonth() === 9; // 9 = ottobre
   }
 
-  // ===== SHOP HALLOWEEN =====
   const PRODOTTI_HALLOWEEN = {
     'soldi-500':    { nome: '500 Crediti',            costo: 20,  tipo: 'crediti',  valore: 500 },
     'soldi-2000':   { nome: '2000 Crediti',           costo: 60,  tipo: 'crediti',  valore: 2000 },
@@ -16,21 +14,19 @@
     'gemma-1':      { nome: '1 Gemma',                costo: 15,  tipo: 'gemma',    valore: 1 },
     'gemma-5':      { nome: '5 Gemme',                costo: 60,  tipo: 'gemma',    valore: 5 },
     'gemma-15':     { nome: '15 Gemme',               costo: 150, tipo: 'gemma',    valore: 15 },
-    'cornice-zucca':   { nome: 'Cornice Zucca',    costo: 40,  tipo: 'cosmetico', id: 'cornice-zucca' },
-    'cornice-ragno':   { nome: 'Cornice Ragnatela', costo: 60,  tipo: 'cosmetico', id: 'cornice-ragno' },
-    'badge-pipistrello': { nome: 'Badge Pipistrello', costo: 80,  tipo: 'cosmetico', id: 'badge-pipistrello' },
-    'badge-teschio':    { nome: 'Badge Teschio Halloween', costo: 100, tipo: 'cosmetico', id: 'badge-teschio' },
-    'tema-scuro':       { nome: 'Tema Scuro',       costo: 150, tipo: 'tema',      id: 'tema-halloween' },
-    'skin-fantasmino':  { nome: 'Skin Fantasma',    costo: 200, tipo: 'skin',      id: 'skin-fantasma' }
+    'cornice-zucca':     { nome: 'Cornice Zucca',           costo: 40,  tipo: 'cosmetico', id: 'cornice-zucca' },
+    'cornice-ragno':     { nome: 'Cornice Ragnatela',       costo: 60,  tipo: 'cosmetico', id: 'cornice-ragno' },
+    'badge-pipistrello': { nome: 'Badge Pipistrello',       costo: 80,  tipo: 'cosmetico', id: 'badge-pipistrello' },
+    'badge-teschio':     { nome: 'Badge Teschio Halloween', costo: 100, tipo: 'cosmetico', id: 'badge-teschio' },
+    'tema-scuro':        { nome: 'Tema Scuro',              costo: 150, tipo: 'cosmetico', id: 'tema-halloween' },
+    'skin-fantasmino':   { nome: 'Skin Fantasma',           costo: 200, tipo: 'cosmetico', id: 'skin-fantasmino' }
   };
 
-  // ===== INIZIALIZZAZIONE =====
   function initHalloween() {
     const btnDolcetto = document.getElementById('btnDolcetto');
     const paginaHalloween = document.getElementById('page-halloween');
     const navHalloween = document.querySelector('[data-page="halloween"]');
 
-    // Mostra/nascondi in base al mese
     const attivo = eventoAttivo();
     if (!attivo) {
       if (navHalloween) navHalloween.style.display = 'none';
@@ -43,7 +39,6 @@
       btnDolcetto.addEventListener('click', dolcettoOScherzetto);
     }
 
-    // Bottoni shop Halloween
     document.querySelectorAll('.btn-halloween').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.dataset.halloween;
@@ -52,7 +47,6 @@
     });
   }
 
-  // ===== DOLCETTO O SCHERZETTO =====
   async function dolcettoOScherzetto() {
     if (!window.RB.utenteCorrente) return;
     if (!eventoAttivo()) {
@@ -74,7 +68,6 @@
     let messaggio = '';
 
     if (r < 0.60) {
-      // 60% dolcetto piccolo
       p.zucche = (p.zucche || 0) + 10;
       p.zuccheTotali = (p.zuccheTotali || 0) + 10;
       aggiornamenti.zucche = p.zucche;
@@ -82,7 +75,6 @@
       messaggio = '+10 Zucche!';
       window.RB.mostraPopup('🍬 DOLCETTO', messaggio, 'gemma');
     } else if (r < 0.85) {
-      // 25% dolcetto grande
       p.zucche = (p.zucche || 0) + 25;
       p.zuccheTotali = (p.zuccheTotali || 0) + 25;
       aggiornamenti.zucche = p.zucche;
@@ -90,7 +82,6 @@
       messaggio = '+25 Zucche!';
       window.RB.mostraPopup('🍫 DOLCETTO GRANDE', messaggio, 'gemma');
     } else {
-      // 15% scherzetto
       const perdita = Math.min(10, window.RB.saldo);
       window.RB.saldo -= perdita;
       p.zucche = (p.zucche || 0) + 3;
@@ -107,7 +98,6 @@
     aggiornaTimerDolcetto();
   }
 
-  // ===== AGGIORNA TIMER DOLCETTO =====
   function aggiornaTimerDolcetto() {
     const timerEl = document.getElementById('timerDolcetto');
     if (!timerEl || !window.RB.profiloCorrente) return;
@@ -131,14 +121,12 @@
     }
   }
 
-  // ===== AGGIORNA SHOP HALLOWEEN =====
   function aggiornaHalloween() {
     if (!window.RB.profiloCorrente) return;
     const zuccheEl = document.getElementById('zuccheGrandiDisplay');
     if (zuccheEl) zuccheEl.textContent = window.RB.profiloCorrente.zucche || 0;
     aggiornaTimerDolcetto();
 
-    // Marca come già sbloccati i cosmetici posseduti
     const sbloccati = window.RB.profiloCorrente.cosmeticiSbloccati || [];
     document.querySelectorAll('.btn-halloween').forEach(btn => {
       const id = btn.dataset.halloween;
@@ -147,17 +135,10 @@
       if (prod.tipo === 'cosmetico' && sbloccati.includes(prod.id)) {
         btn.disabled = true;
         btn.textContent = 'POSSEDUTO';
-      } else if (prod.tipo === 'tema' && sbloccati.includes(prod.id)) {
-        btn.disabled = true;
-        btn.textContent = 'ATTIVO';
-      } else if (prod.tipo === 'skin' && sbloccati.includes(prod.id)) {
-        btn.disabled = true;
-        btn.textContent = 'ATTIVA';
       }
     });
   }
 
-  // ===== COMPRA PRODOTTO HALLOWEEN =====
   async function compraHalloween(id) {
     if (!window.RB.utenteCorrente) return;
     if (!eventoAttivo()) {
@@ -199,14 +180,26 @@
       window.RB.aggiornaValute();
       window.RB.mostraPopup('💎 GEMME ACQUISTATE', '+' + prod.valore + ' gemme', 'gemma');
 
-    } else if (prod.tipo === 'cosmetico' || prod.tipo === 'tema' || prod.tipo === 'skin') {
+    } else if (prod.tipo === 'cosmetico') {
       if (!p.cosmeticiSbloccati) p.cosmeticiSbloccati = [];
       p.cosmeticiSbloccati.push(prod.id);
       aggiornamenti.cosmeticiSbloccati = p.cosmeticiSbloccati;
-      window.RB.mostraPopup('SBLOCCATO!', prod.nome + ' è ora disponibile', 'gemma');
+      window.RB.mostraPopup('SBLOCCATO!', prod.nome + ' è ora disponibile nel profilo', 'gemma');
+
+      // Se è un badge, lo attivo subito (opzionale)
+      if (prod.id === 'badge-pipistrello') {
+        p.badge = '🦇';
+        aggiornamenti.badge = '🦇';
+      }
+      if (prod.id === 'badge-teschio') {
+        p.badge = '💀';
+        aggiornamenti.badge = '💀';
+      }
     }
 
     window.RB.aggiornaValute();
+    window.RB.aggiornaNomeUI();
+    if (window.RB.renderizzaPersonalizzazioni) window.RB.renderizzaPersonalizzazioni();
     await window.RB.salvaProfilo(aggiornamenti);
     aggiornaHalloween();
   }
@@ -226,7 +219,6 @@
       initHalloween();
     }
 
-    // Timer del dolcetto che si aggiorna ogni 30 sec
     setInterval(() => {
       if (window.RB.profiloCorrente) aggiornaTimerDolcetto();
     }, 30000);
