@@ -1,5 +1,5 @@
 // ============================================================
-//  SCHEDINE CALCIO — v3 con moltiplicatori attivi
+//  SCHEDINE CALCIO — v4 con moltiplicatori
 // ============================================================
 (function() {
 
@@ -123,10 +123,8 @@
     selezioni.forEach(p => quotaTotale *= parseFloat(p.quote[p.selected]));
     quotaTotale = Math.round(quotaTotale * 100) / 100;
 
-    // Moltiplicatore attivo
     const moltiplicatore = window.RB.getMoltiplicatoreAttivo ? window.RB.getMoltiplicatoreAttivo() : 1;
 
-    // Simula
     let vittoria = true;
     for (const p of partite) {
       if (p.selected) {
