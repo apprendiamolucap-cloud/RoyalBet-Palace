@@ -749,4 +749,247 @@ body {
   .popup-title { font-size: 1.8rem; }
   .popup-text { font-size: 1.3rem; }
   .popup-icon { font-size: 3.5rem; }
+/* ========== SCHERMATA LOGIN OBBLIGATORIO ========== */
+.login-wall {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  padding: 40px 20px;
+}
+
+.login-wall-box {
+  background: linear-gradient(145deg, #1a2f22, #0f2419);
+  border: 2px solid #c9a95c;
+  border-radius: 40px;
+  padding: 50px 60px;
+  text-align: center;
+  box-shadow: inset 0 0 30px #00000099, 0 20px 40px black;
+  max-width: 500px;
+}
+
+.login-logo {
+  height: 120px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px black;
+  margin-bottom: 20px;
+}
+
+.login-wall-box h1 {
+  font-size: 2rem;
+  color: #ffd966;
+  letter-spacing: 4px;
+  margin-bottom: 12px;
+  text-shadow: 0 3px 0 #3a2e1b, 0 6px 10px black;
+}
+
+.login-wall-sub {
+  color: #d6c38b;
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+}
+
+.login-btn.big {
+  font-size: 1.2rem;
+  padding: 16px 32px;
+}
+
+/* ========== NAV BUTTONS ========== */
+.nav-btn {
+  background: #2b4b33;
+  color: #ffd966;
+  border: 1px solid #b1964b;
+  border-radius: 30px;
+  padding: 8px 18px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  letter-spacing: 1px;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.nav-btn:hover {
+  background: #3d6b48;
+}
+
+/* ========== PROFILO ========== */
+.profilo-box {
+  padding: 30px 40px;
+  max-width: 460px;
+}
+
+.profilo-avatar-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.profilo-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 3px solid #ffd966;
+  object-fit: cover;
+  background: #0d2317;
+  box-shadow: 0 8px 20px black;
+}
+
+.profilo-field {
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.profilo-field label {
+  display: block;
+  color: #d6c38b;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.profilo-field input,
+.profilo-field textarea {
+  width: 100%;
+  background: #0d2317;
+  border: 2px solid #5b7a4b;
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: #f5e7b0;
+  font-size: 1rem;
+  font-family: inherit;
+  outline: none;
+}
+
+.profilo-field input:focus,
+.profilo-field textarea:focus {
+  border-color: #ffd966;
+}
+
+.profilo-field textarea {
+  resize: none;
+  height: 70px;
+}
+
+.profilo-field.readonly .profilo-crediti {
+  background: #0d2317;
+  border: 2px solid #b1964b;
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: #ffd966;
+  font-weight: 800;
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+.profilo-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.chiudi-btn {
+  background: #3a3a3a;
+  color: #f5e7b0;
+  border-color: #666;
+}
+
+/* ========== CLASSIFICA ========== */
+.classifica-box {
+  padding: 30px 40px;
+  max-width: 600px;
+  width: 90%;
+}
+
+.classifica-list {
+  max-height: 60vh;
+  overflow-y: auto;
+  margin: 20px 0;
+  padding: 0 8px;
+}
+
+.classifica-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  background: #0d2317;
+  border: 1px solid #5b7a4b;
+  border-radius: 16px;
+  margin-bottom: 10px;
+}
+
+.classifica-row.top1 {
+  background: linear-gradient(90deg, #4a3a0d, #0d2317);
+  border-color: #ffd966;
+}
+
+.classifica-row.top2 {
+  background: linear-gradient(90deg, #333, #0d2317);
+  border-color: #b0b0b0;
+}
+
+.classifica-row.top3 {
+  background: linear-gradient(90deg, #4a2a0d, #0d2317);
+  border-color: #cd7f32;
+}
+
+.classifica-row.tu {
+  border-color: #ffd966;
+  box-shadow: 0 0 12px #ffd96655;
+}
+
+.classifica-pos {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #ffd966;
+  min-width: 40px;
+  text-align: center;
+}
+
+.classifica-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid #b1964b;
+  object-fit: cover;
+  background: #1e3d23;
+}
+
+.classifica-info {
+  flex: 1;
+  text-align: left;
+}
+
+.classifica-nome {
+  color: #f5e7b0;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.classifica-bio {
+  color: #8f9f7f;
+  font-size: 0.8rem;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 280px;
+}
+
+.classifica-crediti {
+  font-weight: 900;
+  color: #ffd966;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+}
+
+.classifica-vuota {
+  color: #8f9f7f;
+  padding: 30px;
+  text-align: center;
+  font-style: italic;
 }
