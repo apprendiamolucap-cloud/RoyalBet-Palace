@@ -1,7 +1,20 @@
 // ============================================================
-//  CLASSIFICA GLOBALE — fix attesa window.RB
+//  CLASSIFICA GLOBALE — v4 con tab Crediti/Gemme
 // ============================================================
 (function() {
+
+  let tabAttiva = 'crediti';
+
+  function initClassifica() {
+    document.querySelectorAll('.classifica-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabAttiva = tab.dataset.tab;
+        document.querySelectorAll('.classifica-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        aggiornaClassifica();
+      });
+    });
+  }
 
   async function aggiornaClassifica() {
     if (!window.RB || !window.RB.utenteCorrente) return;
@@ -25,11 +38,18 @@
           bio: u.bio || '',
           avatarUrl: u.avatarUrl || '',
           saldo: u.saldo || 0,
+          gemme: u.gemme || 0,
+          gemmeTotali: u.gemmeTotali || 0,
           coloreNome: u.coloreNome || '#ffd966',
           badge: u.badge || ''
         });
       });
-      utenti.sort((a, b) => b.saldo - a.saldo);
+
+      if (tabAttiva === 'gemme') {
+        utenti.sort((a, b) => b.gemmeTotali - a.gemmeTotali);
+      } else {
+        utenti.sort((a, b) => b.saldo - a.saldo);
+      }
 
       cont.innerHTML = '';
       utenti.slice(0, 100).forEach((u, i) => {
@@ -52,15 +72,15 @@
         const info = document.createElement('div');
         info.className = 'classifica-info';
 
-       const nome = document.createElement('div');
-nome.className = 'classifica-nome';
-if (u.coloreNome === 'rainbow') {
-  nome.classList.add('rainbow');
-} else {
-  nome.style.color = u.coloreNome;
-}
-nome.textContent = u.nome + (u.badge ? ' ' + u.badge : '') + (u.uid === window.RB.utenteCorrente.uid ? ' (tu)' : '');
-info.appendChild(nome);
+        const nome = document.createElement('div');
+        nome.className = 'classifica-nome';
+        if (u.coloreNome === 'rainbow') {
+          nome.classList.add('rainbow');
+        } else {
+          nome.style.color = u.coloreNome;
+        }
+        nome.textContent = u.nome + (u.badge ? ' ' + u.badge : '') + (u.uid === window.RB.utenteCorrente.uid ? ' (tu)' : '');
+        info.appendChild(nome);
 
         if (u.bio) {
           const bio = document.createElement('div');
@@ -71,7 +91,13 @@ info.appendChild(nome);
 
         const crediti = document.createElement('div');
         crediti.className = 'classifica-crediti';
-        crediti.textContent = u.saldo + ' cr.';
+
+        if (tabAttiva === 'gemme') {
+          crediti.textContent = '💎 ' + u.gemmeTotali;
+          crediti.style.color = '#d0a0ff';
+        } else {
+          crediti.textContent = u.saldo + ' cr.';
+        }
 
         row.appendChild(pos);
         row.appendChild(av);
@@ -85,7 +111,6 @@ info.appendChild(nome);
     }
   }
 
-  // Aspetta che window.RB esista
   function attesaRB(callback) {
     if (window.RB) callback();
     else setTimeout(() => attesaRB(callback), 50);
@@ -93,5 +118,11 @@ info.appendChild(nome);
 
   attesaRB(() => {
     window.RB.aggiornaClassifica = aggiornaClassifica;
+    window.RB.initClassifica = initClassifica;
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initClassifica);
+    } else {
+      initClassifica();
+    }
   });
 })();
