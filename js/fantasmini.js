@@ -1,5 +1,5 @@
 // ============================================================
-//  CORSA FANTASMINI — v2 con animazione fix e vincitore casuale
+//  CORSA FANTASMINI — v3 con moltiplicatori e animazione
 // ============================================================
 (function() {
 
@@ -98,10 +98,7 @@
     const btnGioca = document.getElementById('giocaCavalli');
     if (btnGioca) btnGioca.disabled = true;
 
-    // ============================================================
-    //  SCEGLI IL VINCITORE IN BASE ALLE QUOTE (peso inverso)
-    //  Quota bassa (favorito) = più probabile, ma TUTTI possono vincere
-    // ============================================================
+    // Estrai vincitore in base alle quote
     const pesi = fantasmini.map(f => 1 / f.quota);
     const somma = pesi.reduce((a, b) => a + b, 0);
     const r = Math.random() * somma;
@@ -114,27 +111,15 @@
         break;
       }
     }
-    console.log('🏆 Vincitore estratto:', fantasmini[vincitore].nome, '(indice', vincitore + ')');
 
-    // ============================================================
-    //  CREA LA PISTA
-    // ============================================================
+    // Crea la pista
     mostraPista();
 
-    // ============================================================
-    //  VELOCITÀ: il vincitore arriva al 100%, gli altri tra 75% e 95%
-    //  così gli arrivi sono SEMPRE diversi
-    // ============================================================
+    // Velocità
     const velocitaFantasmini = fantasmini.map((_, i) => {
-      if (i === vincitore) {
-        return 1.0;
-      }
-      // Altri: casuale tra 0.78 e 0.95 (mai oltre il vincitore)
+      if (i === vincitore) return 1.0;
       return 0.78 + Math.random() * 0.17;
     });
-
-    // Piccolo scarto casuale per non farli tutti uguali
-    velocitaFantasmini[vincitore] = 1.0;
 
     const durata = 5000;
     const tempoInizio = performance.now();
@@ -142,8 +127,6 @@
     function animazione(t) {
       const elapsed = t - tempoInizio;
       const progress = Math.min(elapsed / durata, 1);
-
-      // ease out: parte veloce, rallenta verso la fine
       const ease = 1 - Math.pow(1 - progress, 2);
 
       fantasmini.forEach((_, i) => {
@@ -174,7 +157,6 @@
     const pista = document.createElement('div');
     pista.className = 'pista-corsa';
 
-    // Traguardo a destra
     const traguardo = document.createElement('div');
     traguardo.className = 'traguardo';
     pista.appendChild(traguardo);
@@ -218,6 +200,8 @@
     const f = fantasmini[fantasminoSelezionato];
     const haVinto = (indiceVincitore === fantasminoSelezionato);
 
+    const moltiplicatore = window.RB.getMoltiplicatoreAttivo ? window.RB.getMoltiplicatoreAttivo() : 1;
+
     const p = window.RB.profiloCorrente;
     if (!p.stats) p.stats = {};
     if (!p.stats.fantasmini) p.stats.fantasmini = { giocate: 0, vinte: 0 };
@@ -227,12 +211,20 @@
 
     window.RB.saldo -= puntata;
     if (haVinto) {
-      const vincita = Math.floor(puntata * f.quota);
+      let vincita = Math.floor(puntata * f.quota);
+      if (moltiplicatore > 1) {
+        vincita = vincita * moltiplicatore;
+      }
       window.RB.saldo += vincita;
       p.stats.fantasmini.vinte++;
+
+      let testo = vincitore.nome + ' è arrivato primo! +' + vincita + ' crediti';
+      if (moltiplicatore > 1) {
+        testo += ' · MOLTIPLICATORE x' + moltiplicatore;
+      }
       const msg = document.getElementById('messaggioCavalli');
       if (msg) msg.textContent = '🏆 ' + vincitore.nome + ' ha vinto! +' + vincita + ' crediti';
-      window.RB.mostraPopup('HAI VINTO!', vincitore.nome + ' è arrivato primo! +' + vincita + ' crediti', 'vittoria');
+      window.RB.mostraPopup('HAI VINTO!', testo, 'vittoria');
     } else {
       const msg = document.getElementById('messaggioCavalli');
       if (msg) msg.textContent = '🏁 ' + vincitore.nome + ' ha vinto. Riprova!';
