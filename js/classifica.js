@@ -1,5 +1,5 @@
 // ============================================================
-//  CLASSIFICA GLOBALE
+//  CLASSIFICA GLOBALE — fix attesa window.RB
 // ============================================================
 (function() {
 
@@ -51,11 +51,13 @@
 
         const info = document.createElement('div');
         info.className = 'classifica-info';
+
         const nome = document.createElement('div');
         nome.className = 'classifica-nome';
         nome.style.color = u.coloreNome;
         nome.textContent = u.nome + (u.badge ? ' ' + u.badge : '') + (u.uid === window.RB.utenteCorrente.uid ? ' (tu)' : '');
         info.appendChild(nome);
+
         if (u.bio) {
           const bio = document.createElement('div');
           bio.className = 'classifica-bio';
@@ -79,6 +81,7 @@
     }
   }
 
+  // Aspetta che window.RB esista
   function attesaRB(callback) {
     if (window.RB) callback();
     else setTimeout(() => attesaRB(callback), 50);
