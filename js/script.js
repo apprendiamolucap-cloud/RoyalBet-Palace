@@ -1,6 +1,6 @@
 // ============================================================
-//  ROYALBET PALACE — SCRIPT PRINCIPALE (v4)
-//  Router + Login + Firebase + Valute + Popup
+//  ROYALBET PALACE — SCRIPT PRINCIPALE (v5)
+//  Router + Login + Firebase + Valute + Popup + Case
 // ============================================================
 
 window.addEventListener('firebaseReady', () => {
@@ -59,17 +59,19 @@ function avviaGioco() {
     const gemmeBig = document.getElementById('gemmeCountBig');
     if (gemmeBig) gemmeBig.textContent = p.gemme || 0;
 
+    const zuccheBig = document.getElementById('zuccheGrandiDisplay');
+    if (zuccheBig) zuccheBig.textContent = p.zucche || 0;
+
     // Mostra barra zucche solo a ottobre
     if (zuccheBar) {
       const mese = new Date().getMonth();
       zuccheBar.style.display = (mese === 9) ? 'flex' : 'none';
     }
 
-    // Aggiorna case
     if (window.RB.renderizzaCase) window.RB.renderizzaCase();
   };
 
-    window.RB.salvaSaldo = async function() {
+  window.RB.salvaSaldo = async function() {
     if (!window.RB.utenteCorrente) return;
     try {
       const r = ref(db, 'utenti/' + window.RB.utenteCorrente.uid);
@@ -95,22 +97,11 @@ function avviaGioco() {
     }
   };
 
-  window.RB.salvaProfilo = async function(campiExtra) {
-    if (!window.RB.utenteCorrente) return;
-    try {
-      const r = ref(db, 'utenti/' + window.RB.utenteCorrente.uid);
-      await update(r, Object.assign({
-        saldo: window.RB.saldo,
-        ultimoAccesso: Date.now()
-      }, campiExtra || {}));
-    } catch (e) {
-      console.error('Errore salvataggio profilo:', e);
-    }
-  };
-
   window.RB.aggiornaNomeUI = function() {
     if (!window.RB.profiloCorrente) return;
     const p = window.RB.profiloCorrente;
+
+    // Nome + badge
     if (userName) {
       userName.textContent = (p.nome || 'Giocatore') + (p.badge ? ' ' + p.badge : '');
       userName.classList.remove('rainbow');
@@ -126,8 +117,17 @@ function avviaGioco() {
         userName.style.color = p.coloreNome || '#ffd966';
       }
     }
+
+    // Avatar
     const av = p.avatarUrl || (window.RB.utenteCorrente && window.RB.utenteCorrente.photoURL);
     if (av && userAvatar) userAvatar.src = av;
+
+    // Cornice avatar
+    if (userAvatar) {
+      userAvatar.classList.remove('avatar-cornice-zucca', 'avatar-cornice-ragno');
+      if (p.corniceAvatar === 'cornice-zucca') userAvatar.classList.add('avatar-cornice-zucca');
+      if (p.corniceAvatar === 'cornice-ragno') userAvatar.classList.add('avatar-cornice-ragno');
+    }
   };
 
   // ===== ROUTER =====
@@ -144,6 +144,7 @@ function avviaGioco() {
     if (pageId === 'banca' && window.RB.aggiornaBanca) window.RB.aggiornaBanca();
     if (pageId === 'codici' && window.RB.aggiornaCodici) window.RB.aggiornaCodici();
     if (pageId === 'gemme' && window.RB.aggiornaValute) window.RB.aggiornaValute();
+    if (pageId === 'halloween' && window.RB.aggiornaHalloween) window.RB.aggiornaHalloween();
   };
 
   document.querySelectorAll('.nav-page').forEach(btn => {
@@ -188,26 +189,22 @@ function avviaGioco() {
           bio: dati.bio || '',
           coloreNome: dati.coloreNome || '#ffd966',
           badge: dati.badge || '',
+          corniceAvatar: dati.corniceAvatar || '',
           codiciSbloccati: dati.codiciSbloccati || [],
 
-          // Valute
           gemme: dati.gemme || 0,
           gemmeTotali: dati.gemmeTotali || 0,
           zucche: dati.zucche || 0,
           zuccheTotali: dati.zuccheTotali || 0,
 
-          // Moltiplicatori
           moltiplicatore: dati.moltiplicatore || { tipo: null, scadenza: 0 },
 
-          // Case
           case: dati.case || { baracca: 0, villa: 0, castello: 0 },
           ultimoRiscattoCase: dati.ultimoRiscattoCase || Date.now(),
 
-          // Halloween
           ultimoDolcetto: dati.ultimoDolcetto || 0,
           cosmeticiSbloccati: dati.cosmeticiSbloccati || [],
 
-          // Banca
           deposito: dati.deposito || 0,
           prestito: dati.prestito || 0,
           ultimoInteresseDeposito: dati.ultimoInteresseDeposito || Date.now(),
@@ -215,7 +212,6 @@ function avviaGioco() {
           giorniFedelta: dati.giorniFedelta || 0,
           bonusFedeltaRiscattato: dati.bonusFedeltaRiscattato === true,
 
-          // Stats
           stats: dati.stats || {
             calcio: { giocate: 0, vinte: 0 },
             fantasmini: { giocate: 0, vinte: 0 },
@@ -224,7 +220,6 @@ function avviaGioco() {
         };
         window.RB.saldo = window.RB.profiloCorrente.saldo;
       } else {
-        // Nuovo profilo
         window.RB.saldo = 500;
         window.RB.profiloCorrente = {
           saldo: 500,
@@ -234,6 +229,7 @@ function avviaGioco() {
           bio: '',
           coloreNome: '#ffd966',
           badge: '',
+          corniceAvatar: '',
           codiciSbloccati: [],
           gemme: 0,
           gemmeTotali: 0,
@@ -266,12 +262,11 @@ function avviaGioco() {
     }
   };
 
-  // ===== REGISTRA VISITA FEDELTÀ =====
+  // ===== VISITA FEDELTÀ =====
   window.RB.registraVisitaFedelta = async function() {
     if (!window.RB.utenteCorrente || !window.RB.profiloCorrente) return;
     const oggi = new Date().toISOString().slice(0, 10);
     const p = window.RB.profiloCorrente;
-
     if (p.ultimaVisitaFedelta === oggi) return;
 
     const ieri = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
@@ -281,7 +276,6 @@ function avviaGioco() {
     } else {
       nuoviGiorni = 1;
     }
-
     p.ultimaVisitaFedelta = oggi;
     p.giorniFedelta = nuoviGiorni;
     if (typeof p.bonusFedeltaRiscattato !== 'boolean') {
@@ -325,7 +319,7 @@ function avviaGioco() {
     }
   };
 
-  // ===== CASE: GENERAZIONE AUTOMATICA DI CREDITI =====
+  // ===== CASE — GENERAZIONE AUTOMATICA =====
   window.RB.riscuotiCase = async function() {
     if (!window.RB.utenteCorrente || !window.RB.profiloCorrente) return;
     const p = window.RB.profiloCorrente;
@@ -358,7 +352,6 @@ function avviaGioco() {
     }
   };
 
-  // Timer automatico ogni 60 secondi
   setInterval(() => {
     if (window.RB.utenteCorrente && window.RB.riscuotiCase) {
       window.RB.riscuotiCase();
@@ -387,6 +380,7 @@ function avviaGioco() {
       if (window.RB.aggiornaBanca) window.RB.aggiornaBanca();
       if (window.RB.aggiornaCodici) window.RB.aggiornaCodici();
       if (window.RB.renderizzaCase) window.RB.renderizzaCase();
+      if (window.RB.aggiornaHalloween) window.RB.aggiornaHalloween();
       if (window.RB.initNegozio) window.RB.initNegozio();
     } else {
       window.RB.utenteCorrente = null;
@@ -499,7 +493,7 @@ function avviaGioco() {
     });
   }
 
-  // ===== UTILITY MOLTIPLICATORE ATTIVO =====
+  // ===== MOLTIPLICATORE =====
   window.RB.getMoltiplicatoreAttivo = function() {
     const p = window.RB.profiloCorrente;
     if (!p || !p.moltiplicatore) return 1;
