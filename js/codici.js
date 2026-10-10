@@ -185,12 +185,18 @@
     }
   };
 
-  window.RB.aggiornaCodici = aggiornaCodici;
-  window.RB.initCodici = initCodici;
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCodici);
-  } else {
-    initCodici();
+  function attesaRB(callback) {
+    if (window.RB) callback();
+    else setTimeout(() => attesaRB(callback), 50);
   }
+
+  attesaRB(() => {
+    window.RB.aggiornaCodici = aggiornaCodici;
+    window.RB.initCodici = initCodici;
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initCodici);
+    } else {
+      initCodici();
+    }
+  });
 })();
