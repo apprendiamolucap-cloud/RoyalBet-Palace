@@ -149,10 +149,10 @@
             btn.classList.add('selected');
           }
           btn.addEventListener('click', () => {
-            p.coloreNome = c.colore;
-            window.RB.aggiornaNomeUI();
-            renderizzaPersonalizzazioni();
-          });
+  p.coloreNome = c.colore; // se è "rainbow" salva la stringa "rainbow"
+  if (window.RB.aggiornaNomeUI) window.RB.aggiornaNomeUI();
+  renderizzaPersonalizzazioni();
+});
         }
         coloriCont.appendChild(btn);
       });
