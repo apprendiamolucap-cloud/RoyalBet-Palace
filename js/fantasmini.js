@@ -1,20 +1,31 @@
 // ============================================================
-//  CORSA FANTASMINI — v3 con moltiplicatori e animazione
+//  CORSA FANTASMINI — v4 con skin fantasma e moltiplicatori
 // ============================================================
 (function() {
 
   const IMG_FANTASMINO = 'https://cdn-icons-png.flaticon.com/128/706/706023.png';
+  const IMG_FANTASMA = 'https://cdn-icons-png.flaticon.com/128/854/854878.png';
 
   const fantasmini = [
-    { nome: 'Blinky',  img: IMG_FANTASMINO, quota: 2.5, colore: '#ff4040' },
-    { nome: 'Pinky',   img: IMG_FANTASMINO, quota: 3.2, colore: '#ff80c0' },
-    { nome: 'Inky',    img: IMG_FANTASMINO, quota: 4.0, colore: '#40a0ff' },
-    { nome: 'Clyde',   img: IMG_FANTASMINO, quota: 5.5, colore: '#ffa040' },
-    { nome: 'Spettro', img: IMG_FANTASMINO, quota: 6.0, colore: '#a0a0ff' }
+    { nome: 'Blinky',  quota: 2.5, colore: '#ff4040' },
+    { nome: 'Pinky',   quota: 3.2, colore: '#ff80c0' },
+    { nome: 'Inky',    quota: 4.0, colore: '#40a0ff' },
+    { nome: 'Clyde',   quota: 5.5, colore: '#ffa040' },
+    { nome: 'Spettro', quota: 6.0, colore: '#a0a0ff' }
   ];
 
   let fantasminoSelezionato = null;
   let inCorsa = false;
+
+  function usaSkinFantasma() {
+    const p = window.RB.profiloCorrente || {};
+    const cosmetici = p.cosmeticiSbloccati || [];
+    return cosmetici.includes('skin-fantasmino');
+  }
+
+  function getImgFantasmino() {
+    return usaSkinFantasma() ? IMG_FANTASMA : IMG_FANTASMINO;
+  }
 
   function initFantasmini() {
     const btnGioca = document.getElementById('giocaCavalli');
@@ -28,6 +39,8 @@
     const horseList = document.getElementById('horseList');
     if (!horseList) return;
 
+    const imgSrc = getImgFantasmino();
+
     horseList.innerHTML = '';
     fantasmini.forEach((fantasmino, idx) => {
       const card = document.createElement('div');
@@ -39,7 +52,7 @@
       infoDiv.className = 'horse-info';
 
       const img = document.createElement('img');
-      img.src = fantasmino.img;
+      img.src = imgSrc;
       img.alt = fantasmino.nome;
       img.style.filter = 'drop-shadow(0 0 6px ' + fantasmino.colore + ')';
 
@@ -98,7 +111,6 @@
     const btnGioca = document.getElementById('giocaCavalli');
     if (btnGioca) btnGioca.disabled = true;
 
-    // Estrai vincitore in base alle quote
     const pesi = fantasmini.map(f => 1 / f.quota);
     const somma = pesi.reduce((a, b) => a + b, 0);
     const r = Math.random() * somma;
@@ -112,10 +124,8 @@
       }
     }
 
-    // Crea la pista
     mostraPista();
 
-    // Velocità
     const velocitaFantasmini = fantasmini.map((_, i) => {
       if (i === vincitore) return 1.0;
       return 0.78 + Math.random() * 0.17;
@@ -153,6 +163,8 @@
     const horseList = document.getElementById('horseList');
     if (!horseList) return;
 
+    const imgSrc = getImgFantasmino();
+
     horseList.innerHTML = '';
     const pista = document.createElement('div');
     pista.className = 'pista-corsa';
@@ -177,7 +189,7 @@
       runner.style.transition = 'none';
 
       const img = document.createElement('img');
-      img.src = f.img;
+      img.src = imgSrc;
       img.alt = f.nome;
       img.style.filter = 'drop-shadow(0 0 8px ' + f.colore + ')';
 
