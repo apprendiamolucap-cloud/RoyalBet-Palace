@@ -69,7 +69,7 @@ function avviaGioco() {
     if (window.RB.renderizzaCase) window.RB.renderizzaCase();
   };
 
-  window.RB.salvaSaldo = async function() {
+    window.RB.salvaSaldo = async function() {
     if (!window.RB.utenteCorrente) return;
     try {
       const r = ref(db, 'utenti/' + window.RB.utenteCorrente.uid);
@@ -79,6 +79,19 @@ function avviaGioco() {
       });
     } catch (e) {
       console.error('Errore salvataggio saldo:', e);
+    }
+  };
+
+  window.RB.salvaProfilo = async function(campiExtra) {
+    if (!window.RB.utenteCorrente) return;
+    try {
+      const r = ref(db, 'utenti/' + window.RB.utenteCorrente.uid);
+      await update(r, Object.assign({
+        saldo: window.RB.saldo,
+        ultimoAccesso: Date.now()
+      }, campiExtra || {}));
+    } catch (e) {
+      console.error('Errore salvataggio profilo:', e);
     }
   };
 
