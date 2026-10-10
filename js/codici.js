@@ -1,5 +1,5 @@
 // ============================================================
-//  CODICI SEGRETI + PERSONALIZZAZIONI
+//  CODICI SEGRETI + PERSONALIZZAZIONI — fix attesa window.RB
 // ============================================================
 (function() {
 
@@ -21,8 +21,8 @@
     { id: 'fulmine', emoji: '⚡', label: 'Fulmine', codiceRichiesto: 'bolt' }
   ];
 
-  // Codici validi (generati dalla ruota)
-  window.RB.codiciValidi = {
+  // Codici validi
+  const CODICI_VALIDI = {
     'gold': { tipo: 'colore', valore: '#ffd966', label: 'Colore Oro' },
     'red': { tipo: 'colore', valore: '#ff5050', label: 'Colore Rosso' },
     'blue': { tipo: 'colore', valore: '#50a0ff', label: 'Colore Blu' },
@@ -43,9 +43,9 @@
     if (btnRiscatta) btnRiscatta.addEventListener('click', riscattaCodice);
     if (btnGeneraTest) {
       btnGeneraTest.addEventListener('click', generaCodiceTest);
-      // Mostra modalità test solo se l'URL contiene ?test=1
       if (window.location.search.includes('test=1')) {
-        document.getElementById('codiciTest').style.display = 'block';
+        const testBox = document.getElementById('codiciTest');
+        if (testBox) testBox.style.display = 'block';
       }
     }
   }
@@ -63,7 +63,7 @@
 
     cont.innerHTML = '';
     sbloccati.forEach(cod => {
-      const info = window.RB.codiciValidi[cod];
+      const info = CODICI_VALIDI[cod];
       if (!info) return;
       const div = document.createElement('div');
       div.className = 'codice-sbloccato';
@@ -83,7 +83,7 @@
       return;
     }
 
-    const info = window.RB.codiciValidi[codice];
+    const info = CODICI_VALIDI[codice];
     if (!info) {
       msg.style.color = '#ff8a8a';
       msg.textContent = '❌ Codice non valido';
@@ -111,7 +111,7 @@
   }
 
   function generaCodiceTest() {
-    const keys = Object.keys(window.RB.codiciValidi);
+    const keys = Object.keys(CODICI_VALIDI);
     const random = keys[Math.floor(Math.random() * keys.length)];
     const input = document.getElementById('inputCodice');
     if (input) {
@@ -121,7 +121,7 @@
   }
 
   // ===== PERSONALIZZAZIONE PROFILO =====
-  window.RB.renderizzaPersonalizzazioni = function() {
+  function renderizzaPersonalizzazioni() {
     const p = window.RB.profiloCorrente;
     if (!p) return;
     const sbloccati = p.codiciSbloccati || [];
@@ -151,7 +151,7 @@
           btn.addEventListener('click', () => {
             p.coloreNome = c.colore;
             window.RB.aggiornaNomeUI();
-            window.RB.renderizzaPersonalizzazioni();
+            renderizzaPersonalizzazioni();
           });
         }
         coloriCont.appendChild(btn);
@@ -177,22 +177,26 @@
           btn.addEventListener('click', () => {
             p.badge = (p.badge === b.emoji) ? '' : b.emoji;
             window.RB.aggiornaNomeUI();
-            window.RB.renderizzaPersonalizzazioni();
+            renderizzaPersonalizzazioni();
           });
         }
         badgeCont.appendChild(btn);
       });
     }
-  };
+  }
 
+  // Aspetta che window.RB esista
   function attesaRB(callback) {
     if (window.RB) callback();
     else setTimeout(() => attesaRB(callback), 50);
   }
 
   attesaRB(() => {
+    window.RB.codiciValidi = CODICI_VALIDI;
     window.RB.aggiornaCodici = aggiornaCodici;
     window.RB.initCodici = initCodici;
+    window.RB.renderizzaPersonalizzazioni = renderizzaPersonalizzazioni;
+
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', initCodici);
     } else {
