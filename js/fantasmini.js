@@ -1,5 +1,5 @@
 // ============================================================
-//  CORSA FANTASMINI — con animazione della pista
+//  CORSA FANTASMINI — v2 con animazione fix e vincitore casuale
 // ============================================================
 (function() {
 
@@ -33,7 +33,7 @@
       const card = document.createElement('div');
       card.className = 'horse-card';
       if (fantasminoSelezionato === idx) card.classList.add('selected');
-      card.style.borderLeftColor = fantasmino.colore;
+      card.style.borderLeft = '4px solid ' + fantasmino.colore;
 
       const infoDiv = document.createElement('div');
       infoDiv.className = 'horse-info';
@@ -98,7 +98,10 @@
     const btnGioca = document.getElementById('giocaCavalli');
     if (btnGioca) btnGioca.disabled = true;
 
-    // Determina il vincitore in anticipo (in base alle quote)
+    // ============================================================
+    //  SCEGLI IL VINCITORE IN BASE ALLE QUOTE (peso inverso)
+    //  Quota bassa (favorito) = più probabile, ma TUTTI possono vincere
+    // ============================================================
     const pesi = fantasmini.map(f => 1 / f.quota);
     const somma = pesi.reduce((a, b) => a + b, 0);
     const r = Math.random() * somma;
@@ -111,36 +114,49 @@
         break;
       }
     }
+    console.log('🏆 Vincitore estratto:', fantasmini[vincitore].nome, '(indice', vincitore + ')');
 
-    // Crea la pista animata
-    mostraPista(vincitore);
+    // ============================================================
+    //  CREA LA PISTA
+    // ============================================================
+    mostraPista();
 
-    // Durata corsa 5 secondi
+    // ============================================================
+    //  VELOCITÀ: il vincitore arriva al 100%, gli altri tra 75% e 95%
+    //  così gli arrivi sono SEMPRE diversi
+    // ============================================================
+    const velocitaFantasmini = fantasmini.map((_, i) => {
+      if (i === vincitore) {
+        return 1.0;
+      }
+      // Altri: casuale tra 0.78 e 0.95 (mai oltre il vincitore)
+      return 0.78 + Math.random() * 0.17;
+    });
+
+    // Piccolo scarto casuale per non farli tutti uguali
+    velocitaFantasmini[vincitore] = 1.0;
+
     const durata = 5000;
     const tempoInizio = performance.now();
-
-    // Genera velocità casuali per l'animazione
-    const velocitaFantasmini = fantasmini.map((_, i) => {
-      if (i === vincitore) return 1; // il vincitore arriva primo
-      return 0.85 + Math.random() * 0.12; // gli altri tra 85% e 97%
-    });
 
     function animazione(t) {
       const elapsed = t - tempoInizio;
       const progress = Math.min(elapsed / durata, 1);
 
+      // ease out: parte veloce, rallenta verso la fine
+      const ease = 1 - Math.pow(1 - progress, 2);
+
       fantasmini.forEach((_, i) => {
         const elem = document.getElementById('corsa-' + i);
         if (!elem) return;
-        // Posizione finale = velocitaFantasmini[i] * 100%
-        const posizione = velocitaFantasmini[i] * progress * 100;
-        elem.style.left = 'calc(' + posizione + '% - 30px)';
+        const posizione = velocitaFantasmini[i] * ease * 100;
+        elem.style.left = posizione + '%';
       });
 
       if (progress < 1) {
         requestAnimationFrame(animazione);
       } else {
-        setTimeout(() => concludiCorsa(vincitore, puntata), 400);
+        setTimeout(() => concludiCorsa(vincitore, puntata), 500);
       }
     }
 
@@ -150,8 +166,7 @@
     if (msg) msg.textContent = '🏁 La corsa è iniziata!';
   }
 
-  function mostraPista(vincitore) {
-    // Sostituisci la lista con la pista di corsa
+  function mostraPista() {
     const horseList = document.getElementById('horseList');
     if (!horseList) return;
 
@@ -159,7 +174,7 @@
     const pista = document.createElement('div');
     pista.className = 'pista-corsa';
 
-    // Traguardo
+    // Traguardo a destra
     const traguardo = document.createElement('div');
     traguardo.className = 'traguardo';
     pista.appendChild(traguardo);
@@ -176,7 +191,8 @@
       const runner = document.createElement('div');
       runner.className = 'runner';
       runner.id = 'corsa-' + i;
-      runner.style.left = '-30px';
+      runner.style.left = '0%';
+      runner.style.transition = 'none';
 
       const img = document.createElement('img');
       img.src = f.img;
@@ -198,7 +214,6 @@
   }
 
   async function concludiCorsa(indiceVincitore, puntata) {
-    // Ricostruisci la lista dopo 1.5s
     const vincitore = fantasmini[indiceVincitore];
     const f = fantasmini[fantasminoSelezionato];
     const haVinto = (indiceVincitore === fantasminoSelezionato);
@@ -236,7 +251,6 @@
       console.error('Errore salvataggio fantasmini:', e);
     }
 
-    // Reset
     fantasminoSelezionato = null;
     inCorsa = false;
     const btnGioca = document.getElementById('giocaCavalli');
@@ -249,11 +263,10 @@
       await window.RB.update(r, { saldo: 500 });
     }
 
-    // Ricostruisci dopo un breve delay per far vedere il risultato
     setTimeout(() => {
       renderFantasmini();
       aggiornaStatsFantasmini();
-    }, 1800);
+    }, 2000);
   }
 
   function aggiornaStatsFantasmini() {
