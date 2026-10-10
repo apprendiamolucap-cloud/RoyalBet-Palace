@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RoyalBet Palace · Schedine & Fantasmini</title>
-  <link rel="icon" type="image/jpeg" href="https://i.imgur.com/wIAdYpR.jpeg">
+  <link rel="icon" type="image/png" href="https://i.imgur.com/GRyTgji.png">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -44,7 +44,7 @@
         <div class="feature-card">
           <div class="feature-icon">🎰</div>
           <div class="feature-title">Ruota della Fortuna</div>
-          <div class="feature-desc">Un giro gratis ogni giorno con premi fino a 1000 crediti</div>
+          <div class="feature-desc">Un giro gratis al giorno con premi fino a 1000 crediti</div>
         </div>
         <div class="feature-card">
           <div class="feature-icon">⚽</div>
@@ -54,7 +54,7 @@
         <div class="feature-card">
           <div class="feature-icon">👻</div>
           <div class="feature-title">Corsa Fantasmini</div>
-          <div class="feature-desc">Scommetti sul fantasmino vincente</div>
+          <div class="feature-desc">Scommetti sul fantasmino vincente con animazione</div>
         </div>
         <div class="feature-card">
           <div class="feature-icon">🏦</div>
@@ -64,7 +64,7 @@
         <div class="feature-card">
           <div class="feature-icon">💎</div>
           <div class="feature-title">Gemme Premium</div>
-          <div class="feature-desc">Sblocca moltiplicatori, case e cosmetici esclusivi</div>
+          <div class="feature-desc">Moltiplicatori, case e cosmetici esclusivi</div>
         </div>
         <div class="feature-card">
           <div class="feature-icon">🏆</div>
@@ -92,7 +92,6 @@
   <!-- ===== CONTENUTO CON ROUTER ===== -->
   <div id="contenutoGioco" style="display:none;">
 
-    <!-- HEADER + NAV -->
     <header class="main-header">
       <div class="logo-wrap">
         <img src="https://i.imgur.com/wIAdYpR.jpeg" alt="RoyalBet Palace" class="logo-img">
@@ -102,7 +101,7 @@
       <!-- BARRA VALUTE -->
       <div class="currency-bar">
         <div class="currency-item">
-          <img src="https://i.imgur.com/XQKaE54.jpeg" alt="crediti" class="currency-icon">
+          <img src="https://i.imgur.com/GRyTgji.png" alt="crediti" class="currency-icon">
           <div class="currency-info">
             <span class="currency-label">CREDITI</span>
             <span id="saldoDisplay" class="currency-value">500</span>
@@ -110,7 +109,7 @@
         </div>
 
         <div class="currency-item">
-          <img src="https://i.imgur.com/uLnmEao.jpeg" alt="gemme" class="currency-icon">
+          <img src="https://i.imgur.com/rGdtD0k.png" alt="gemme" class="currency-icon">
           <div class="currency-info">
             <span class="currency-label">GEMME</span>
             <span id="gemmeDisplay" class="currency-value">0</span>
@@ -118,7 +117,7 @@
         </div>
 
         <div class="currency-item" id="zuccheBar" style="display:none;">
-          <img src="https://i.imgur.com/WnmlXyF.jpeg" alt="zucche" class="currency-icon">
+          <img src="https://i.imgur.com/bBYgnL0.png" alt="zucche" class="currency-icon">
           <div class="currency-info">
             <span class="currency-label">ZUCche</span>
             <span id="zuccheDisplay" class="currency-value">0</span>
@@ -148,27 +147,27 @@
 
       <div class="home-grid">
         <div class="home-card" data-goto="ruota">
-          <img src="https://cdn-icons-png.flaticon.com/128/706/706023.png" alt="ruota">
+          <div class="home-card-icon">🎰</div>
           <h3>Ruota della Fortuna</h3>
           <p>Gira una volta al giorno e vinci crediti o codici segreti</p>
         </div>
         <div class="home-card" data-goto="calcio">
-          <img src="https://cdn-icons-png.flaticon.com/128/12065/12065246.png" alt="calcio">
+          <div class="home-card-icon">⚽</div>
           <h3>Schedine Calcio</h3>
           <p>Gioca le tue schedine sulle partite del giorno</p>
         </div>
         <div class="home-card" data-goto="fantasmini">
-          <img src="https://cdn-icons-png.flaticon.com/128/706/706023.png" alt="fantasmini">
+          <div class="home-card-icon">👻</div>
           <h3>Corsa Fantasmini</h3>
           <p>Scommetti sul fantasmino più veloce</p>
         </div>
         <div class="home-card" data-goto="banca">
-          <img src="https://cdn-icons-png.flaticon.com/128/2331/2331941.png" alt="banca">
+          <div class="home-card-icon">🏦</div>
           <h3>Banca RoyalBet</h3>
           <p>Deposita i tuoi crediti e guadagna interessi</p>
         </div>
         <div class="home-card" data-goto="gemme">
-          <img src="https://i.imgur.com/uLnmEao.jpeg" alt="gemme">
+          <div class="home-card-icon">💎</div>
           <h3>Gemme Premium</h3>
           <p>Moltiplicatori, case e cosmetici esclusivi</p>
         </div>
@@ -304,7 +303,7 @@
 
       <div class="gemme-container">
         <div class="gemme-header">
-          <img src="https://i.imgur.com/uLnmEao.jpeg" alt="gemma" class="gemma-big-icon">
+          <img src="https://i.imgur.com/rGdtD0k.png" alt="gemma" class="gemma-big-icon">
           <div class="gemme-count">
             <span class="gemme-label">LE TUE GEMME</span>
             <span id="gemmeCountBig" class="gemme-value">0</span>
@@ -343,49 +342,42 @@
             <div class="gemma-shop-price">5 💎</div>
             <button class="play-btn small btn-compra" data-shop="moltiplicatore-x2">COMPRA</button>
           </div>
-
           <div class="gemma-shop-card">
             <div class="gemma-shop-title">⚡ Moltiplicatore x5</div>
             <div class="gemma-shop-desc">Per 1 minuto le vincite sono quintuple</div>
             <div class="gemma-shop-price">15 💎</div>
             <button class="play-btn small btn-compra" data-shop="moltiplicatore-x5">COMPRA</button>
           </div>
-
           <div class="gemma-shop-card">
             <div class="gemma-shop-title">🌈 Colore Arcobaleno</div>
             <div class="gemma-shop-desc">Sblocca il nome arcobaleno animato</div>
             <div class="gemma-shop-price">10 💎</div>
             <button class="play-btn small btn-compra" data-shop="colore-arcobaleno">COMPRA</button>
           </div>
-
           <div class="gemma-shop-card">
             <div class="gemma-shop-title">👑 Badge Corona</div>
             <div class="gemma-shop-desc">Badge esclusivo visibile in classifica</div>
             <div class="gemma-shop-price">20 💎</div>
             <button class="play-btn small btn-compra" data-shop="badge-corona">COMPRA</button>
           </div>
-
           <div class="gemma-shop-card">
             <div class="gemma-shop-title">🏠 Baracca</div>
             <div class="gemma-shop-desc">Genera 1 credito al minuto (max 10)</div>
             <div class="gemma-shop-price">25 💎</div>
             <button class="play-btn small btn-compra" data-shop="casa-baracca">COMPRA</button>
           </div>
-
           <div class="gemma-shop-card">
             <div class="gemma-shop-title">🏡 Villa</div>
             <div class="gemma-shop-desc">Genera 5 crediti al minuto (max 10)</div>
             <div class="gemma-shop-price">80 💎</div>
             <button class="play-btn small btn-compra" data-shop="casa-villa">COMPRA</button>
           </div>
-
           <div class="gemma-shop-card">
             <div class="gemma-shop-title">🏰 Castello</div>
             <div class="gemma-shop-desc">Genera 20 crediti al minuto (max 10)</div>
             <div class="gemma-shop-price">300 💎</div>
             <button class="play-btn small btn-compra" data-shop="casa-castello">COMPRA</button>
           </div>
-
           <div class="gemma-shop-card">
             <div class="gemma-shop-title">🔁 Rigira la Ruota</div>
             <div class="gemma-shop-desc">Un giro extra oggi, subito</div>
@@ -464,7 +456,7 @@
 
         <div class="creatore-stats">
           <div class="creatore-stat">
-            <div class="stat-num">7</div>
+            <div class="stat-num">9</div>
             <div class="stat-label">Giochi</div>
           </div>
           <div class="creatore-stat">
