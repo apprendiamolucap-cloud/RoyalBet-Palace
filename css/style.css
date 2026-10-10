@@ -1,5 +1,5 @@
 /* ============================================================
-   ROYALBET PALACE — FOGLIO DI STILE COMPLETO (v4)
+   ROYALBET PALACE — FOGLIO DI STILE COMPLETO (v5)
    ============================================================ */
 
 /* ===== RESET E BASE ===== */
@@ -76,6 +76,7 @@ body {
   border: 2px solid #ffd966;
   object-fit: cover;
   background: #0a1a10;
+  transition: 0.3s;
 }
 
 .user-name {
@@ -86,7 +87,6 @@ body {
   text-shadow: 0 2px 3px black;
 }
 
-/* Nome arcobaleno */
 .user-name.rainbow,
 .classifica-nome.rainbow {
   background: linear-gradient(90deg,
@@ -139,6 +139,23 @@ body {
   background: #3d6b48;
 }
 
+/* ===== CORNICI AVATAR ===== */
+.user-avatar.avatar-cornice-zucca {
+  border: 3px solid #ff8020;
+  box-shadow: 0 0 15px #ff8020;
+  animation: cornice-pulse 1.5s infinite alternate;
+}
+
+.user-avatar.avatar-cornice-ragno {
+  border: 3px solid #c0c0ff;
+  box-shadow: 0 0 15px #c0c0ff, 0 0 25px #7a40c0;
+}
+
+@keyframes cornice-pulse {
+  from { box-shadow: 0 0 15px #ff8020; }
+  to   { box-shadow: 0 0 25px #ffb050, 0 0 40px #ff8020; }
+}
+
 /* ===== HEADER ===== */
 .main-header {
   text-align: center;
@@ -189,11 +206,14 @@ body {
 }
 
 .currency-icon {
-  width: 40px !important;
-  height: 40px !important;
-  max-width: 40px;
-  max-height: 40px;
+  width: 44px !important;
+  height: 44px !important;
+  max-width: 44px;
+  max-height: 44px;
   object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
   filter: drop-shadow(0 2px 4px black);
 }
 
@@ -220,7 +240,7 @@ body {
   text-shadow: 0 2px 3px black;
 }
 
-/* ===== MENU NAVIGAZIONE ===== */
+/* ===== MENU ===== */
 .main-nav {
   display: flex;
   flex-wrap: wrap;
@@ -486,7 +506,7 @@ body {
     #1e5631 90deg 135deg,
     #7a2c2c 135deg 180deg,
     #1e5631 180deg 225deg,
-    #3a3a3a 225deg 270deg,
+    #4a2a8a 225deg 270deg,
     #1e5631 270deg 315deg,
     #a67c00 315deg 360deg
   );
@@ -602,7 +622,7 @@ body {
   border-radius: 50%;
 }
 
-/* ===== CARD GENERICA ===== */
+/* ===== CARD ===== */
 .card {
   background: #1a2f22;
   border-radius: 32px;
@@ -897,7 +917,7 @@ body {
   border-color: #999;
 }
 
-/* ===== STATS GIOCO ===== */
+/* ===== STATS ===== */
 .gioco-stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -995,7 +1015,7 @@ body {
   font-style: italic;
 }
 
-/* ===== PAGINA GEMME ===== */
+/* ===== GEMME ===== */
 #page-gemme {
   background: linear-gradient(145deg, #1a0f2e 0%, #2b1a4a 100%);
   border-radius: 40px;
@@ -1037,6 +1057,7 @@ body {
   height: 90px !important;
   max-width: 90px;
   object-fit: contain;
+  image-rendering: pixelated;
   filter: drop-shadow(0 0 20px #a050ff);
   animation: gemma-pulse 2s infinite ease-in-out;
 }
@@ -1204,6 +1225,185 @@ body {
   color: #8f9f7f;
   font-size: 0.8rem;
   font-style: italic;
+}
+
+/* ===== HALLOWEEN ===== */
+#page-halloween {
+  background: linear-gradient(145deg, #2a0f0a 0%, #4a1a0a 100%) !important;
+  border-radius: 40px !important;
+  padding: 28px !important;
+  border: 2px solid #ff8020 !important;
+  box-shadow: inset 0 0 40px #8a3a0a55, 0 20px 40px black !important;
+  margin-top: 20px !important;
+}
+
+#page-halloween .page-title h2 {
+  color: #ffb050 !important;
+  text-shadow: 0 4px 0 #3a1500, 0 8px 15px black !important;
+}
+
+#page-halloween .page-title p {
+  color: #ffa060 !important;
+}
+
+.halloween-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.halloween-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  background: #1a0805;
+  border: 2px solid #ff8020;
+  border-radius: 30px;
+  padding: 22px 36px;
+  margin-bottom: 28px;
+  box-shadow: 0 0 30px #ff802044;
+  flex-wrap: wrap;
+}
+
+.zucca-big-icon {
+  width: 100px !important;
+  height: 100px !important;
+  max-width: 100px;
+  max-height: 100px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 20px #ff8020);
+  animation: zucca-pulse 2s infinite ease-in-out;
+}
+
+@keyframes zucca-pulse {
+  0%, 100% { transform: scale(1) rotate(-3deg); }
+  50% { transform: scale(1.08) rotate(3deg); }
+}
+
+.zucche-count {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.zucche-label {
+  font-size: 0.85rem;
+  color: #ffa060;
+  letter-spacing: 3px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.zucche-value {
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: #ffb050;
+  text-shadow: 0 4px 0 #3a1500, 0 8px 15px black;
+}
+
+.halloween-titolo {
+  color: #ffb050;
+  letter-spacing: 3px;
+  font-size: 1.3rem;
+  margin: 28px 0 14px;
+  text-align: center;
+  text-shadow: 0 2px 0 #3a1500;
+  display: block;
+  width: 100%;
+}
+
+.shop-halloween-desc {
+  color: #ffa060;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+  display: block;
+  width: 100%;
+}
+
+.dolcetto-box {
+  background: #1a0805;
+  border: 2px dashed #ff8020;
+  border-radius: 28px;
+  padding: 28px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.dolcetto-desc {
+  color: #ffa060;
+  margin-bottom: 18px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.dolcetto-timer {
+  color: #ffd966;
+  margin-top: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.halloween-shop-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+  gap: 16px !important;
+  width: 100%;
+}
+
+.halloween-card {
+  background: linear-gradient(145deg, #2a1208, #1a0805);
+  border: 2px solid #b05020;
+  border-radius: 22px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: center;
+  transition: 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.halloween-card:hover {
+  transform: translateY(-4px);
+  border-color: #ffb050;
+  box-shadow: 0 12px 25px black, 0 0 25px #ff802044;
+}
+
+.halloween-card-title {
+  color: #ffb050;
+  font-weight: 800;
+  font-size: 1rem;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.halloween-card-price {
+  color: #ffd966;
+  font-weight: 900;
+  font-size: 1.3rem;
+  margin: 6px 0;
+}
+
+.halloween-card .play-btn {
+  background: linear-gradient(145deg, #ff8020, #b05020);
+  border-color: #ffb050;
+  color: #fff;
+  width: 100%;
+  font-size: 0.9rem;
+  padding: 10px 16px;
+  letter-spacing: 1px;
+}
+
+.halloween-card .play-btn:disabled {
+  background: #444;
+  color: #888;
+  border-color: #666;
 }
 
 /* ===== CLASSIFICA ===== */
@@ -1665,17 +1865,22 @@ body {
 
 .colore-btn,
 .badge-btn {
-  width: 40px;
+  min-width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: 20px;
   border: 2px solid #5b7a4b;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   background: #0d2317;
   transition: 0.15s;
+  padding: 0 8px;
+}
+
+.colore-btn {
+  width: 40px;
 }
 
 .colore-btn:hover,
@@ -1750,163 +1955,5 @@ body {
   .creatore-nome { font-size: 1.6rem; }
   .currency-item { min-width: 110px; padding: 6px 14px; }
   .currency-value { font-size: 1.1rem; }
-  .currency-icon { width: 32px !important; height: 32px !important; }
-}
-/* ========== PAGINA HALLOWEEN ========== */
-#page-halloween {
-  background: linear-gradient(145deg, #2a0f0a 0%, #4a1a0a 100%);
-  border-radius: 40px;
-  padding: 28px;
-  border: 2px solid #ff8020;
-  box-shadow: inset 0 0 40px #8a3a0a55, 0 20px 40px black;
-  margin-top: 20px;
-}
-
-#page-halloween .page-title h2 {
-  color: #ffb050;
-  text-shadow: 0 4px 0 #3a1500, 0 8px 15px black;
-}
-
-#page-halloween .page-title p {
-  color: #ffa060;
-}
-
-.halloween-container {
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.halloween-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 28px;
-  background: #1a0805;
-  border: 2px solid #ff8020;
-  border-radius: 30px;
-  padding: 22px 36px;
-  margin-bottom: 28px;
-  box-shadow: 0 0 30px #ff802044;
-}
-
-.zucca-big-icon {
-  width: 100px !important;
-  height: 100px !important;
-  max-width: 100px;
-  object-fit: contain;
-  filter: drop-shadow(0 0 20px #ff8020);
-  animation: zucca-pulse 2s infinite ease-in-out;
-}
-
-@keyframes zucca-pulse {
-  0%, 100% { transform: scale(1) rotate(-3deg); }
-  50% { transform: scale(1.08) rotate(3deg); }
-}
-
-.zucche-count {
-  display: flex;
-  flex-direction: column;
-}
-
-.zucche-label {
-  font-size: 0.85rem;
-  color: #ffa060;
-  letter-spacing: 3px;
-  font-weight: 600;
-}
-
-.zucche-value {
-  font-size: 2.8rem;
-  font-weight: 900;
-  color: #ffb050;
-  text-shadow: 0 4px 0 #3a1500, 0 8px 15px black;
-}
-
-.halloween-titolo {
-  color: #ffb050;
-  letter-spacing: 3px;
-  font-size: 1.3rem;
-  margin: 28px 0 14px;
-  text-align: center;
-  text-shadow: 0 2px 0 #3a1500;
-}
-
-.shop-halloween-desc {
-  color: #ffa060;
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 0.95rem;
-}
-
-.dolcetto-box {
-  background: #1a0805;
-  border: 2px dashed #ff8020;
-  border-radius: 28px;
-  padding: 28px;
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.dolcetto-desc {
-  color: #ffa060;
-  margin-bottom: 18px;
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
-.dolcetto-timer {
-  color: #ffd966;
-  margin-top: 14px;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-
-.halloween-shop-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-}
-
-.halloween-card {
-  background: linear-gradient(145deg, #2a1208, #1a0805);
-  border: 2px solid #b05020;
-  border-radius: 22px;
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  text-align: center;
-  transition: 0.2s;
-}
-
-.halloween-card:hover {
-  transform: translateY(-4px);
-  border-color: #ffb050;
-  box-shadow: 0 12px 25px black, 0 0 25px #ff802044;
-}
-
-.halloween-card-title {
-  color: #ffb050;
-  font-weight: 800;
-  font-size: 1rem;
-}
-
-.halloween-card-price {
-  color: #ffd966;
-  font-weight: 900;
-  font-size: 1.3rem;
-  margin: 6px 0;
-}
-
-.halloween-card .play-btn {
-  background: linear-gradient(145deg, #ff8020, #b05020);
-  border-color: #ffb050;
-  color: #fff;
-  width: 100%;
-}
-
-.halloween-card .play-btn:disabled {
-  background: #444;
-  color: #888;
-  border-color: #666;
+  .currency-icon { width: 34px !important; height: 34px !important; }
 }
