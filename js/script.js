@@ -1,12 +1,96 @@
-(function() {
-  let saldo = 500;
+window.addEventListener('firebaseReady', () => {
+  avviaGioco();
+});
 
-  const IMG_PALLONE    = 'https://cdn-icons-png.flaticon.com/128/12065/12065246.png';
+function avviaGioco() {
+  const { auth, db, provider, signInWithPopup, signOut, onAuthStateChanged, ref, get, set } = window.FB;
+
+  let saldo = 500;
+  let utenteCorrente = null;
+  let salvataggioInCorso = false;
+
+  const IMG_PALLONE = 'https://cdn-icons-png.flaticon.com/128/12065/12065246.png';
   const IMG_FANTASMINO = 'https://cdn-icons-png.flaticon.com/128/706/706023.png';
 
-  // ============================================================
-  //  POPUP VINCITA + CONFETTI
-  // ============================================================
+  // ---------- FIRESTORE (Realtime DB) ----------
+  async function caricaSaldo(user) {
+    try {
+      const r = ref(db, 'utenti/' + user.uid);
+      const snapshot = await get(r);
+      if (snapshot.exists()) {
+        saldo = snapshot.val().saldo ?? 500;
+      } else {
+        saldo = 500;
+        await set(r, {
+          saldo: 500,
+          nome: user.displayName,
+          email: user.email,
+          ultimoAccesso: Date.now()
+        });
+      }
+      aggiornaSaldo();
+    } catch (e) {
+      console.error('Errore caricamento saldo:', e);
+    }
+  }
+
+  async function salvaSaldo() {
+    if (!utenteCorrente || salvataggioInCorso) return;
+    salvataggioInCorso = true;
+    try {
+      const r = ref(db, 'utenti/' + utenteCorrente.uid);
+      await set(r, {
+        saldo: saldo,
+        nome: utenteCorrente.displayName,
+        email: utenteCorrente.email,
+        ultimoAccesso: Date.now()
+      });
+    } catch (e) {
+      console.error('Errore salvataggio:', e);
+    } finally {
+      salvataggioInCorso = false;
+    }
+  }
+
+  // ---------- LOGIN / LOGOUT ----------
+  const userLoggedOut = document.getElementById('userLoggedOut');
+  const userLoggedIn = document.getElementById('userLoggedIn');
+  const loginBtn = document.getElementById('loginBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const userAvatar = document.getElementById('userAvatar');
+  const userName = document.getElementById('userName');
+
+  loginBtn.addEventListener('click', async () => {
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (e) {
+      console.error('Errore login:', e);
+    }
+  });
+
+  logoutBtn.addEventListener('click', async () => {
+    await salvaSaldo();
+    await signOut(auth);
+  });
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      utenteCorrente = user;
+      userLoggedOut.style.display = 'none';
+      userLoggedIn.style.display = 'flex';
+      userAvatar.src = user.photoURL || 'https://cdn-icons-png.flaticon.com/512/1077/1077114.png';
+      userName.textContent = user.displayName || user.email;
+      await caricaSaldo(user);
+    } else {
+      utenteCorrente = null;
+      userLoggedOut.style.display = 'block';
+      userLoggedIn.style.display = 'none';
+      saldo = 500;
+      aggiornaSaldo();
+    }
+  });
+
+  // ---------- POPUP + CONFETTI ----------
   const popupOverlay = document.getElementById('popupOverlay');
   const popupTitle = document.getElementById('popupTitle');
   const popupIcon = document.getElementById('popupIcon');
@@ -67,17 +151,13 @@
         confettiCtx.restore();
       }
     });
-    if (attivi > 0) {
-      confettiAnim = requestAnimationFrame(animaConfetti);
-    } else {
-      confettiCanvas.style.display = 'none';
-    }
+    if (attivi > 0) confettiAnim = requestAnimationFrame(animaConfetti);
+    else confettiCanvas.style.display = 'none';
   }
 
   function mostraPopup(titolo, testo, tipo) {
     popupTitle.textContent = titolo;
     popupText.textContent = testo;
-
     if (tipo === 'vittoria') {
       popupIcon.textContent = '🏆';
       popupTitle.style.color = '#ffd966';
@@ -89,7 +169,6 @@
       popupIcon.textContent = '🎰';
       popupTitle.style.color = '#ffd966';
     }
-
     popupOverlay.classList.add('show');
   }
 
@@ -97,18 +176,16 @@
     popupOverlay.classList.remove('show');
   });
 
-  // ============================================================
-  //  RUOTA DELLA FORTUNA
-  // ============================================================
+  // ---------- RUOTA ----------
   const premi = [
-    { label: '+50',    valore: 50,   tipo: 'crediti',        angolo: 22.5 },
-    { label: 'x2',     valore: 2,    tipo: 'moltiplicatore', angolo: 67.5 },
-    { label: '+100',   valore: 100,  tipo: 'crediti',        angolo: 112.5 },
-    { label: 'Tenta',  valore: 0,    tipo: 'ritenta',        angolo: 157.5 },
-    { label: '+250',   valore: 250,  tipo: 'crediti',        angolo: 202.5 },
-    { label: 'Niente', valore: 0,    tipo: 'niente',         angolo: 247.5 },
-    { label: '+500',   valore: 500,  tipo: 'crediti',        angolo: 292.5 },
-    { label: '+1000',  valore: 1000, tipo: 'crediti',        angolo: 337.5 }
+    { label: '+50', valore: 50, tipo: 'crediti', angolo: 22.5 },
+    { label: 'x2', valore: 2, tipo: 'moltiplicatore', angolo: 67.5 },
+    { label: '+100', valore: 100, tipo: 'crediti', angolo: 112.5 },
+    { label: 'Tenta', valore: 0, tipo: 'ritenta', angolo: 157.5 },
+    { label: '+250', valore: 250, tipo: 'crediti', angolo: 202.5 },
+    { label: 'Niente', valore: 0, tipo: 'niente', angolo: 247.5 },
+    { label: '+500', valore: 500, tipo: 'crediti', angolo: 292.5 },
+    { label: '+1000', valore: 1000, tipo: 'crediti', angolo: 337.5 }
   ];
 
   const wheel = document.getElementById('wheel');
@@ -130,8 +207,7 @@
       const rad = (premio.angolo - 90) * Math.PI / 180;
       const x = Math.cos(rad) * raggio;
       const y = Math.sin(rad) * raggio;
-      label.style.transform =
-        'translate(' + x + 'px, ' + y + 'px)';
+      label.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
       wheel.appendChild(label);
     });
   }
@@ -141,8 +217,12 @@
     return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
   }
 
+  function chiaveUltimoGiro() {
+    return utenteCorrente ? 'ultimoGiroRuota_' + utenteCorrente.uid : 'ultimoGiroRuota_ospite';
+  }
+
   function puoGirare() {
-    return localStorage.getItem('ultimoGiroRuota') !== getDataOggi();
+    return localStorage.getItem(chiaveUltimoGiro()) !== getDataOggi();
   }
 
   function aggiornaStatoRuota() {
@@ -159,9 +239,7 @@
   }
 
   function giraRuota() {
-    if (inRotazione) return;
-    if (!puoGirare()) return;
-
+    if (inRotazione || !puoGirare()) return;
     inRotazione = true;
     btnGira.disabled = true;
     messaggioRuota.textContent = 'La ruota sta girando...';
@@ -170,21 +248,16 @@
     const premio = premi[indice];
     const giriExtra = 6 + Math.floor(Math.random() * 3);
     const angoloTarget = 360 * giriExtra + (360 - premio.angolo);
-
     const partenza = rotazioneAttuale % 360;
     rotazioneAttuale += (angoloTarget - partenza);
     if (rotazioneAttuale < 0) rotazioneAttuale += 360 * giriExtra;
 
     wheel.style.transform = 'rotate(' + rotazioneAttuale + 'deg)';
-
-    setTimeout(() => {
-      fineGiro(premio);
-    }, 5100);
+    setTimeout(() => fineGiro(premio), 5100);
   }
 
   function fineGiro(premio) {
     inRotazione = false;
-
     if (premio.tipo === 'crediti') {
       saldo += premio.valore;
       messaggioRuota.textContent = 'HAI VINTO ' + premio.valore + ' CREDITI!';
@@ -201,32 +274,28 @@
       messaggioRuota.textContent = 'NIENTE! Riprova domani';
       mostraPopup('NIENTE', 'Riprova domani!', 'sconfitta');
     }
-
     saldoDisplay.textContent = saldo;
-    localStorage.setItem('ultimoGiroRuota', getDataOggi());
+    localStorage.setItem(chiaveUltimoGiro(), getDataOggi());
     aggiornaStatoRuota();
-
+    salvaSaldo();
     if (saldo <= 0) {
       saldo = 500;
       saldoDisplay.textContent = saldo;
+      salvaSaldo();
     }
   }
 
   btnGira.addEventListener('click', giraRuota);
-
   creaEtichette();
   aggiornaStatoRuota();
-
-  // ============================================================
-  //  SCHEDINE CALCIO
-  // ============================================================
+    // ---------- CALCIO ----------
   const squadre = [
     { nome: 'Juventus', img: IMG_PALLONE },
-    { nome: 'Inter',    img: IMG_PALLONE },
-    { nome: 'Milan',    img: IMG_PALLONE },
-    { nome: 'Roma',     img: IMG_PALLONE },
-    { nome: 'Napoli',   img: IMG_PALLONE },
-    { nome: 'Lazio',    img: IMG_PALLONE }
+    { nome: 'Inter', img: IMG_PALLONE },
+    { nome: 'Milan', img: IMG_PALLONE },
+    { nome: 'Roma', img: IMG_PALLONE },
+    { nome: 'Napoli', img: IMG_PALLONE },
+    { nome: 'Lazio', img: IMG_PALLONE }
   ];
 
   function generaPartite() {
@@ -237,11 +306,9 @@
       [copia[i], copia[j]] = [copia[j], copia[i]];
     }
     for (let i = 0; i < 3; i++) {
-      const casa = copia[i * 2];
-      const trasferta = copia[i * 2 + 1];
       partite.push({
-        casa: casa,
-        trasferta: trasferta,
+        casa: copia[i * 2],
+        trasferta: copia[i * 2 + 1],
         quote: {
           1: (1.5 + Math.random() * 3).toFixed(2),
           X: (2.8 + Math.random() * 2.5).toFixed(2),
@@ -311,14 +378,12 @@
     });
   }
 
-  // ============================================================
-  //  FANTASMINI
-  // ============================================================
+  // ---------- FANTASMINI ----------
   const fantasmini = [
-    { nome: 'Blinky',  img: IMG_FANTASMINO, quota: 2.5 },
-    { nome: 'Pinky',   img: IMG_FANTASMINO, quota: 3.2 },
-    { nome: 'Inky',    img: IMG_FANTASMINO, quota: 4.0 },
-    { nome: 'Clyde',   img: IMG_FANTASMINO, quota: 5.5 },
+    { nome: 'Blinky', img: IMG_FANTASMINO, quota: 2.5 },
+    { nome: 'Pinky', img: IMG_FANTASMINO, quota: 3.2 },
+    { nome: 'Inky', img: IMG_FANTASMINO, quota: 4.0 },
+    { nome: 'Clyde', img: IMG_FANTASMINO, quota: 5.5 },
     { nome: 'Spettro', img: IMG_FANTASMINO, quota: 6.0 }
   ];
   let fantasminoSelezionato = null;
@@ -360,9 +425,7 @@
     });
   }
 
-  // ============================================================
-  //  GIOCO CALCIO
-  // ============================================================
+  // ---------- GIOCO CALCIO ----------
   document.getElementById('giocaCalcio').addEventListener('click', () => {
     const puntataInput = document.getElementById('puntataCalcio');
     const puntata = parseInt(puntataInput.value, 10);
@@ -406,13 +469,12 @@
     partite = generaPartite();
     renderCalcio();
     aggiornaSaldo();
+    salvaSaldo();
     puntataInput.value = Math.min(20, saldo) || 1;
-    if (saldo <= 0) { saldo = 500; aggiornaSaldo(); }
+    if (saldo <= 0) { saldo = 500; aggiornaSaldo(); salvaSaldo(); }
   });
 
-  // ============================================================
-  //  GIOCO FANTASMINI
-  // ============================================================
+  // ---------- GIOCO FANTASMINI ----------
   document.getElementById('giocaCavalli').addEventListener('click', () => {
     const puntataInput = document.getElementById('puntataCavalli');
     const puntata = parseInt(puntataInput.value, 10);
@@ -444,16 +506,15 @@
     }
 
     aggiornaSaldo();
+    salvaSaldo();
     fantasminoSelezionato = null;
     renderFantasmini();
     puntataInput.value = Math.min(20, saldo) || 1;
-    if (saldo <= 0) { saldo = 500; aggiornaSaldo(); }
+    if (saldo <= 0) { saldo = 500; aggiornaSaldo(); salvaSaldo(); }
   });
 
-  // ============================================================
-  //  AVVIO
-  // ============================================================
+  // ---------- AVVIO ----------
   aggiornaSaldo();
   renderCalcio();
   renderFantasmini();
-})();
+}
