@@ -118,7 +118,7 @@
     }
   }
 
-  // ===== PERSONALIZZAZIONE PROFILO =====
+    // ===== PERSONALIZZAZIONE PROFILO =====
   function renderizzaPersonalizzazioni() {
     const p = window.RB.profiloCorrente;
     if (!p) return;
@@ -138,7 +138,6 @@
           btn.style.background = c.colore;
         }
         btn.title = c.label;
-        // Sbloccato con codice O con gemme
         const ha = sbloccati.includes(c.codiceRichiesto) ||
                    cosmeticiGemme.includes('colore-' + c.id) ||
                    (c.id === 'arcobaleno' && cosmeticiGemme.includes('colore-arcobaleno'));
@@ -184,23 +183,35 @@
         badgeCont.appendChild(btn);
       });
     }
-  }
 
-  function attesaRB(callback) {
-    if (window.RB) callback();
-    else setTimeout(() => attesaRB(callback), 50);
-  }
-
-  attesaRB(() => {
-    window.RB.codiciValidi = CODICI_VALIDI;
-    window.RB.aggiornaCodici = aggiornaCodici;
-    window.RB.initCodici = initCodici;
-    window.RB.renderizzaPersonalizzazioni = renderizzaPersonalizzazioni;
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initCodici);
-    } else {
-      initCodici();
+    // ===== CORNICI AVATAR =====
+    const corniciCont = document.getElementById('profiloCornici');
+    if (corniciCont) {
+      const CORNICI = [
+        { id: 'cornice-zucca', label: '🎃 Zucca', classe: 'avatar-cornice-zucca' },
+        { id: 'cornice-ragno', label: '🕸️ Ragnatela', classe: 'avatar-cornice-ragno' }
+      ];
+      corniciCont.innerHTML = '';
+      CORNICI.forEach(c => {
+        const btn = document.createElement('button');
+        btn.className = 'badge-btn';
+        btn.textContent = c.label;
+        btn.style.width = 'auto';
+        btn.style.padding = '0 14px';
+        btn.style.fontSize = '0.85rem';
+        const ha = cosmeticiGemme.includes(c.id);
+        if (!ha) {
+          btn.style.opacity = '0.25';
+          btn.disabled = true;
+        } else {
+          if (p.corniceAvatar === c.id) btn.classList.add('selected');
+          btn.addEventListener('click', () => {
+            p.corniceAvatar = (p.corniceAvatar === c.id) ? '' : c.id;
+            window.RB.aggiornaNomeUI();
+            renderizzaPersonalizzazioni();
+          });
+        }
+        corniciCont.appendChild(btn);
+      });
     }
-  });
-})();
+  }
