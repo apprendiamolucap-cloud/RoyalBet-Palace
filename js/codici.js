@@ -1,5 +1,5 @@
 // ============================================================
-//  CODICI SEGRETI + PERSONALIZZAZIONI — fix attesa window.RB
+//  CODICI SEGRETI + PERSONALIZZAZIONI — v3
 // ============================================================
 (function() {
 
@@ -21,7 +21,6 @@
     { id: 'fulmine', emoji: '⚡', label: 'Fulmine', codiceRichiesto: 'bolt' }
   ];
 
-  // Codici validi
   const CODICI_VALIDI = {
     'gold': { tipo: 'colore', valore: '#ffd966', label: 'Colore Oro' },
     'red': { tipo: 'colore', valore: '#ff5050', label: 'Colore Rosso' },
@@ -100,8 +99,7 @@
     sbloccati.push(codice);
     window.RB.profiloCorrente.codiciSbloccati = sbloccati;
 
-    const r = window.RB.ref(window.RB.db, 'utenti/' + window.RB.utenteCorrente.uid);
-    await window.RB.update(r, { codiciSbloccati: sbloccati });
+    await window.RB.salvaProfilo({ codiciSbloccati: sbloccati });
 
     msg.style.color = '#ffd966';
     msg.textContent = '✅ Sbloccato: ' + info.label;
@@ -125,6 +123,7 @@
     const p = window.RB.profiloCorrente;
     if (!p) return;
     const sbloccati = p.codiciSbloccati || [];
+    const cosmeticiGemme = p.cosmeticiSbloccati || [];
 
     // Colori
     const coloriCont = document.getElementById('profiloColori');
@@ -139,20 +138,21 @@
           btn.style.background = c.colore;
         }
         btn.title = c.label;
-        const ha = sbloccati.includes(c.codiceRichiesto) || sbloccati.includes(c.id);
+        // Sbloccato con codice O con gemme
+        const ha = sbloccati.includes(c.codiceRichiesto) ||
+                   cosmeticiGemme.includes('colore-' + c.id) ||
+                   (c.id === 'arcobaleno' && cosmeticiGemme.includes('colore-arcobaleno'));
         if (!ha) {
           btn.style.opacity = '0.25';
           btn.style.cursor = 'not-allowed';
           btn.disabled = true;
         } else {
-          if (p.coloreNome === c.colore || (c.colore === 'rainbow' && p.coloreNome === 'rainbow')) {
-            btn.classList.add('selected');
-          }
+          if (p.coloreNome === c.colore) btn.classList.add('selected');
           btn.addEventListener('click', () => {
-  p.coloreNome = c.colore; // se è "rainbow" salva la stringa "rainbow"
-  if (window.RB.aggiornaNomeUI) window.RB.aggiornaNomeUI();
-  renderizzaPersonalizzazioni();
-});
+            p.coloreNome = c.colore;
+            window.RB.aggiornaNomeUI();
+            renderizzaPersonalizzazioni();
+          });
         }
         coloriCont.appendChild(btn);
       });
@@ -167,7 +167,8 @@
         btn.className = 'badge-btn';
         btn.textContent = b.emoji;
         btn.title = b.label;
-        const ha = sbloccati.includes(b.codiceRichiesto) || sbloccati.includes(b.id);
+        const ha = sbloccati.includes(b.codiceRichiesto) ||
+                   cosmeticiGemme.includes('badge-' + b.id);
         if (!ha) {
           btn.style.opacity = '0.25';
           btn.style.cursor = 'not-allowed';
@@ -185,7 +186,6 @@
     }
   }
 
-  // Aspetta che window.RB esista
   function attesaRB(callback) {
     if (window.RB) callback();
     else setTimeout(() => attesaRB(callback), 50);
