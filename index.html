@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RoyalBet Palace · Schedine & Fantasmini</title>
+  <link rel="icon" type="image/jpeg" href="images/logo.jpeg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="casino-container">
+
+  <div style="text-align:center; margin-bottom:12px;">
+    <img src="images/logo.jpeg"
+         alt="RoyalBet Palace"
+         style="height:140px; border-radius:16px; box-shadow: 0 8px 20px black;">
+  </div>
+  <div class="brand-subtitle">Schedine &amp; Corse Reali</div>
+
+  <div class="credit-bar">
+    <img src="images/gettoni.png" alt="gettoni">
+    CREDITO: <span id="saldoDisplay" class="saldo">500</span>
+    <img src="images/gettoni.png" alt="gettoni">
+  </div>
+
+  <div class="section-grid">
+
+    <div class="card">
+      <div class="card-header">
+        <img src="images/pallone.png" alt="pallone">
+        <h2>SCHEDINE CALCIO</h2>
+      </div>
+      <div class="match-list" id="matchList"></div>
+      <div class="schedina-footer">
+        <div class="puntata-box">
+          <label>PUNTATA</label>
+          <input type="number" id="puntataCalcio" value="20" min="1" step="1">
+        </div>
+        <button class="play-btn" id="giocaCalcio">GIOCA</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <img src="images/fantasmino.png" alt="fantasmino">
+        <h2>CORSA FANTASMINI</h2>
+      </div>
+      <div class="horse-track" id="horseList"></div>
+      <div class="cavalli-footer">
+        <div class="puntata-box">
+          <label>PUNTATA</label>
+          <input type="number" id="puntataCavalli" value="20" min="1" step="1">
+        </div>
+        <button class="play-btn" id="giocaCavalli">GIOCA</button>
+      </div>
+      <div class="message-area" id="messaggioCavalli">Seleziona un fantasmino e punta</div>
+    </div>
+
+  </div>
+
+  <div style="text-align:center; padding:20px 0 0; color:#c9a95c; font-size:0.85rem;">
+    Icone: Flaticon - Freepik
+  </div>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
