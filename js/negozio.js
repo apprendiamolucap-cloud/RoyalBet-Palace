@@ -1,22 +1,21 @@
 // ============================================================
-//  NEGOZIO GEMME — acquisti, moltiplicatori, cosmetici, case
+//  NEGOZIO GEMME — v4
 // ============================================================
 (function() {
 
-  // ===== CATALOGO PRODOTTI =====
   const PRODOTTI = {
     'moltiplicatore-x2': {
       nome: 'Moltiplicatore x2',
       costo: 5,
       tipo: 'moltiplicatore',
-      durata: 120000,  // 2 minuti
+      durata: 120000,
       valore: 'x2'
     },
     'moltiplicatore-x5': {
       nome: 'Moltiplicatore x5',
       costo: 15,
       tipo: 'moltiplicatore',
-      durata: 60000,  // 1 minuto
+      durata: 60000,
       valore: 'x5'
     },
     'colore-arcobaleno': {
@@ -78,13 +77,11 @@
     const p = window.RB.profiloCorrente;
     const gemmeAttuali = p.gemme || 0;
 
-    // ===== CONTROLLO SALDO =====
     if (gemmeAttuali < prodotto.costo) {
       window.RB.mostraPopup('GEMME INSUFFICIENTI', 'Ti servono ' + prodotto.costo + ' gemme', 'sconfitta');
       return;
     }
 
-    // ===== CONTROLLO LIMITI CASE =====
     if (prodotto.tipo === 'casa') {
       const casePossedute = p.case[prodotto.casaId] || 0;
       if (casePossedute >= prodotto.max) {
@@ -93,7 +90,6 @@
       }
     }
 
-    // ===== CONTROLLO COSMETICI GIÀ SBLOCCATI =====
     if (prodotto.tipo === 'cosmetico') {
       const sbloccati = p.cosmeticiSbloccati || [];
       if (sbloccati.includes(prodotto.cosmeticoId)) {
@@ -102,7 +98,6 @@
       }
     }
 
-    // ===== APPLICA L'ACQUISTO =====
     p.gemme -= prodotto.costo;
     let aggiornamenti = { gemme: p.gemme };
 
@@ -124,13 +119,12 @@
     } else if (prodotto.tipo === 'casa') {
       if (!p.case) p.case = { baracca: 0, villa: 0, castello: 0 };
       p.case[prodotto.casaId] = (p.case[prodotto.casaId] || 0) + 1;
-      p.ultimoRiscattoCase = Date.now(); // reset timer per evitare guadagni enormi
+      p.ultimoRiscattoCase = Date.now();
       aggiornamenti.case = p.case;
       aggiornamenti.ultimoRiscattoCase = p.ultimoRiscattoCase;
       window.RB.mostraPopup('CASA ACQUISTATA', 'Ora possiedi ' + p.case[prodotto.casaId] + ' ' + prodotto.nome, 'gemma');
 
     } else if (prodotto.tipo === 'rigira') {
-      // Sblocca la ruota per oggi
       const chiave = window.RB.utenteCorrente
         ? 'ultimoGiroRuota_' + window.RB.utenteCorrente.uid
         : 'ultimoGiroRuota_ospite';
@@ -139,20 +133,17 @@
       window.RB.mostraPopup('RUOTA SBLOCCATA', 'Puoi girare di nuovo adesso!', 'gemma');
     }
 
-    // Salva tutto su Firebase
     try {
       await window.RB.salvaProfilo(aggiornamenti);
     } catch (e) {
       console.error('Errore acquisto:', e);
     }
 
-    // Aggiorna UI
     window.RB.aggiornaValute();
     if (window.RB.renderizzaCase) window.RB.renderizzaCase();
     if (window.RB.renderizzaPersonalizzazioni) window.RB.renderizzaPersonalizzazioni();
   }
 
-  // ===== RENDERIZZA LE CASE POSSEDUTE =====
   function renderizzaCase() {
     const cont = document.getElementById('caseGrid');
     if (!cont) return;
