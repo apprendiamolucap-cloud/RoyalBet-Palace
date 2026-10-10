@@ -10,7 +10,7 @@
 <body>
 <div class="casino-container">
 
-  <!-- BARRA UTENTE -->
+  <!-- ===== BARRA UTENTE ===== -->
   <div class="user-bar" id="userBar">
     <div id="userLoggedOut">
       <button class="login-btn" id="loginBtn">
@@ -27,15 +27,13 @@
       <img id="userAvatar" class="user-avatar" alt="avatar">
       <span id="userName" class="user-name"></span>
       <button class="nav-btn" id="btnProfilo">Profilo</button>
-      <button class="nav-btn" id="btnClassifica">Classifica</button>
       <button class="logout-btn" id="logoutBtn">Esci</button>
     </div>
   </div>
 
-  <!-- SCHERMATA LOGIN OBBLIGATORIO -->
+  <!-- ===== SCHERMATA LOGIN ===== -->
   <div id="schermataLogin" class="login-wall">
     <div class="login-wall-box">
-
       <div class="login-hero">
         <img src="https://i.imgur.com/wIAdYpR.jpeg" alt="logo" class="login-logo">
         <h1>RoyalBet Palace</h1>
@@ -56,12 +54,22 @@
         <div class="feature-card">
           <div class="feature-icon">👻</div>
           <div class="feature-title">Corsa Fantasmini</div>
-          <div class="feature-desc">Scommetti sul fantasmino vincente e moltiplica i crediti</div>
+          <div class="feature-desc">Scommetti sul fantasmino vincente</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🏦</div>
+          <div class="feature-title">Banca RoyalBet</div>
+          <div class="feature-desc">Deposita, investi e guadagna interessi</div>
         </div>
         <div class="feature-card">
           <div class="feature-icon">🏆</div>
           <div class="feature-title">Classifica Globale</div>
           <div class="feature-desc">Scala la classifica e diventa il re del Palazzo</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎟️</div>
+          <div class="feature-title">Codici Segreti</div>
+          <div class="feature-desc">Trova codici nella ruota e sblocca personalizzazioni</div>
         </div>
       </div>
 
@@ -78,30 +86,75 @@
         </button>
         <p class="login-note">Ti diamo subito <strong>500 crediti omaggio</strong> per iniziare</p>
       </div>
-
     </div>
   </div>
 
-  <!-- CONTENUTO DEL GIOCO (nascosto finché non accedi) -->
+  <!-- ===== CONTENUTO CON ROUTER ===== -->
   <div id="contenutoGioco" style="display:none;">
 
-    <div class="logo-wrap">
-      <img src="https://i.imgur.com/wIAdYpR.jpeg" alt="RoyalBet Palace" class="logo-img">
-    </div>
-    <div class="brand-subtitle">Schedine &amp; Corse Reali</div>
-
-    <div class="credit-bar">
-      <img src="https://cdn-icons-png.flaticon.com/128/2331/2331941.png" alt="gettoni">
-      CREDITO: <span id="saldoDisplay" class="saldo">500</span>
-      <img src="https://cdn-icons-png.flaticon.com/128/2331/2331941.png" alt="gettoni">
-    </div>
-
-    <!-- RUOTA -->
-    <div class="ruota-section">
-      <div class="ruota-header">
-        <h2>RUOTA DELLA FORTUNA</h2>
-        <p class="ruota-info">Un giro gratis ogni giorno</p>
+    <!-- HEADER + NAV -->
+    <header class="main-header">
+      <div class="logo-wrap">
+        <img src="https://i.imgur.com/wIAdYpR.jpeg" alt="RoyalBet Palace" class="logo-img">
       </div>
+      <div class="brand-subtitle">Schedine &amp; Corse Reali</div>
+
+      <div class="credit-bar">
+        <img src="https://cdn-icons-png.flaticon.com/128/2331/2331941.png" alt="gettoni">
+        CREDITO: <span id="saldoDisplay" class="saldo">500</span>
+        <img src="https://cdn-icons-png.flaticon.com/128/2331/2331941.png" alt="gettoni">
+      </div>
+
+      <nav class="main-nav">
+        <button class="nav-page active" data-page="home">🏠 Home</button>
+        <button class="nav-page" data-page="ruota">🎰 Ruota</button>
+        <button class="nav-page" data-page="calcio">⚽ Calcio</button>
+        <button class="nav-page" data-page="fantasmini">👻 Fantasmini</button>
+        <button class="nav-page" data-page="banca">🏦 Banca</button>
+        <button class="nav-page" data-page="classifica">🏆 Classifica</button>
+        <button class="nav-page" data-page="codici">🎟️ Codici</button>
+        <button class="nav-page" data-page="creatore">👑 Creatore</button>
+      </nav>
+    </header>
+
+    <!-- ===== PAGINA HOME ===== -->
+    <section class="page active" id="page-home">
+      <div class="page-title">
+        <h2>BENVENUTO AL PALAZZO</h2>
+        <p>Scegli un gioco dal menu in alto</p>
+      </div>
+
+      <div class="home-grid">
+        <div class="home-card" data-goto="ruota">
+          <img src="https://cdn-icons-png.flaticon.com/128/706/706023.png" alt="ruota">
+          <h3>Ruota della Fortuna</h3>
+          <p>Gira una volta al giorno e vinci crediti o codici segreti</p>
+        </div>
+        <div class="home-card" data-goto="calcio">
+          <img src="https://cdn-icons-png.flaticon.com/128/12065/12065246.png" alt="calcio">
+          <h3>Schedine Calcio</h3>
+          <p>Gioca le tue schedine sulle partite del giorno</p>
+        </div>
+        <div class="home-card" data-goto="fantasmini">
+          <img src="https://cdn-icons-png.flaticon.com/128/706/706023.png" alt="fantasmini">
+          <h3>Corsa Fantasmini</h3>
+          <p>Scommetti sul fantasmino più veloce</p>
+        </div>
+        <div class="home-card" data-goto="banca">
+          <img src="https://cdn-icons-png.flaticon.com/128/2331/2331941.png" alt="banca">
+          <h3>Banca RoyalBet</h3>
+          <p>Deposita i tuoi crediti e guadagna interessi</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PAGINA RUOTA ===== -->
+    <section class="page" id="page-ruota">
+      <div class="page-title">
+        <h2>🎰 RUOTA DELLA FORTUNA</h2>
+        <p>Un giro gratis ogni giorno · Vinci crediti o codici segreti</p>
+      </div>
+
       <div class="ruota-container">
         <div class="wheel-wrap">
           <div class="wheel-pointer"></div>
@@ -113,24 +166,29 @@
           <div class="ruota-timer" id="ruotaTimer"></div>
         </div>
       </div>
+
       <div class="premi-legend">
         <div class="premio-tag"><span style="background:#1e5631"></span>+50 crediti</div>
         <div class="premio-tag"><span style="background:#8a6d1c"></span>x2 moltiplicatore</div>
         <div class="premio-tag"><span style="background:#1e5631"></span>+100 crediti</div>
-        <div class="premio-tag"><span style="background:#7a2c2c"></span>Tenta ancora</div>
+        <div class="premio-tag"><span style="background:#7a2c2c"></span>Codice segreto</div>
         <div class="premio-tag"><span style="background:#1e5631"></span>+250 crediti</div>
         <div class="premio-tag"><span style="background:#3a3a3a"></span>Niente</div>
         <div class="premio-tag"><span style="background:#1e5631"></span>+500 crediti</div>
         <div class="premio-tag"><span style="background:#a67c00"></span>+1000 crediti</div>
       </div>
-    </div>
 
-    <div class="section-grid">
+      <div class="gioco-stats" id="statsRuota"></div>
+    </section>
+
+    <!-- ===== PAGINA CALCIO ===== -->
+    <section class="page" id="page-calcio">
+      <div class="page-title">
+        <h2>⚽ SCHEDINE CALCIO</h2>
+        <p>Seleziona gli esiti e prova a vincere</p>
+      </div>
+
       <div class="card">
-        <div class="card-header">
-          <img src="https://cdn-icons-png.flaticon.com/128/12065/12065246.png" alt="pallone">
-          <h2>SCHEDINE CALCIO</h2>
-        </div>
         <div class="match-list" id="matchList"></div>
         <div class="schedina-footer">
           <div class="puntata-box">
@@ -140,11 +198,18 @@
           <button class="play-btn" id="giocaCalcio">GIOCA</button>
         </div>
       </div>
+
+      <div class="gioco-stats" id="statsCalcio"></div>
+    </section>
+
+    <!-- ===== PAGINA FANTASMINI ===== -->
+    <section class="page" id="page-fantasmini">
+      <div class="page-title">
+        <h2>👻 CORSA FANTASMINI</h2>
+        <p>Scommetti sul fantasmino che vincerà la corsa</p>
+      </div>
+
       <div class="card">
-        <div class="card-header">
-          <img src="https://cdn-icons-png.flaticon.com/128/706/706023.png" alt="fantasmino">
-          <h2>CORSA FANTASMINI</h2>
-        </div>
         <div class="horse-track" id="horseList"></div>
         <div class="cavalli-footer">
           <div class="puntata-box">
@@ -155,13 +220,136 @@
         </div>
         <div class="message-area" id="messaggioCavalli">Seleziona un fantasmino e punta</div>
       </div>
-    </div>
 
-    <div class="footer-credits">Icone: Flaticon - Freepik · Logo: RoyalBet Palace</div>
+      <div class="gioco-stats" id="statsFantasmini"></div>
+    </section>
+
+    <!-- ===== PAGINA BANCA ===== -->
+    <section class="page" id="page-banca">
+      <div class="page-title">
+        <h2>🏦 BANCA ROYALBET</h2>
+        <p id="bancaStato">Sbloccata al raggiungimento di 1000 crediti</p>
+      </div>
+
+      <div class="banca-grid">
+        <div class="banca-card">
+          <h3>💰 Deposito</h3>
+          <p>Metti al sicuro i tuoi crediti e ricevi <strong>+2% interesse ogni 24h</strong></p>
+          <div class="banca-saldo">Deposito attuale: <span id="depositoTotale">0</span> cr.</div>
+          <div class="banca-azioni">
+            <input type="number" id="importoDeposito" placeholder="Importo" min="1">
+            <button class="play-btn small" id="btnDeposita">DEPOSITA</button>
+            <button class="play-btn small" id="btnRitira">RITIRA</button>
+          </div>
+          <div class="banca-info" id="infoDeposito"></div>
+        </div>
+
+        <div class="banca-card">
+          <h3>📄 Prestito</h3>
+          <p>Chiedi fino a <strong>500 crediti</strong>, restituisci con <strong>+20% interesse in 7 giorni</strong></p>
+          <div class="banca-saldo">Prestito attuale: <span id="prestitoTotale">0</span> cr.</div>
+          <div class="banca-azioni">
+            <input type="number" id="importoPrestito" placeholder="Importo" min="100" max="500">
+            <button class="play-btn small" id="btnPrestito">CHIEDI</button>
+            <button class="play-btn small" id="btnRestituisci">RESTITUISCI</button>
+          </div>
+          <div class="banca-info" id="infoPrestito"></div>
+        </div>
+
+        <div class="banca-card">
+          <h3>🎁 Bonus Fedeltà</h3>
+          <p>Accedi <strong>7 giorni di fila</strong> e ricevi <strong>+100 crediti</strong></p>
+          <div class="banca-saldo">Giorni di fila: <span id="giorniFedelta">0</span> / 7</div>
+          <div class="banca-azioni">
+            <button class="play-btn small" id="btnBonusFedelta">RISCATTA BONUS</button>
+          </div>
+          <div class="banca-info" id="infoFedelta"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PAGINA CLASSIFICA ===== -->
+    <section class="page" id="page-classifica">
+      <div class="page-title">
+        <h2>🏆 CLASSIFICA GLOBALE</h2>
+        <p>I migliori giocatori del Palazzo</p>
+      </div>
+
+      <div class="classifica-list" id="classificaList">Caricamento...</div>
+    </section>
+
+    <!-- ===== PAGINA CODICI ===== -->
+    <section class="page" id="page-codici">
+      <div class="page-title">
+        <h2>🎟️ RISCATTA CODICE</h2>
+        <p>Inserisci un codice trovato nella ruota per sbloccare personalizzazioni</p>
+      </div>
+
+      <div class="codici-panel">
+        <div class="codici-input-wrap">
+          <input type="text" id="inputCodice" placeholder="ROYAL-XXXX-XXXX" maxlength="20">
+          <button class="play-btn" id="btnRiscattaCodice">RISCATTA</button>
+        </div>
+        <div class="codici-messaggio" id="codiciMessaggio"></div>
+
+        <h3 class="codici-titolo">I TUOI SBLOCCATI</h3>
+        <div class="codici-sbloccati" id="codiciSbloccati">
+          <p class="codici-vuoto">Nessun codice riscattato ancora</p>
+        </div>
+
+        <div class="codici-test" id="codiciTest" style="display:none;">
+          <h3>🔧 Modalità Test</h3>
+          <p>Pulsante nascosto per generare un codice di prova</p>
+          <button class="play-btn small" id="btnGeneraCodiceTest">GENERA CODICE TEST</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PAGINA CREATORE ===== -->
+    <section class="page" id="page-creatore">
+      <div class="page-title">
+        <h2>👑 IL CREATORE</h2>
+        <p>Chi ha costruito RoyalBet Palace</p>
+      </div>
+
+      <div class="creatore-card">
+        <img src="https://i.pinimg.com/736x/ab/14/01/ab140139e78539b7bd755e95b2acda87.jpg"
+             alt="Santos_Lukas" class="creatore-avatar">
+        <h2 class="creatore-nome">Santos_Lukas</h2>
+        <p class="creatore-ruolo">Fondatore di RoyalBet Palace</p>
+
+        <div class="creatore-bio">
+          <p>Ciao! Sono Santos_Lukas, il creatore di RoyalBet Palace.</p>
+          <p>Ho costruito questo palazzo virtuale per dare a tutti la possibilità di giocare, divertirsi e scalare la classifica senza spendere un centesimo.</p>
+          <p>La ruota, le schedine, i fantasmini, la banca e i codici segreti sono tutti frutto della mia fantasia. Spero ti divertirai!</p>
+        </div>
+
+        <div class="creatore-stats">
+          <div class="creatore-stat">
+            <div class="stat-num">7</div>
+            <div class="stat-label">Giochi</div>
+          </div>
+          <div class="creatore-stat">
+            <div class="stat-num">∞</div>
+            <div class="stat-label">Divertimento</div>
+          </div>
+          <div class="creatore-stat">
+            <div class="stat-num">1</div>
+            <div class="stat-label">Sogno</div>
+          </div>
+        </div>
+
+        <button class="play-btn follow-btn" id="btnSegui">SEGUI</button>
+      </div>
+    </section>
+
+    <div class="footer-credits">
+      Icone: Flaticon - Freepik · Logo: RoyalBet Palace · Creato da Santos_Lukas
+    </div>
   </div>
 </div>
 
-<!-- POPUP VINCITA -->
+<!-- ===== POPUP VINCITA ===== -->
 <div class="popup-overlay" id="popupOverlay">
   <div class="popup-box">
     <div class="popup-title" id="popupTitle">HAI VINTO!</div>
@@ -171,7 +359,7 @@
   </div>
 </div>
 
-<!-- MODALE PROFILO -->
+<!-- ===== MODALE PROFILO ===== -->
 <div class="popup-overlay" id="modaleProfilo">
   <div class="popup-box profilo-box">
     <div class="popup-title">IL TUO PROFILO</div>
@@ -195,6 +383,16 @@
       <textarea id="profiloBio" maxlength="100" placeholder="Raccontati in 2 righe..."></textarea>
     </div>
 
+    <div class="profilo-field">
+      <label>Colore nome (sbloccabile con codici)</label>
+      <div class="profilo-colori" id="profiloColori"></div>
+    </div>
+
+    <div class="profilo-field">
+      <label>Badge (sbloccabile con codici)</label>
+      <div class="profilo-badge" id="profiloBadge"></div>
+    </div>
+
     <div class="profilo-field readonly">
       <label>Crediti attuali</label>
       <div class="profilo-crediti" id="profiloCrediti">500</div>
@@ -204,15 +402,6 @@
       <button class="popup-btn" id="salvaProfilo">SALVA</button>
       <button class="popup-btn chiudi-btn" id="chiudiProfilo">CHIUDI</button>
     </div>
-  </div>
-</div>
-
-<!-- MODALE CLASSIFICA -->
-<div class="popup-overlay" id="modaleClassifica">
-  <div class="popup-box classifica-box">
-    <div class="popup-title">CLASSIFICA GLOBALE</div>
-    <div class="classifica-list" id="classificaList">Caricamento...</div>
-    <button class="popup-btn" id="chiudiClassifica">CHIUDI</button>
   </div>
 </div>
 
