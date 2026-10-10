@@ -79,5 +79,12 @@
     }
   }
 
-  window.RB.aggiornaClassifica = aggiornaClassifica;
+  function attesaRB(callback) {
+    if (window.RB) callback();
+    else setTimeout(() => attesaRB(callback), 50);
+  }
+
+  attesaRB(() => {
+    window.RB.aggiornaClassifica = aggiornaClassifica;
+  });
 })();
