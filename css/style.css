@@ -1,3 +1,8 @@
+/* ============================================================
+   ROYALBET PALACE — FOGLIO DI STILE COMPLETO
+   ============================================================ */
+
+/* ===== RESET E BASE ===== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -24,7 +29,7 @@ body {
   border: 1px solid #c9a95c;
 }
 
-/* ========== BARRA UTENTE ========== */
+/* ===== BARRA UTENTE ===== */
 .user-bar {
   display: flex;
   justify-content: flex-end;
@@ -44,14 +49,14 @@ body {
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
   transition: transform 0.1s;
   font-family: inherit;
 }
 
 .login-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.5);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
 }
 
 #userLoggedIn {
@@ -98,7 +103,25 @@ body {
   background: #a33636;
 }
 
-/* ========== LOGO ========== */
+.nav-btn {
+  background: #2b4b33;
+  color: #ffd966;
+  border: 1px solid #b1964b;
+  border-radius: 30px;
+  padding: 8px 18px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  letter-spacing: 1px;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.nav-btn:hover {
+  background: #3d6b48;
+}
+
+/* ===== LOGO ===== */
 .logo-wrap {
   text-align: center;
   margin-bottom: 12px;
@@ -121,7 +144,7 @@ body {
   font-weight: 600;
 }
 
-/* ========== BARRA CREDITO ========== */
+/* ===== BARRA CREDITO ===== */
 .credit-bar {
   display: flex;
   justify-content: flex-end;
@@ -153,7 +176,128 @@ body {
   letter-spacing: 1px;
 }
 
-/* ========== RUOTA ========== */
+/* ===== SCHERMATA LOGIN OBBLIGATORIO ===== */
+.login-wall {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+  padding: 30px 20px;
+}
+
+.login-wall-box {
+  background: linear-gradient(145deg, #1a2f22, #0f2419);
+  border: 2px solid #c9a95c;
+  border-radius: 40px;
+  padding: 40px 48px 44px;
+  text-align: center;
+  box-shadow: inset 0 0 30px #00000099, 0 20px 40px black;
+  max-width: 780px;
+  width: 100%;
+}
+
+.login-hero {
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 2px dashed #8f7a4b;
+}
+
+.login-logo {
+  height: 110px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px black;
+  margin-bottom: 16px;
+}
+
+.login-wall-box h1 {
+  font-size: 2.4rem;
+  color: #ffd966;
+  letter-spacing: 6px;
+  margin-bottom: 6px;
+  text-shadow: 0 3px 0 #3a2e1b, 0 6px 12px black;
+  font-weight: 900;
+}
+
+.login-tagline {
+  color: #c9a95c;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-shadow: 0 2px 4px black;
+}
+
+.login-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 30px;
+}
+
+.feature-card {
+  background: #0d2317;
+  border: 1px solid #5b7a4b;
+  border-radius: 18px;
+  padding: 16px 18px;
+  text-align: left;
+  transition: transform 0.15s, border-color 0.15s;
+}
+
+.feature-card:hover {
+  transform: translateY(-2px);
+  border-color: #ffd966;
+}
+
+.feature-icon {
+  font-size: 1.8rem;
+  margin-bottom: 6px;
+}
+
+.feature-title {
+  color: #ffd966;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+
+.feature-desc {
+  color: #b0c0a0;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.login-cta {
+  padding-top: 24px;
+  border-top: 2px dashed #8f7a4b;
+}
+
+.login-required {
+  color: #d6c38b;
+  font-size: 1rem;
+  margin-bottom: 16px;
+  letter-spacing: 1px;
+}
+
+.login-btn.big {
+  font-size: 1.2rem;
+  padding: 16px 36px;
+  margin: 0 auto;
+}
+
+.login-note {
+  color: #8f9f7f;
+  font-size: 0.9rem;
+  margin-top: 14px;
+  letter-spacing: 0.5px;
+}
+
+.login-note strong {
+  color: #ffd966;
+  font-weight: 800;
+}
+
+/* ===== RUOTA DELLA FORTUNA ===== */
 .ruota-section {
   background: linear-gradient(135deg, #14281c 0%, #0f1f16 100%);
   border-radius: 40px;
@@ -210,7 +354,7 @@ body {
     0 0 0 4px #6d5524,
     0 0 0 8px #b1964b,
     0 12px 30px black,
-    inset 0 0 30px rgba(0,0,0,0.5);
+    inset 0 0 30px rgba(0, 0, 0, 0.5);
   background:
     conic-gradient(
       #1e5631 0deg 45deg,
@@ -254,7 +398,7 @@ body {
   border-radius: 50%;
   background: radial-gradient(circle at 30% 30%, #f5e7b0, #c9a95c 60%, #8a6d1c);
   border: 4px solid #6d5524;
-  box-shadow: 0 6px 12px black, inset 0 2px 6px rgba(255,255,255,0.4);
+  box-shadow: 0 6px 12px black, inset 0 2px 6px rgba(255, 255, 255, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -345,7 +489,7 @@ body {
   border: 1px solid #000;
 }
 
-/* ========== SEZIONI GIOCO ========== */
+/* ===== SEZIONI GIOCO ===== */
 .section-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -622,7 +766,7 @@ body {
   font-size: 0.85rem;
 }
 
-/* ========== POPUP VINCITA ========== */
+/* ===== POPUP VINCITA ===== */
 .popup-overlay {
   position: fixed;
   inset: 0;
@@ -645,7 +789,7 @@ body {
   border-radius: 40px;
   padding: 40px 60px;
   text-align: center;
-  box-shadow: 0 25px 60px black, inset 0 0 30px rgba(0,0,0,0.6);
+  box-shadow: 0 25px 60px black, inset 0 0 30px rgba(0, 0, 0, 0.6);
   animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   max-width: 90%;
 }
@@ -694,218 +838,7 @@ body {
   box-shadow: 0 2px 0 #6d5524, 0 10px 20px black;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes popIn {
-  0% { transform: scale(0.3); opacity: 0; }
-  60% { transform: scale(1.08); opacity: 1; }
-  100% { transform: scale(1); }
-}
-
-#confettiCanvas {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9998;
-  display: none;
-}
-
-/* ========== RESPONSIVE ========== */
-@media (max-width: 1100px) {
-  .ruota-container {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-  .wheel-wrap {
-    width: 340px;
-    height: 340px;
-    margin: 0 auto;
-  }
-  .ruota-controls {
-    min-width: auto;
-  }
-}
-
-@media (max-width: 900px) {
-  .section-grid {
-    grid-template-columns: 1fr;
-  }
-  .card-header h2 {
-    font-size: 1.4rem;
-  }
-  .casino-container {
-    padding: 20px;
-  }
-  .ruota-header h2 {
-    font-size: 1.6rem;
-  }
-  .wheel-wrap {
-    width: 300px;
-    height: 300px;
-  }
-  .popup-title { font-size: 1.8rem; }
-  .popup-text { font-size: 1.3rem; }
-  .popup-icon { font-size: 3.5rem; }
-/* ========== SCHERMATA LOGIN OBBLIGATORIO ========== */
-.login-wall {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 70vh;
-  padding: 30px 20px;
-}
-
-.login-wall-box {
-  background: linear-gradient(145deg, #1a2f22, #0f2419);
-  border: 2px solid #c9a95c;
-  border-radius: 40px;
-  padding: 40px 48px 44px;
-  text-align: center;
-  box-shadow: inset 0 0 30px #00000099, 0 20px 40px black;
-  max-width: 780px;
-  width: 100%;
-}
-
-.login-hero {
-  margin-bottom: 28px;
-  padding-bottom: 24px;
-  border-bottom: 2px dashed #8f7a4b;
-}
-
-.login-logo {
-  height: 110px;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px black;
-  margin-bottom: 16px;
-}
-
-.login-wall-box h1 {
-  font-size: 2.4rem;
-  color: #ffd966;
-  letter-spacing: 6px;
-  margin-bottom: 6px;
-  text-shadow: 0 3px 0 #3a2e1b, 0 6px 12px black;
-  font-weight: 900;
-}
-
-.login-tagline {
-  color: #c9a95c;
-  letter-spacing: 6px;
-  text-transform: uppercase;
-  font-size: 0.95rem;
-  font-weight: 600;
-  text-shadow: 0 2px 4px black;
-}
-
-.login-features {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-bottom: 30px;
-}
-
-.feature-card {
-  background: #0d2317;
-  border: 1px solid #5b7a4b;
-  border-radius: 18px;
-  padding: 16px 18px;
-  text-align: left;
-  transition: transform 0.15s, border-color 0.15s;
-}
-
-.feature-card:hover {
-  transform: translateY(-2px);
-  border-color: #ffd966;
-}
-
-.feature-icon {
-  font-size: 1.8rem;
-  margin-bottom: 6px;
-}
-
-.feature-title {
-  color: #ffd966;
-  font-weight: 700;
-  font-size: 1rem;
-  margin-bottom: 4px;
-  letter-spacing: 0.5px;
-}
-
-.feature-desc {
-  color: #b0c0a0;
-  font-size: 0.82rem;
-  line-height: 1.35;
-}
-
-.login-cta {
-  padding-top: 24px;
-  border-top: 2px dashed #8f7a4b;
-}
-
-.login-required {
-  color: #d6c38b;
-  font-size: 1rem;
-  margin-bottom: 16px;
-  letter-spacing: 1px;
-}
-
-.login-btn.big {
-  font-size: 1.2rem;
-  padding: 16px 36px;
-}
-
-.login-note {
-  color: #8f9f7f;
-  font-size: 0.9rem;
-  margin-top: 14px;
-  letter-spacing: 0.5px;
-}
-
-.login-note strong {
-  color: #ffd966;
-  font-weight: 800;
-}
-
-/* Responsive per schermi piccoli */
-@media (max-width: 700px) {
-  .login-wall-box {
-    padding: 30px 24px;
-  }
-  .login-features {
-    grid-template-columns: 1fr;
-  }
-  .login-wall-box h1 {
-    font-size: 1.7rem;
-    letter-spacing: 3px;
-  }
-  .login-logo {
-    height: 80px;
-  }
-}
-
-/* ========== NAV BUTTONS ========== */
-.nav-btn {
-  background: #2b4b33;
-  color: #ffd966;
-  border: 1px solid #b1964b;
-  border-radius: 30px;
-  padding: 8px 18px;
-  font-weight: 700;
-  font-size: 0.9rem;
-  cursor: pointer;
-  letter-spacing: 1px;
-  font-family: inherit;
-  transition: background 0.15s;
-}
-
-.nav-btn:hover {
-  background: #3d6b48;
-}
-
-/* ========== PROFILO ========== */
+/* ===== MODALE PROFILO ===== */
 .profilo-box {
   padding: 30px 40px;
   max-width: 460px;
@@ -989,7 +922,7 @@ body {
   border-color: #666;
 }
 
-/* ========== CLASSIFICA ========== */
+/* ===== MODALE CLASSIFICA ===== */
 .classifica-box {
   padding: 30px 40px;
   max-width: 600px;
@@ -1084,4 +1017,65 @@ body {
   padding: 30px;
   text-align: center;
   font-style: italic;
+}
+
+/* ===== ANIMAZIONI ===== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  60% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+#confettiCanvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  display: none;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1100px) {
+  .ruota-container {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .wheel-wrap {
+    width: 340px;
+    height: 340px;
+    margin: 0 auto;
+  }
+  .ruota-controls {
+    min-width: auto;
+  }
+}
+
+@media (max-width: 900px) {
+  .section-grid {
+    grid-template-columns: 1fr;
+  }
+  .card-header h2 {
+    font-size: 1.4rem;
+  }
+  .casino-container {
+    padding: 20px;
+  }
+  .ruota-header h2 {
+    font-size: 1.6rem;
+  }
+  .wheel-wrap {
+    width: 300px;
+    height: 300px;
+  }
+  .popup-title { font-size: 1.8rem; }
+  .popup-text { font-size: 1.3rem; }
+  .popup-icon { font-size: 3.5rem; }
+  .login-features { grid-template-columns: 1fr; }
+  .login-wall-box h1 { font-size: 1.7rem; }
+  .login-logo { height: 80px; }
 }
