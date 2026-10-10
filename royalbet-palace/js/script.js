@@ -42,13 +42,13 @@
   resetSelezioniCalcio();
 
   // ---------- CAVALLI ----------
-  const cavalli = [
-    { nome: 'Fulmine', img: 'images/cavallo.png', quota: 2.5 },
-    { nome: 'Saetta', img: 'images/cavallo.png', quota: 3.2 },
-    { nome: 'Tuono', img: 'images/cavallo.png', quota: 4.0 },
-    { nome: 'Lampo', img: 'images/cavallo.png', quota: 5.5 },
-    { nome: 'Vento', img: 'images/cavallo.png', quota: 6.0 }
-  ];
+const cavalli = [
+  { nome: 'Fulmine', img: 'https://cdn-icons-png.flaticon.com/128/706/706023.png', quota: 2.5 },
+  { nome: 'Saetta',  img: 'https://cdn-icons-png.flaticon.com/128/706/706023.png', quota: 3.2 },
+  { nome: 'Tuono',   img: 'https://cdn-icons-png.flaticon.com/128/706/706023.png', quota: 4.0 },
+  { nome: 'Lampo',   img: 'https://cdn-icons-png.flaticon.com/128/706/706023.png', quota: 5.5 },
+  { nome: 'Vento',   img: 'https://cdn-icons-png.flaticon.com/128/706/706023.png', quota: 6.0 }
+];
   let cavalloSelezionato = null;
 
   // ---------- RIFERIMENTI DOM ----------
