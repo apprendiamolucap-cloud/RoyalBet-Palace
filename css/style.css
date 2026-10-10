@@ -1501,3 +1501,23 @@ body {
   from { transform: translateY(0); }
   to   { transform: translateY(-6px); }
 }
+/* ===== EFFETTO NOME ARCOBALENO ===== */
+.user-name.rainbow,
+.classifica-nome.rainbow,
+.nome-rainbow {
+  background: linear-gradient(90deg,
+    #ff0000, #ff7f00, #ffff00, #00ff00,
+    #0000ff, #4b0082, #9400d3, #ff0000);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: rainbow-slide 3s linear infinite;
+  font-weight: 800;
+}
+
+@keyframes rainbow-slide {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
