@@ -205,13 +205,19 @@
     window.RB.mostraPopup('BONUS!', '+100 crediti fedeltà', 'vittoria');
   }
 
-  window.RB.aggiornaBanca = aggiornaBanca;
-  window.RB.initBanca = initBanca;
-
-  // Inizializza quando il DOM è pronto
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initBanca);
-  } else {
-    initBanca();
+  // Aspetta che window.RB esista
+  function attesaRB(callback) {
+    if (window.RB) callback();
+    else setTimeout(() => attesaRB(callback), 50);
   }
+
+  attesaRB(() => {
+    window.RB.aggiornaBanca = aggiornaBanca;
+    window.RB.initBanca = initBanca;
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initBanca);
+    } else {
+      initBanca();
+    }
+  });
 })();
