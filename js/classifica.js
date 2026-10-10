@@ -52,11 +52,15 @@
         const info = document.createElement('div');
         info.className = 'classifica-info';
 
-        const nome = document.createElement('div');
-        nome.className = 'classifica-nome';
-        nome.style.color = u.coloreNome;
-        nome.textContent = u.nome + (u.badge ? ' ' + u.badge : '') + (u.uid === window.RB.utenteCorrente.uid ? ' (tu)' : '');
-        info.appendChild(nome);
+       const nome = document.createElement('div');
+nome.className = 'classifica-nome';
+if (u.coloreNome === 'rainbow') {
+  nome.classList.add('rainbow');
+} else {
+  nome.style.color = u.coloreNome;
+}
+nome.textContent = u.nome + (u.badge ? ' ' + u.badge : '') + (u.uid === window.RB.utenteCorrente.uid ? ' (tu)' : '');
+info.appendChild(nome);
 
         if (u.bio) {
           const bio = document.createElement('div');
