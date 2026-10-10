@@ -2,14 +2,20 @@
   // ---------- STATO ----------
   let saldo = 500;
 
+  // ---------- IMMAGINI ----------
+  const IMG_FANTASMINO = 'https://cdn-icons-png.flaticon.com/128/706/706023.png';
+  const IMG_PALLONE    = 'https://cdn-icons-png.flaticon.com/128/12065/12065246.png';
+  const IMG_CORONA     = 'https://cdn-icons-png.flaticon.com/128/1076/1076928.png';
+  const IMG_GETTONI    = 'https://cdn-icons-png.flaticon.com/128/2331/2331941.png';
+
   // ---------- DATI SQUADRE ----------
   const squadre = [
-    { nome: 'Juventus', img: 'images/pallone.png' },
-    { nome: 'Inter', img: 'images/pallone.png' },
-    { nome: 'Milan', img: 'images/pallone.png' },
-    { nome: 'Roma', img: 'images/pallone.png' },
-    { nome: 'Napoli', img: 'images/pallone.png' },
-    { nome: 'Lazio', img: 'images/pallone.png' }
+    { nome: 'Juventus', img: IMG_PALLONE },
+    { nome: 'Inter',    img: IMG_PALLONE },
+    { nome: 'Milan',    img: IMG_PALLONE },
+    { nome: 'Roma',     img: IMG_PALLONE },
+    { nome: 'Napoli',   img: IMG_PALLONE },
+    { nome: 'Lazio',    img: IMG_PALLONE }
   ];
 
   function generaPartite() {
@@ -41,15 +47,15 @@
   }
   resetSelezioniCalcio();
 
-  // ---------- CAVALLI ----------
-const cavalli = [
-  { nome: 'Fulmine', img: 'https://cdn-icons-png.flaticon.com/128/706/706023.png', quota: 2.5 },
-  { nome: 'Saetta',  img: 'https://cdn-icons-png.flaticon.com/128/706/706023.png', quota: 3.2 },
-  { nome: 'Tuono',   img: 'https://cdn-icons-png.flaticon.com/128/706/706023.png', quota: 4.0 },
-  { nome: 'Lampo',   img: 'https://cdn-icons-png.flaticon.com/128/706/706023.png', quota: 5.5 },
-  { nome: 'Vento',   img: 'https://cdn-icons-png.flaticon.com/128/706/706023.png', quota: 6.0 }
-];
-  let cavalloSelezionato = null;
+  // ---------- FANTASMINI (al posto dei cavalli) ----------
+  const fantasmini = [
+    { nome: 'Blinky', img: IMG_FANTASMINO, quota: 2.5 },
+    { nome: 'Pinky',  img: IMG_FANTASMINO, quota: 3.2 },
+    { nome: 'Inky',   img: IMG_FANTASMINO, quota: 4.0 },
+    { nome: 'Clyde',  img: IMG_FANTASMINO, quota: 5.5 },
+    { nome: 'Spettro', img: IMG_FANTASMINO, quota: 6.0 }
+  ];
+  let fantasminoSelezionato = null;
 
   // ---------- RIFERIMENTI DOM ----------
   const saldoDisplay = document.getElementById('saldoDisplay');
@@ -118,41 +124,41 @@ const cavalli = [
     });
   }
 
-  function renderCavalli() {
+  function renderFantasmini() {
     horseList.innerHTML = '';
-    cavalli.forEach((cavallo, idx) => {
+    fantasmini.forEach((fantasmino, idx) => {
       const card = document.createElement('div');
       card.className = 'horse-card';
-      if (cavalloSelezionato === idx) card.classList.add('selected');
+      if (fantasminoSelezionato === idx) card.classList.add('selected');
 
       const infoDiv = document.createElement('div');
       infoDiv.className = 'horse-info';
       const img = document.createElement('img');
-      img.src = cavallo.img;
-      img.alt = cavallo.nome;
+      img.src = fantasmino.img;
+      img.alt = fantasmino.nome;
       const nomeSpan = document.createElement('span');
       nomeSpan.className = 'horse-name';
-      nomeSpan.textContent = cavallo.nome;
+      nomeSpan.textContent = fantasmino.nome;
       infoDiv.appendChild(img);
       infoDiv.appendChild(nomeSpan);
 
       const quotaSpan = document.createElement('span');
       quotaSpan.className = 'horse-quota';
-      quotaSpan.textContent = 'x' + cavallo.quota.toFixed(2);
+      quotaSpan.textContent = 'x' + fantasmino.quota.toFixed(2);
 
       card.appendChild(infoDiv);
       card.appendChild(quotaSpan);
 
       card.addEventListener('click', () => {
-        if (cavalloSelezionato === idx) {
-          cavalloSelezionato = null;
+        if (fantasminoSelezionato === idx) {
+          fantasminoSelezionato = null;
         } else {
-          cavalloSelezionato = idx;
+          fantasminoSelezionato = idx;
         }
-        renderCavalli();
-        messaggioCavalli.textContent = cavalloSelezionato !== null
-          ? 'Hai puntato su ' + cavalli[cavalloSelezionato].nome
-          : 'Seleziona un cavallo e punta';
+        renderFantasmini();
+        messaggioCavalli.textContent = fantasminoSelezionato !== null
+          ? 'Hai puntato su ' + fantasmini[fantasminoSelezionato].nome
+          : 'Seleziona un fantasmino e punta';
       });
 
       horseList.appendChild(card);
@@ -219,7 +225,7 @@ const cavalli = [
     }
   });
 
-  // ---------- GIOCO CAVALLI ----------
+  // ---------- GIOCO FANTASMINI ----------
   document.getElementById('giocaCavalli').addEventListener('click', () => {
     const puntataInput = document.getElementById('puntataCavalli');
     let puntata = parseInt(puntataInput.value, 10);
@@ -231,29 +237,29 @@ const cavalli = [
       alert('Credito insufficiente!');
       return;
     }
-    if (cavalloSelezionato === null) {
-      alert('Seleziona un cavallo prima di giocare!');
+    if (fantasminoSelezionato === null) {
+      alert('Seleziona un fantasmino prima di giocare!');
       return;
     }
 
-    const cavallo = cavalli[cavalloSelezionato];
-    const probabilitaVincita = 1 / cavallo.quota;
+    const fantasmino = fantasmini[fantasminoSelezionato];
+    const probabilitaVincita = 1 / fantasmino.quota;
     const esito = Math.random() < probabilitaVincita;
 
     saldo -= puntata;
 
     if (esito) {
-      const vincita = Math.floor(puntata * cavallo.quota);
+      const vincita = Math.floor(puntata * fantasmino.quota);
       saldo += vincita;
-      messaggioCavalli.textContent = 'RoyalBet Palace: ' + cavallo.nome + ' ha vinto! Guadagno: +' + vincita + ' crediti';
+      messaggioCavalli.textContent = 'RoyalBet Palace: ' + fantasmino.nome + ' ha vinto! Guadagno: +' + vincita + ' crediti';
     } else {
-      messaggioCavalli.textContent = 'RoyalBet Palace: ' + cavallo.nome + ' non ha vinto. Riprova!';
+      messaggioCavalli.textContent = 'RoyalBet Palace: ' + fantasmino.nome + ' non ha vinto. Riprova!';
     }
 
     aggiornaSaldo();
 
-    cavalloSelezionato = null;
-    renderCavalli();
+    fantasminoSelezionato = null;
+    renderFantasmini();
     if (saldo <= 0) {
       saldo = 500;
       aggiornaSaldo();
@@ -266,8 +272,8 @@ const cavalli = [
   function init() {
     aggiornaSaldo();
     renderCalcio();
-    renderCavalli();
-    messaggioCavalli.textContent = 'Seleziona un cavallo e punta';
+    renderFantasmini();
+    messaggioCavalli.textContent = 'Seleziona un fantasmino e punta';
   }
   init();
 })();
