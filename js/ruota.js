@@ -1,5 +1,5 @@
 // ============================================================
-//  RUOTA DELLA FORTUNA — v3 con gemme e zucche
+//  RUOTA DELLA FORTUNA — v4 con gemme, codici e moltiplicatori
 // ============================================================
 (function() {
 
@@ -128,7 +128,6 @@
       window.RB.mostraPopup('HAI VINTO!', '+' + premio.valore + ' crediti', 'vittoria');
 
     } else if (premio.tipo === 'moltiplicatore') {
-      // Moltiplicatore x2 per 2 minuti
       p.moltiplicatore = {
         tipo: 'x2',
         scadenza: Date.now() + 120000
