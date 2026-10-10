@@ -6,85 +6,51 @@
   const IMG_FANTASMINO = 'https://cdn-icons-png.flaticon.com/128/706/706023.png';
 
   // ============================================================
-  //  RUOTA DELLA FORTUNA
+  //  RUOTA DELLA FORTUNA (CSS puro + conic-gradient)
   // ============================================================
   const premi = [
-    { label: '+50',        valore: 50,   tipo: 'crediti', colore: '#1e5631' },
-    { label: 'x2',         valore: 2,    tipo: 'moltiplicatore', colore: '#8a6d1c' },
-    { label: '+100',       valore: 100,  tipo: 'crediti', colore: '#1e5631' },
-    { label: 'Tenta',      valore: 0,    tipo: 'ritenta', colore: '#7a2c2c' },
-    { label: '+250',       valore: 250,  tipo: 'crediti', colore: '#1e5631' },
-    { label: 'Niente',     valore: 0,    tipo: 'niente', colore: '#3a3a3a' },
-    { label: '+500',       valore: 500,  tipo: 'crediti', colore: '#1e5631' },
-    { label: '+1000',      valore: 1000, tipo: 'crediti', colore: '#a67c00' }
+    { label: '+50',    valore: 50,   tipo: 'crediti',  angolo: 22.5 },
+    { label: 'x2',     valore: 2,    tipo: 'moltiplicatore', angolo: 67.5 },
+    { label: '+100',   valore: 100,  tipo: 'crediti',  angolo: 112.5 },
+    { label: 'Tenta',  valore: 0,    tipo: 'ritenta',  angolo: 157.5 },
+    { label: '+250',   valore: 250,  tipo: 'crediti',  angolo: 202.5 },
+    { label: 'Niente', valore: 0,    tipo: 'niente',   angolo: 247.5 },
+    { label: '+500',   valore: 500,  tipo: 'crediti',  angolo: 292.5 },
+    { label: '+1000',  valore: 1000, tipo: 'crediti',  angolo: 337.5 }
   ];
 
-  const canvas = document.getElementById('wheelCanvas');
-  const ctx = canvas.getContext('2d');
+  const wheel = document.getElementById('wheel');
   const btnGira = document.getElementById('giraRuota');
   const messaggioRuota = document.getElementById('ruotaMessaggio');
   const timerRuota = document.getElementById('ruotaTimer');
-
-  const centerX = canvas.width / 2;
-  const centerY = canvas.height / 2;
-  const raggio = canvas.width / 2 - 10;
-  const numSpicchi = premi.length;
-  const angoloSpicchio = (2 * Math.PI) / numSpicchi;
+  const saldoDisplay = document.getElementById('saldoDisplay');
 
   let rotazioneAttuale = 0;
   let inRotazione = false;
 
-  function disegnaRuota(rotazione) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // Crea le etichette una volta sola all'avvio
+  function creaEtichette() {
+    // rimuovi etichette precedenti se presenti
+    wheel.querySelectorAll('.label').forEach(el => el.remove());
 
-    // bordo esterno dorato
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, raggio + 8, 0, 2 * Math.PI);
-    ctx.fillStyle = '#c9a95c';
-    ctx.fill();
+    const raggio = 165; // px dal centro
+    premi.forEach((premio) => {
+      const label = document.createElement('div');
+      label.className = 'label';
+      label.textContent = premio.label;
 
-    // spicchi
-    premi.forEach((premio, i) => {
-      const angoloInizio = i * angoloSpicchio + rotazione;
-      const angoloFine = angoloInizio + angoloSpicchio;
+      // posiziona lungo il raggio e ruota il testo
+      const rad = (premio.angolo - 90) * Math.PI / 180;
+      const x = Math.cos(rad) * raggio;
+      const y = Math.sin(rad) * raggio;
 
-      ctx.beginPath();
-      ctx.moveTo(centerX, centerY);
-      ctx.arc(centerX, centerY, raggio, angoloInizio, angoloFine);
-      ctx.closePath();
-      ctx.fillStyle = premio.colore;
-      ctx.fill();
-
-      ctx.strokeStyle = '#c9a95c';
-      ctx.lineWidth = 3;
-      ctx.stroke();
-
-      // testo
-      ctx.save();
-      ctx.translate(centerX, centerY);
-      ctx.rotate(angoloInizio + angoloSpicchio / 2);
-      ctx.textAlign = 'right';
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 22px Segoe UI, sans-serif';
-      ctx.shadowColor = 'black';
-      ctx.shadowBlur = 6;
-      ctx.fillText(premio.label, raggio - 20, 8);
-      ctx.restore();
+      label.style.left = '50%';
+      label.style.top = '50%';
+      label.style.transform =
+        'translate(' + x + 'px, ' + y + 'px) ' +
+        'translate(-50%, -50%) rotate(' + premio.angolo + 'deg)';
+      wheel.appendChild(label);
     });
-
-    // centro decorativo
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, 45, 0, 2 * Math.PI);
-    ctx.fillStyle = '#1e3b2b';
-    ctx.fill();
-    ctx.strokeStyle = '#c9a95c';
-    ctx.lineWidth = 5;
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, 25, 0, 2 * Math.PI);
-    ctx.fillStyle = '#c9a95c';
-    ctx.fill();
   }
 
   function getDataOggi() {
@@ -93,8 +59,7 @@
   }
 
   function puoGirare() {
-    const ultimoGiro = localStorage.getItem('ultimoGiroRuota');
-    return ultimoGiro !== getDataOggi();
+    return localStorage.getItem('ultimoGiroRuota') !== getDataOggi();
   }
 
   function aggiornaStatoRuota() {
@@ -102,7 +67,9 @@
       btnGira.disabled = false;
       btnGira.textContent = 'GIRA LA RUOTA';
       timerRuota.textContent = 'Hai 1 giro disponibile oggi';
-      messaggioRuota.textContent = 'Premi per girare';
+      if (messaggioRuota.textContent === 'Premi per girare') {
+        // ok
+      }
     } else {
       btnGira.disabled = true;
       btnGira.textContent = 'GIRO GIÀ USATO';
@@ -117,50 +84,42 @@
 
     inRotazione = true;
     btnGira.disabled = true;
+    messaggioRuota.textContent = 'La ruota sta girando...';
 
-    // scegli un premio casuale
-    const indice = Math.floor(Math.random() * numSpicchi);
+    // scegli un premio a caso
+    const indice = Math.floor(Math.random() * premi.length);
+    const premio = premi[indice];
 
-    // calcola l'angolo per far finire quello spicchio sotto la freccia
-    // La freccia è in alto (12 ore) -> angolo -PI/2
-    // Vogliamo che il centro dello spicchio indice + 0.5 stia in alto
-    const giriExtra = 6 + Math.floor(Math.random() * 3); // 6-8 giri
-    const target = (2 * Math.PI) * giriExtra
-      + (2 * Math.PI - (indice + 0.5) * angoloSpicchio);
+    // numero di giri completi extra
+    const giriExtra = 6 + Math.floor(Math.random() * 3);
 
-    const rotazionePartenza = rotazioneAttuale;
-    const rotazioneFinale = rotazionePartenza + target;
-    const durata = 4500;
-    const tempoInizio = performance.now();
+    // l'angolo vincente è già quello del premio
+    // per portarlo sotto la freccia (che sta in alto = 0deg),
+    // dobbiamo ruotare fino a -premio.angolo
+    const angoloTarget = 360 * giriExtra + (360 - premio.angolo);
 
-    function animazione(t) {
-      const elapsed = t - tempoInizio;
-      const progress = Math.min(elapsed / durata, 1);
-      // ease out cubic
-      const ease = 1 - Math.pow(1 - progress, 3);
-      rotazioneAttuale = rotazionePartenza + (rotazioneFinale - rotazionePartenza) * ease;
-      disegnaRuota(rotazioneAttuale);
+    // salva la rotazione di partenza (mod 360)
+    const partenza = rotazioneAttuale % 360;
+    // accumula la rotazione assoluta
+    rotazioneAttuale += (angoloTarget - partenza);
+    if (rotazioneAttuale < 0) rotazioneAttuale += 360 * giriExtra;
 
-      if (progress < 1) {
-        requestAnimationFrame(animazione);
-      } else {
-        fineGiro(indice);
-      }
-    }
+    wheel.style.transform = 'rotate(' + rotazioneAttuale + 'deg)';
 
-    requestAnimationFrame(animazione);
+    // aspetta fine animazione
+    setTimeout(() => {
+      fineGiro(premio);
+    }, 5100);
   }
 
-  function fineGiro(indice) {
-    const premio = premi[indice];
+  function fineGiro(premio) {
     inRotazione = false;
 
-    // applica premio
     if (premio.tipo === 'crediti') {
       saldo += premio.valore;
       messaggioRuota.textContent = 'HAI VINTO ' + premio.valore + ' CREDITI!';
     } else if (premio.tipo === 'moltiplicatore') {
-      const bonus = saldo; // x2 -> aggiungi il saldo attuale
+      const bonus = saldo;
       saldo += bonus;
       messaggioRuota.textContent = 'MOLTIPLICATORE x2! +' + bonus + ' crediti';
     } else if (premio.tipo === 'ritenta') {
@@ -181,8 +140,7 @@
 
   btnGira.addEventListener('click', giraRuota);
 
-  // disegno iniziale + stato
-  disegnaRuota(rotazioneAttuale);
+  creaEtichette();
   aggiornaStatoRuota();
 
   // ============================================================
@@ -222,7 +180,6 @@
 
   let partite = generaPartite();
 
-  const saldoDisplay = document.getElementById('saldoDisplay');
   const matchList = document.getElementById('matchList');
   const horseList = document.getElementById('horseList');
   const messaggioCavalli = document.getElementById('messaggioCavalli');
