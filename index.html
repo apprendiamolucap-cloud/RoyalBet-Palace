@@ -62,14 +62,14 @@
           <div class="feature-desc">Deposita, investi e guadagna interessi</div>
         </div>
         <div class="feature-card">
+          <div class="feature-icon">💎</div>
+          <div class="feature-title">Gemme Premium</div>
+          <div class="feature-desc">Sblocca moltiplicatori, case e cosmetici esclusivi</div>
+        </div>
+        <div class="feature-card">
           <div class="feature-icon">🏆</div>
           <div class="feature-title">Classifica Globale</div>
           <div class="feature-desc">Scala la classifica e diventa il re del Palazzo</div>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🎟️</div>
-          <div class="feature-title">Codici Segreti</div>
-          <div class="feature-desc">Trova codici nella ruota e sblocca personalizzazioni</div>
         </div>
       </div>
 
@@ -99,10 +99,31 @@
       </div>
       <div class="brand-subtitle">Schedine &amp; Corse Reali</div>
 
-      <div class="credit-bar">
-        <img src="https://cdn-icons-png.flaticon.com/128/2331/2331941.png" alt="gettoni">
-        CREDITO: <span id="saldoDisplay" class="saldo">500</span>
-        <img src="https://cdn-icons-png.flaticon.com/128/2331/2331941.png" alt="gettoni">
+      <!-- BARRA VALUTE -->
+      <div class="currency-bar">
+        <div class="currency-item">
+          <img src="https://i.imgur.com/XQKaE54.jpeg" alt="crediti" class="currency-icon">
+          <div class="currency-info">
+            <span class="currency-label">CREDITI</span>
+            <span id="saldoDisplay" class="currency-value">500</span>
+          </div>
+        </div>
+
+        <div class="currency-item">
+          <img src="https://i.imgur.com/uLnmEao.jpeg" alt="gemme" class="currency-icon">
+          <div class="currency-info">
+            <span class="currency-label">GEMME</span>
+            <span id="gemmeDisplay" class="currency-value">0</span>
+          </div>
+        </div>
+
+        <div class="currency-item" id="zuccheBar" style="display:none;">
+          <img src="https://i.imgur.com/WnmlXyF.jpeg" alt="zucche" class="currency-icon">
+          <div class="currency-info">
+            <span class="currency-label">ZUCche</span>
+            <span id="zuccheDisplay" class="currency-value">0</span>
+          </div>
+        </div>
       </div>
 
       <nav class="main-nav">
@@ -111,6 +132,7 @@
         <button class="nav-page" data-page="calcio">⚽ Calcio</button>
         <button class="nav-page" data-page="fantasmini">👻 Fantasmini</button>
         <button class="nav-page" data-page="banca">🏦 Banca</button>
+        <button class="nav-page" data-page="gemme">💎 Gemme</button>
         <button class="nav-page" data-page="classifica">🏆 Classifica</button>
         <button class="nav-page" data-page="codici">🎟️ Codici</button>
         <button class="nav-page" data-page="creatore">👑 Creatore</button>
@@ -144,6 +166,11 @@
           <img src="https://cdn-icons-png.flaticon.com/128/2331/2331941.png" alt="banca">
           <h3>Banca RoyalBet</h3>
           <p>Deposita i tuoi crediti e guadagna interessi</p>
+        </div>
+        <div class="home-card" data-goto="gemme">
+          <img src="https://i.imgur.com/uLnmEao.jpeg" alt="gemme">
+          <h3>Gemme Premium</h3>
+          <p>Moltiplicatori, case e cosmetici esclusivi</p>
         </div>
       </div>
     </section>
@@ -258,7 +285,7 @@
 
         <div class="banca-card">
           <h3>🎁 Bonus Fedeltà</h3>
-          <p>Accedi <strong>7 giorni di fila</strong> e ricevi <strong>+100 crediti</strong></p>
+          <p>Accedi <strong>7 giorni di fila</strong> e ricevi <strong>+100 crediti</strong> e <strong>+1 gemma</strong></p>
           <div class="banca-saldo">Giorni di fila: <span id="giorniFedelta">0</span> / 7</div>
           <div class="banca-azioni">
             <button class="play-btn small" id="btnBonusFedelta">RISCATTA BONUS</button>
@@ -268,11 +295,122 @@
       </div>
     </section>
 
+    <!-- ===== PAGINA GEMME ===== -->
+    <section class="page" id="page-gemme">
+      <div class="page-title">
+        <h2>💎 GEMME</h2>
+        <p>Valuta premium di RoyalBet Palace</p>
+      </div>
+
+      <div class="gemme-container">
+        <div class="gemme-header">
+          <img src="https://i.imgur.com/uLnmEao.jpeg" alt="gemma" class="gemma-big-icon">
+          <div class="gemme-count">
+            <span class="gemme-label">LE TUE GEMME</span>
+            <span id="gemmeCountBig" class="gemme-value">0</span>
+          </div>
+        </div>
+
+        <h3 class="gemme-titolo-sezione">COME OTTENERLE</h3>
+        <div class="gemme-info">
+          <div class="gemma-info-card">
+            <div class="gemma-info-icon">🎰</div>
+            <div class="gemma-info-title">Ruota della Fortuna</div>
+            <div class="gemma-info-desc">5% di probabilità ad ogni giro</div>
+          </div>
+          <div class="gemma-info-card">
+            <div class="gemma-info-icon">🎁</div>
+            <div class="gemma-info-title">Bonus Fedeltà</div>
+            <div class="gemma-info-desc">1 gemma ogni 7 giorni di fila</div>
+          </div>
+          <div class="gemma-info-card">
+            <div class="gemma-info-icon">🏆</div>
+            <div class="gemma-info-title">Trofei</div>
+            <div class="gemma-info-desc">Sblocca obiettivi per gemme bonus</div>
+          </div>
+          <div class="gemma-info-card">
+            <div class="gemma-info-icon">🎃</div>
+            <div class="gemma-info-title">Evento Halloween</div>
+            <div class="gemma-info-desc">Compra gemme con le Zucche a ottobre</div>
+          </div>
+        </div>
+
+        <h3 class="gemme-titolo-sezione">NEGOZIO GEMME</h3>
+        <div class="gemme-shop-grid">
+          <div class="gemma-shop-card">
+            <div class="gemma-shop-title">⚡ Moltiplicatore x2</div>
+            <div class="gemma-shop-desc">Per 2 minuti tutte le vincite sono doppie</div>
+            <div class="gemma-shop-price">5 💎</div>
+            <button class="play-btn small btn-compra" data-shop="moltiplicatore-x2">COMPRA</button>
+          </div>
+
+          <div class="gemma-shop-card">
+            <div class="gemma-shop-title">⚡ Moltiplicatore x5</div>
+            <div class="gemma-shop-desc">Per 1 minuto le vincite sono quintuple</div>
+            <div class="gemma-shop-price">15 💎</div>
+            <button class="play-btn small btn-compra" data-shop="moltiplicatore-x5">COMPRA</button>
+          </div>
+
+          <div class="gemma-shop-card">
+            <div class="gemma-shop-title">🌈 Colore Arcobaleno</div>
+            <div class="gemma-shop-desc">Sblocca il nome arcobaleno animato</div>
+            <div class="gemma-shop-price">10 💎</div>
+            <button class="play-btn small btn-compra" data-shop="colore-arcobaleno">COMPRA</button>
+          </div>
+
+          <div class="gemma-shop-card">
+            <div class="gemma-shop-title">👑 Badge Corona</div>
+            <div class="gemma-shop-desc">Badge esclusivo visibile in classifica</div>
+            <div class="gemma-shop-price">20 💎</div>
+            <button class="play-btn small btn-compra" data-shop="badge-corona">COMPRA</button>
+          </div>
+
+          <div class="gemma-shop-card">
+            <div class="gemma-shop-title">🏠 Baracca</div>
+            <div class="gemma-shop-desc">Genera 1 credito al minuto (max 10)</div>
+            <div class="gemma-shop-price">25 💎</div>
+            <button class="play-btn small btn-compra" data-shop="casa-baracca">COMPRA</button>
+          </div>
+
+          <div class="gemma-shop-card">
+            <div class="gemma-shop-title">🏡 Villa</div>
+            <div class="gemma-shop-desc">Genera 5 crediti al minuto (max 10)</div>
+            <div class="gemma-shop-price">80 💎</div>
+            <button class="play-btn small btn-compra" data-shop="casa-villa">COMPRA</button>
+          </div>
+
+          <div class="gemma-shop-card">
+            <div class="gemma-shop-title">🏰 Castello</div>
+            <div class="gemma-shop-desc">Genera 20 crediti al minuto (max 10)</div>
+            <div class="gemma-shop-price">300 💎</div>
+            <button class="play-btn small btn-compra" data-shop="casa-castello">COMPRA</button>
+          </div>
+
+          <div class="gemma-shop-card">
+            <div class="gemma-shop-title">🔁 Rigira la Ruota</div>
+            <div class="gemma-shop-desc">Un giro extra oggi, subito</div>
+            <div class="gemma-shop-price">3 💎</div>
+            <button class="play-btn small btn-compra" data-shop="rigira-ruota">COMPRA</button>
+          </div>
+        </div>
+
+        <h3 class="gemme-titolo-sezione">LE TUE CASE</h3>
+        <div class="case-grid" id="caseGrid">
+          <p class="case-vuoto">Non possiedi ancora nessuna casa</p>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== PAGINA CLASSIFICA ===== -->
     <section class="page" id="page-classifica">
       <div class="page-title">
         <h2>🏆 CLASSIFICA GLOBALE</h2>
         <p>I migliori giocatori del Palazzo</p>
+      </div>
+
+      <div class="classifica-tabs">
+        <button class="classifica-tab active" data-tab="crediti">🪙 Crediti</button>
+        <button class="classifica-tab" data-tab="gemme">💎 Gemme</button>
       </div>
 
       <div class="classifica-list" id="classificaList">Caricamento...</div>
@@ -321,7 +459,7 @@
         <div class="creatore-bio">
           <p>Ciao! Sono Santos_Lukas, il creatore di RoyalBet Palace.</p>
           <p>Ho costruito questo palazzo virtuale per dare a tutti la possibilità di giocare, divertirsi e scalare la classifica senza spendere un centesimo.</p>
-          <p>La ruota, le schedine, i fantasmini, la banca e i codici segreti sono tutti frutto della mia fantasia. Spero ti divertirai!</p>
+          <p>La ruota, le schedine, i fantasmini, la banca, le gemme e i codici segreti sono tutti frutto della mia fantasia. Spero ti divertirai!</p>
         </div>
 
         <div class="creatore-stats">
@@ -384,12 +522,12 @@
     </div>
 
     <div class="profilo-field">
-      <label>Colore nome (sbloccabile con codici)</label>
+      <label>Colore nome (sbloccabile con codici o gemme)</label>
       <div class="profilo-colori" id="profiloColori"></div>
     </div>
 
     <div class="profilo-field">
-      <label>Badge (sbloccabile con codici)</label>
+      <label>Badge (sbloccabile con codici o gemme)</label>
       <div class="profilo-badge" id="profiloBadge"></div>
     </div>
 
