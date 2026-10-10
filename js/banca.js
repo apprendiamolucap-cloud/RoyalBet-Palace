@@ -1,5 +1,5 @@
 // ============================================================
-//  BANCA ROYALBET
+//  BANCA ROYALBET — fix attesa window.RB
 // ============================================================
 (function() {
   let bancaAttiva = false;
@@ -28,13 +28,15 @@
     const bancaGrid = document.querySelector('.banca-grid');
 
     if (!bancaAttiva && window.RB.saldo < 1000) {
-      bancaStato.innerHTML = 'Banca bloccata · Raggiungi <strong>1000 crediti</strong> per sbloccarla';
-      if (bancaGrid) bancaGrid.style.opacity = '0.35';
-      if (bancaGrid) bancaGrid.style.pointerEvents = 'none';
+      if (bancaStato) bancaStato.innerHTML = 'Banca bloccata · Raggiungi <strong>1000 crediti</strong> per sbloccarla';
+      if (bancaGrid) {
+        bancaGrid.style.opacity = '0.35';
+        bancaGrid.style.pointerEvents = 'none';
+      }
       return;
     }
 
-    bancaStato.textContent = 'Deposita, chiedi prestiti e guadagna bonus fedeltà';
+    if (bancaStato) bancaStato.textContent = 'Deposita, chiedi prestiti e guadagna bonus fedeltà';
     if (bancaGrid) {
       bancaGrid.style.opacity = '1';
       bancaGrid.style.pointerEvents = 'auto';
@@ -60,7 +62,7 @@
     }
 
     if (infoPrestito && p.prestito > 0) {
-      infoPrestito.textContent = 'Restituisci ' + Math.floor(p.prestito * 1.2) + ' crediti per chiudere il prestito';
+      infoPrestito.textContent = 'Restituisci ' + Math.floor(p.prestito * 1.2) + ' crediti per chiudere';
     } else if (infoPrestito) {
       infoPrestito.textContent = 'Nessun prestito attivo';
     }
@@ -205,7 +207,7 @@
     window.RB.mostraPopup('BONUS!', '+100 crediti fedeltà', 'vittoria');
   }
 
-  // Aspetta che window.RB esista
+  // Aspetta che window.RB esista prima di registrare le funzioni
   function attesaRB(callback) {
     if (window.RB) callback();
     else setTimeout(() => attesaRB(callback), 50);
@@ -214,6 +216,7 @@
   attesaRB(() => {
     window.RB.aggiornaBanca = aggiornaBanca;
     window.RB.initBanca = initBanca;
+
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', initBanca);
     } else {
