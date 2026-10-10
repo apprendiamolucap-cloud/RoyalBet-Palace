@@ -1,5 +1,5 @@
 // ============================================================
-//  CODICI SEGRETI + PERSONALIZZAZIONI — v3
+//  CODICI SEGRETI + PERSONALIZZAZIONI — v4 con cornici
 // ============================================================
 (function() {
 
@@ -18,7 +18,9 @@
     { id: 'stella', emoji: '⭐', label: 'Stella', codiceRichiesto: 'star' },
     { id: 'diamante', emoji: '💎', label: 'Diamante', codiceRichiesto: 'diamond' },
     { id: 'teschio', emoji: '💀', label: 'Teschio', codiceRichiesto: 'skull' },
-    { id: 'fulmine', emoji: '⚡', label: 'Fulmine', codiceRichiesto: 'bolt' }
+    { id: 'fulmine', emoji: '⚡', label: 'Fulmine', codiceRichiesto: 'bolt' },
+    { id: 'pipistrello', emoji: '🦇', label: 'Pipistrello', codiceRichiesto: null, daShop: 'badge-pipistrello' },
+    { id: 'teschio-halloween', emoji: '💀', label: 'Teschio Halloween', codiceRichiesto: null, daShop: 'badge-teschio' }
   ];
 
   const CODICI_VALIDI = {
@@ -118,14 +120,14 @@
     }
   }
 
-    // ===== PERSONALIZZAZIONE PROFILO =====
+  // ===== PERSONALIZZAZIONE PROFILO =====
   function renderizzaPersonalizzazioni() {
     const p = window.RB.profiloCorrente;
     if (!p) return;
     const sbloccati = p.codiciSbloccati || [];
     const cosmeticiGemme = p.cosmeticiSbloccati || [];
 
-    // Colori
+    // ===== COLORI =====
     const coloriCont = document.getElementById('profiloColori');
     if (coloriCont) {
       coloriCont.innerHTML = '';
@@ -157,7 +159,7 @@
       });
     }
 
-    // Badge
+    // ===== BADGE =====
     const badgeCont = document.getElementById('profiloBadge');
     if (badgeCont) {
       badgeCont.innerHTML = '';
@@ -166,8 +168,14 @@
         btn.className = 'badge-btn';
         btn.textContent = b.emoji;
         btn.title = b.label;
-        const ha = sbloccati.includes(b.codiceRichiesto) ||
-                   cosmeticiGemme.includes('badge-' + b.id);
+
+        let ha = false;
+        if (b.codiceRichiesto) {
+          ha = sbloccati.includes(b.codiceRichiesto) || cosmeticiGemme.includes('badge-' + b.id);
+        } else if (b.daShop) {
+          ha = cosmeticiGemme.includes(b.daShop);
+        }
+
         if (!ha) {
           btn.style.opacity = '0.25';
           btn.style.cursor = 'not-allowed';
@@ -188,8 +196,8 @@
     const corniciCont = document.getElementById('profiloCornici');
     if (corniciCont) {
       const CORNICI = [
-        { id: 'cornice-zucca', label: '🎃 Zucca', classe: 'avatar-cornice-zucca' },
-        { id: 'cornice-ragno', label: '🕸️ Ragnatela', classe: 'avatar-cornice-ragno' }
+        { id: 'cornice-zucca', label: '🎃 Zucca' },
+        { id: 'cornice-ragno', label: '🕸️ Ragnatela' }
       ];
       corniciCont.innerHTML = '';
       CORNICI.forEach(c => {
@@ -215,3 +223,22 @@
       });
     }
   }
+
+  function attesaRB(callback) {
+    if (window.RB) callback();
+    else setTimeout(() => attesaRB(callback), 50);
+  }
+
+  attesaRB(() => {
+    window.RB.codiciValidi = CODICI_VALIDI;
+    window.RB.aggiornaCodici = aggiornaCodici;
+    window.RB.initCodici = initCodici;
+    window.RB.renderizzaPersonalizzazioni = renderizzaPersonalizzazioni;
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initCodici);
+    } else {
+      initCodici();
+    }
+  });
+})();
