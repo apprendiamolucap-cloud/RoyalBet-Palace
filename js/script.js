@@ -1,22 +1,114 @@
 (function() {
   let saldo = 500;
 
-  // ---------- IMMAGINI ONLINE ----------
   const IMG_PALLONE    = 'https://cdn-icons-png.flaticon.com/128/12065/12065246.png';
   const IMG_FANTASMINO = 'https://cdn-icons-png.flaticon.com/128/706/706023.png';
 
   // ============================================================
-  //  RUOTA DELLA FORTUNA (CSS puro + conic-gradient)
+  //  POPUP VINCITA + CONFETTI
+  // ============================================================
+  const popupOverlay = document.getElementById('popupOverlay');
+  const popupTitle = document.getElementById('popupTitle');
+  const popupIcon = document.getElementById('popupIcon');
+  const popupText = document.getElementById('popupText');
+  const popupBtn = document.getElementById('popupBtn');
+  const confettiCanvas = document.getElementById('confettiCanvas');
+  const confettiCtx = confettiCanvas.getContext('2d');
+
+  let confettiParticles = [];
+  let confettiAnim = null;
+
+  function resizeConfetti() {
+    confettiCanvas.width = window.innerWidth;
+    confettiCanvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeConfetti);
+  resizeConfetti();
+
+  function lanciaConfetti() {
+    confettiCanvas.style.display = 'block';
+    confettiParticles = [];
+    const colori = ['#ffd966', '#c9a74b', '#f5e7b0', '#3d6b48', '#ebc768', '#ff6b6b', '#ffdb8e'];
+    for (let i = 0; i < 180; i++) {
+      confettiParticles.push({
+        x: Math.random() * confettiCanvas.width,
+        y: -20 - Math.random() * 300,
+        w: 8 + Math.random() * 8,
+        h: 10 + Math.random() * 10,
+        dx: -2 + Math.random() * 4,
+        dy: 2 + Math.random() * 4,
+        rot: Math.random() * Math.PI * 2,
+        rotSpeed: -0.15 + Math.random() * 0.3,
+        colore: colori[Math.floor(Math.random() * colori.length)],
+        vita: 1
+      });
+    }
+    if (confettiAnim) cancelAnimationFrame(confettiAnim);
+    animaConfetti();
+  }
+
+  function animaConfetti() {
+    confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+    let attivi = 0;
+    confettiParticles.forEach(p => {
+      p.x += p.dx;
+      p.y += p.dy;
+      p.dy += 0.06;
+      p.rot += p.rotSpeed;
+      if (p.y > confettiCanvas.height + 40) {
+        p.vita = 0;
+      } else {
+        attivi++;
+        confettiCtx.save();
+        confettiCtx.translate(p.x, p.y);
+        confettiCtx.rotate(p.rot);
+        confettiCtx.fillStyle = p.colore;
+        confettiCtx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        confettiCtx.restore();
+      }
+    });
+    if (attivi > 0) {
+      confettiAnim = requestAnimationFrame(animaConfetti);
+    } else {
+      confettiCanvas.style.display = 'none';
+    }
+  }
+
+  function mostraPopup(titolo, testo, tipo) {
+    popupTitle.textContent = titolo;
+    popupText.textContent = testo;
+
+    if (tipo === 'vittoria') {
+      popupIcon.textContent = '🏆';
+      popupTitle.style.color = '#ffd966';
+      lanciaConfetti();
+    } else if (tipo === 'sconfitta') {
+      popupIcon.textContent = '😞';
+      popupTitle.style.color = '#ff8a8a';
+    } else {
+      popupIcon.textContent = '🎰';
+      popupTitle.style.color = '#ffd966';
+    }
+
+    popupOverlay.classList.add('show');
+  }
+
+  popupBtn.addEventListener('click', () => {
+    popupOverlay.classList.remove('show');
+  });
+
+  // ============================================================
+  //  RUOTA DELLA FORTUNA
   // ============================================================
   const premi = [
-    { label: '+50',    valore: 50,   tipo: 'crediti',  angolo: 22.5 },
+    { label: '+50',    valore: 50,   tipo: 'crediti',        angolo: 22.5 },
     { label: 'x2',     valore: 2,    tipo: 'moltiplicatore', angolo: 67.5 },
-    { label: '+100',   valore: 100,  tipo: 'crediti',  angolo: 112.5 },
-    { label: 'Tenta',  valore: 0,    tipo: 'ritenta',  angolo: 157.5 },
-    { label: '+250',   valore: 250,  tipo: 'crediti',  angolo: 202.5 },
-    { label: 'Niente', valore: 0,    tipo: 'niente',   angolo: 247.5 },
-    { label: '+500',   valore: 500,  tipo: 'crediti',  angolo: 292.5 },
-    { label: '+1000',  valore: 1000, tipo: 'crediti',  angolo: 337.5 }
+    { label: '+100',   valore: 100,  tipo: 'crediti',        angolo: 112.5 },
+    { label: 'Tenta',  valore: 0,    tipo: 'ritenta',        angolo: 157.5 },
+    { label: '+250',   valore: 250,  tipo: 'crediti',        angolo: 202.5 },
+    { label: 'Niente', valore: 0,    tipo: 'niente',         angolo: 247.5 },
+    { label: '+500',   valore: 500,  tipo: 'crediti',        angolo: 292.5 },
+    { label: '+1000',  valore: 1000, tipo: 'crediti',        angolo: 337.5 }
   ];
 
   const wheel = document.getElementById('wheel');
@@ -28,27 +120,18 @@
   let rotazioneAttuale = 0;
   let inRotazione = false;
 
-  // Crea le etichette una volta sola all'avvio
   function creaEtichette() {
-    // rimuovi etichette precedenti se presenti
     wheel.querySelectorAll('.label').forEach(el => el.remove());
-
-    const raggio = 165; // px dal centro
+    const raggio = 150;
     premi.forEach((premio) => {
       const label = document.createElement('div');
       label.className = 'label';
       label.textContent = premio.label;
-
-      // posiziona lungo il raggio e ruota il testo
       const rad = (premio.angolo - 90) * Math.PI / 180;
       const x = Math.cos(rad) * raggio;
       const y = Math.sin(rad) * raggio;
-
-      label.style.left = '50%';
-      label.style.top = '50%';
       label.style.transform =
-        'translate(' + x + 'px, ' + y + 'px) ' +
-        'translate(-50%, -50%) rotate(' + premio.angolo + 'deg)';
+        'translate(' + x + 'px, ' + y + 'px)';
       wheel.appendChild(label);
     });
   }
@@ -67,9 +150,6 @@
       btnGira.disabled = false;
       btnGira.textContent = 'GIRA LA RUOTA';
       timerRuota.textContent = 'Hai 1 giro disponibile oggi';
-      if (messaggioRuota.textContent === 'Premi per girare') {
-        // ok
-      }
     } else {
       btnGira.disabled = true;
       btnGira.textContent = 'GIRO GIÀ USATO';
@@ -86,27 +166,17 @@
     btnGira.disabled = true;
     messaggioRuota.textContent = 'La ruota sta girando...';
 
-    // scegli un premio a caso
     const indice = Math.floor(Math.random() * premi.length);
     const premio = premi[indice];
-
-    // numero di giri completi extra
     const giriExtra = 6 + Math.floor(Math.random() * 3);
-
-    // l'angolo vincente è già quello del premio
-    // per portarlo sotto la freccia (che sta in alto = 0deg),
-    // dobbiamo ruotare fino a -premio.angolo
     const angoloTarget = 360 * giriExtra + (360 - premio.angolo);
 
-    // salva la rotazione di partenza (mod 360)
     const partenza = rotazioneAttuale % 360;
-    // accumula la rotazione assoluta
     rotazioneAttuale += (angoloTarget - partenza);
     if (rotazioneAttuale < 0) rotazioneAttuale += 360 * giriExtra;
 
     wheel.style.transform = 'rotate(' + rotazioneAttuale + 'deg)';
 
-    // aspetta fine animazione
     setTimeout(() => {
       fineGiro(premio);
     }, 5100);
@@ -118,14 +188,18 @@
     if (premio.tipo === 'crediti') {
       saldo += premio.valore;
       messaggioRuota.textContent = 'HAI VINTO ' + premio.valore + ' CREDITI!';
+      mostraPopup('HAI VINTO!', '+' + premio.valore + ' crediti', 'vittoria');
     } else if (premio.tipo === 'moltiplicatore') {
       const bonus = saldo;
       saldo += bonus;
       messaggioRuota.textContent = 'MOLTIPLICATORE x2! +' + bonus + ' crediti';
+      mostraPopup('MOLTIPLICATORE x2!', '+' + bonus + ' crediti', 'vittoria');
     } else if (premio.tipo === 'ritenta') {
       messaggioRuota.textContent = 'RITENTA! Torna domani';
+      mostraPopup('RITENTA!', 'Torna domani per un altro giro', 'neutro');
     } else {
       messaggioRuota.textContent = 'NIENTE! Riprova domani';
+      mostraPopup('NIENTE', 'Riprova domani!', 'sconfitta');
     }
 
     saldoDisplay.textContent = saldo;
@@ -292,11 +366,20 @@
   document.getElementById('giocaCalcio').addEventListener('click', () => {
     const puntataInput = document.getElementById('puntataCalcio');
     const puntata = parseInt(puntataInput.value, 10);
-    if (isNaN(puntata) || puntata < 1) { alert('Puntata non valida'); return; }
-    if (puntata > saldo) { alert('Credito insufficiente!'); return; }
+    if (isNaN(puntata) || puntata < 1) {
+      mostraPopup('ATTENZIONE', 'Inserisci una puntata valida', 'sconfitta');
+      return;
+    }
+    if (puntata > saldo) {
+      mostraPopup('CREDITO INSUFFICIENTE', 'Non hai abbastanza crediti', 'sconfitta');
+      return;
+    }
 
     const selezioni = partite.filter(p => p.selected !== null);
-    if (selezioni.length === 0) { alert('Seleziona almeno un esito'); return; }
+    if (selezioni.length === 0) {
+      mostraPopup('ATTENZIONE', 'Seleziona almeno un esito', 'sconfitta');
+      return;
+    }
 
     let quotaTotale = 1;
     selezioni.forEach(p => quotaTotale *= parseFloat(p.quote[p.selected]));
@@ -315,16 +398,16 @@
     if (vittoria) {
       const vincita = Math.floor(puntata * quotaTotale);
       saldo += vincita;
-      alert('HAI VINTO! +' + vincita + ' crediti (quota ' + quotaTotale + ')');
+      mostraPopup('HAI VINTO!', '+' + vincita + ' crediti (quota ' + quotaTotale + ')', 'vittoria');
     } else {
-      alert('Hai perso la schedina.');
+      mostraPopup('HAI PERSO', 'Riprova con una nuova schedina', 'sconfitta');
     }
 
     partite = generaPartite();
     renderCalcio();
     aggiornaSaldo();
     puntataInput.value = Math.min(20, saldo) || 1;
-    if (saldo <= 0) { saldo = 500; aggiornaSaldo(); alert('Ricarica a 500'); }
+    if (saldo <= 0) { saldo = 500; aggiornaSaldo(); }
   });
 
   // ============================================================
@@ -333,9 +416,18 @@
   document.getElementById('giocaCavalli').addEventListener('click', () => {
     const puntataInput = document.getElementById('puntataCavalli');
     const puntata = parseInt(puntataInput.value, 10);
-    if (isNaN(puntata) || puntata < 1) { alert('Puntata non valida'); return; }
-    if (puntata > saldo) { alert('Credito insufficiente!'); return; }
-    if (fantasminoSelezionato === null) { alert('Seleziona un fantasmino'); return; }
+    if (isNaN(puntata) || puntata < 1) {
+      mostraPopup('ATTENZIONE', 'Inserisci una puntata valida', 'sconfitta');
+      return;
+    }
+    if (puntata > saldo) {
+      mostraPopup('CREDITO INSUFFICIENTE', 'Non hai abbastanza crediti', 'sconfitta');
+      return;
+    }
+    if (fantasminoSelezionato === null) {
+      mostraPopup('ATTENZIONE', 'Seleziona un fantasmino', 'sconfitta');
+      return;
+    }
 
     const f = fantasmini[fantasminoSelezionato];
     const esito = Math.random() < (1 / f.quota);
@@ -345,15 +437,17 @@
       const vincita = Math.floor(puntata * f.quota);
       saldo += vincita;
       messaggioCavalli.textContent = f.nome + ' ha vinto! +' + vincita + ' crediti';
+      mostraPopup('HAI VINTO!', f.nome + ' è arrivato primo! +' + vincita + ' crediti', 'vittoria');
     } else {
       messaggioCavalli.textContent = f.nome + ' non ha vinto. Riprova!';
+      mostraPopup('HAI PERSO', f.nome + ' non ha vinto. Riprova!', 'sconfitta');
     }
 
     aggiornaSaldo();
     fantasminoSelezionato = null;
     renderFantasmini();
     puntataInput.value = Math.min(20, saldo) || 1;
-    if (saldo <= 0) { saldo = 500; aggiornaSaldo(); alert('Ricarica a 500'); }
+    if (saldo <= 0) { saldo = 500; aggiornaSaldo(); }
   });
 
   // ============================================================
