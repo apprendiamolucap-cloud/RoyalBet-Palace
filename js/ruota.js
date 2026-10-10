@@ -1,5 +1,5 @@
 // ============================================================
-//  RUOTA DELLA FORTUNA — con generazione codici segreti
+//  RUOTA DELLA FORTUNA — v3 con gemme e zucche
 // ============================================================
 (function() {
 
@@ -9,7 +9,7 @@
     { label: '+100',   valore: 100,  tipo: 'crediti',        angolo: 112.5 },
     { label: 'Codice', valore: 0,    tipo: 'codice',         angolo: 157.5 },
     { label: '+250',   valore: 250,  tipo: 'crediti',        angolo: 202.5 },
-    { label: 'Niente', valore: 0,    tipo: 'niente',         angolo: 247.5 },
+    { label: '💎',     valore: 1,    tipo: 'gemma',          angolo: 247.5 },
     { label: '+500',   valore: 500,  tipo: 'crediti',        angolo: 292.5 },
     { label: '+1000',  valore: 1000, tipo: 'crediti',        angolo: 337.5 }
   ];
@@ -112,7 +112,6 @@
     const p = window.RB.profiloCorrente;
     if (!p) return;
 
-    // Aggiorna stats
     if (!p.stats) p.stats = { ruota: { giri: 0, vinti: 0 } };
     if (!p.stats.ruota) p.stats.ruota = { giri: 0, vinti: 0 };
     p.stats.ruota.giri++;
@@ -125,23 +124,22 @@
       window.RB.saldo += premio.valore;
       p.stats.ruota.vinti++;
       aggiornamenti.saldo = window.RB.saldo;
-      aggiornamenti.stats = p.stats;
       if (messaggioRuota) messaggioRuota.textContent = 'HAI VINTO ' + premio.valore + ' CREDITI!';
       window.RB.mostraPopup('HAI VINTO!', '+' + premio.valore + ' crediti', 'vittoria');
 
     } else if (premio.tipo === 'moltiplicatore') {
-      const bonus = window.RB.saldo;
-      window.RB.saldo += bonus;
+      // Moltiplicatore x2 per 2 minuti
+      p.moltiplicatore = {
+        tipo: 'x2',
+        scadenza: Date.now() + 120000
+      };
+      aggiornamenti.moltiplicatore = p.moltiplicatore;
       p.stats.ruota.vinti++;
-      aggiornamenti.saldo = window.RB.saldo;
-      aggiornamenti.stats = p.stats;
-      if (messaggioRuota) messaggioRuota.textContent = 'MOLTIPLICATORE x2! +' + bonus + ' crediti';
-      window.RB.mostraPopup('MOLTIPLICATORE x2!', '+' + bonus + ' crediti', 'vittoria');
+      if (messaggioRuota) messaggioRuota.textContent = 'MOLTIPLICATORE x2 attivo per 2 minuti!';
+      window.RB.mostraPopup('MOLTIPLICATORE x2!', 'Vincite doppie per 2 minuti', 'vittoria');
 
     } else if (premio.tipo === 'codice') {
-      // Genera un codice segreto
       const codiciSbloccati = p.codiciSbloccati || [];
-      // Scegli un codice non ancora sbloccato se possibile
       const disponibili = CODICI_RUOTA.filter(c => !codiciSbloccati.includes(c));
       const pool = disponibili.length > 0 ? disponibili : CODICI_RUOTA;
       const codiceVinto = pool[Math.floor(Math.random() * pool.length)];
@@ -149,16 +147,21 @@
       p.codiciSbloccati = codiciSbloccati;
       p.stats.ruota.vinti++;
       aggiornamenti.codiciSbloccati = codiciSbloccati;
-      aggiornamenti.stats = p.stats;
       if (messaggioRuota) messaggioRuota.textContent = '🎟️ HAI VINTO UN CODICE SEGRETO!';
       window.RB.mostraPopup('🎟️ CODICE SEGRETO!', 'Hai vinto il codice: ' + codiceVinto.toUpperCase() + '\nVai su "Codici" per attivarlo', 'codice');
 
-    } else {
-      if (messaggioRuota) messaggioRuota.textContent = 'NIENTE! Riprova domani';
-      window.RB.mostraPopup('NIENTE', 'Riprova domani!', 'sconfitta');
+    } else if (premio.tipo === 'gemma') {
+      p.gemme = (p.gemme || 0) + 1;
+      p.gemmeTotali = (p.gemmeTotali || 0) + 1;
+      aggiornamenti.gemme = p.gemme;
+      aggiornamenti.gemmeTotali = p.gemmeTotali;
+      p.stats.ruota.vinti++;
+      if (messaggioRuota) messaggioRuota.textContent = '💎 HAI VINTO UNA GEMMA!';
+      window.RB.mostraPopup('💎 GEMMA!', 'Hai vinto 1 gemma rara!', 'gemma');
     }
 
     window.RB.saldoDisplay.textContent = window.RB.saldo;
+    window.RB.aggiornaValute();
     localStorage.setItem(chiaveUltimoGiro(), getDataOggi());
     aggiornaStatoRuota();
 
@@ -171,13 +174,12 @@
 
     if (window.RB.saldo <= 0) {
       window.RB.saldo = 500;
-      window.RB.saldoDisplay.textContent = window.RB.saldo;
+      window.RB.saldoDisplay.textContent = 500;
       const r = window.RB.ref(window.RB.db, 'utenti/' + window.RB.utenteCorrente.uid);
       await window.RB.update(r, { saldo: 500 });
     }
   }
 
-  // Aspetta che window.RB esista
   function attesaRB(callback) {
     if (window.RB) callback();
     else setTimeout(() => attesaRB(callback), 50);
