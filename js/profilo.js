@@ -1,5 +1,5 @@
 // ============================================================
-//  PROFILO UTENTE — fix attesa window.RB
+//  PROFILO UTENTE — v4
 // ============================================================
 (function() {
 
@@ -33,7 +33,6 @@
     const creditiDiv = document.getElementById('profiloCrediti');
     if (creditiDiv) creditiDiv.textContent = window.RB.saldo;
 
-    // Renderizza selettori colore/badge
     if (window.RB.renderizzaPersonalizzazioni) {
       window.RB.renderizzaPersonalizzazioni();
     }
@@ -55,13 +54,13 @@
     p.bio = (bioInput && bioInput.value.trim()) || '';
 
     try {
-      const r = window.RB.ref(window.RB.db, 'utenti/' + window.RB.utenteCorrente.uid);
-      await window.RB.update(r, {
+      await window.RB.salvaProfilo({
         nome: p.nome,
         avatarUrl: p.avatarUrl,
         bio: p.bio,
         coloreNome: p.coloreNome || '#ffd966',
-        badge: p.badge || ''
+        badge: p.badge || '',
+        corniceAvatar: p.corniceAvatar || ''
       });
 
       window.RB.aggiornaNomeUI();
@@ -76,7 +75,6 @@
     }
   }
 
-  // Aspetta che window.RB esista
   function attesaRB(callback) {
     if (window.RB) callback();
     else setTimeout(() => attesaRB(callback), 50);
