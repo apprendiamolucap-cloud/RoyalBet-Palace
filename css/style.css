@@ -1424,7 +1424,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 16px;
+  padding: 16px 40px 16px 16px;
   background: linear-gradient(90deg, #0a1a10 0%, #14281c 100%);
   border: 2px solid #5b7a4b;
   border-radius: 20px;
@@ -1477,8 +1477,9 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: left 0.05s linear;
   z-index: 3;
+  will-change: left;
+  white-space: nowrap;
 }
 
 .runner img {
@@ -1486,6 +1487,7 @@ body {
   height: 42px;
   object-fit: contain;
   animation: fantasmino-bob 0.4s infinite alternate ease-in-out;
+  flex-shrink: 0;
 }
 
 .runner-name {
