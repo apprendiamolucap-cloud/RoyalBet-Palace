@@ -1,5 +1,6 @@
 // ============================================================
-//  ROYALBET PALACE — SCRIPT PRINCIPALE (v3 - fix Firebase)
+//  ROYALBET PALACE — SCRIPT PRINCIPALE (v4)
+//  Router + Login + Firebase + Valute + Popup
 // ============================================================
 
 window.addEventListener('firebaseReady', () => {
@@ -34,6 +35,9 @@ function avviaGioco() {
   const userName = document.getElementById('userName');
   const btnProfilo = document.getElementById('btnProfilo');
   const saldoDisplay = document.getElementById('saldoDisplay');
+  const gemmeDisplay = document.getElementById('gemmeDisplay');
+  const zuccheDisplay = document.getElementById('zuccheDisplay');
+  const zuccheBar = document.getElementById('zuccheBar');
 
   window.RB.saldoDisplay = saldoDisplay;
   window.RB.userAvatar = userAvatar;
@@ -42,6 +46,27 @@ function avviaGioco() {
   // ===== FUNZIONI BASE =====
   window.RB.aggiornaSaldo = function() {
     if (saldoDisplay) saldoDisplay.textContent = window.RB.saldo;
+  };
+
+  window.RB.aggiornaValute = function() {
+    const p = window.RB.profiloCorrente;
+    if (!p) return;
+
+    if (saldoDisplay) saldoDisplay.textContent = window.RB.saldo;
+    if (gemmeDisplay) gemmeDisplay.textContent = p.gemme || 0;
+    if (zuccheDisplay) zuccheDisplay.textContent = p.zucche || 0;
+
+    const gemmeBig = document.getElementById('gemmeCountBig');
+    if (gemmeBig) gemmeBig.textContent = p.gemme || 0;
+
+    // Mostra barra zucche solo a ottobre
+    if (zuccheBar) {
+      const mese = new Date().getMonth();
+      zuccheBar.style.display = (mese === 9) ? 'flex' : 'none';
+    }
+
+    // Aggiorna case
+    if (window.RB.renderizzaCase) window.RB.renderizzaCase();
   };
 
   window.RB.salvaSaldo = async function() {
@@ -57,28 +82,40 @@ function avviaGioco() {
     }
   };
 
-  window.RB.aggiornaNomeUI = function() {
-  if (!window.RB.profiloCorrente) return;
-  const p = window.RB.profiloCorrente;
-  if (userName) {
-    userName.textContent = (p.nome || 'Giocatore') + (p.badge ? ' ' + p.badge : '');
-    // Reset classi/stili precedenti
-    userName.classList.remove('rainbow');
-    userName.style.background = '';
-    userName.style.webkitBackgroundClip = '';
-    userName.style.backgroundClip = '';
-    userName.style.webkitTextFillColor = '';
-    userName.style.color = '';
-
-    if (p.coloreNome === 'rainbow') {
-      userName.classList.add('rainbow');
-    } else {
-      userName.style.color = p.coloreNome || '#ffd966';
+  window.RB.salvaProfilo = async function(campiExtra) {
+    if (!window.RB.utenteCorrente) return;
+    try {
+      const r = ref(db, 'utenti/' + window.RB.utenteCorrente.uid);
+      await update(r, Object.assign({
+        saldo: window.RB.saldo,
+        ultimoAccesso: Date.now()
+      }, campiExtra || {}));
+    } catch (e) {
+      console.error('Errore salvataggio profilo:', e);
     }
-  }
-  const av = p.avatarUrl || (window.RB.utenteCorrente && window.RB.utenteCorrente.photoURL);
-  if (av && userAvatar) userAvatar.src = av;
-};
+  };
+
+  window.RB.aggiornaNomeUI = function() {
+    if (!window.RB.profiloCorrente) return;
+    const p = window.RB.profiloCorrente;
+    if (userName) {
+      userName.textContent = (p.nome || 'Giocatore') + (p.badge ? ' ' + p.badge : '');
+      userName.classList.remove('rainbow');
+      userName.style.background = '';
+      userName.style.webkitBackgroundClip = '';
+      userName.style.backgroundClip = '';
+      userName.style.webkitTextFillColor = '';
+      userName.style.color = '';
+
+      if (p.coloreNome === 'rainbow') {
+        userName.classList.add('rainbow');
+      } else {
+        userName.style.color = p.coloreNome || '#ffd966';
+      }
+    }
+    const av = p.avatarUrl || (window.RB.utenteCorrente && window.RB.utenteCorrente.photoURL);
+    if (av && userAvatar) userAvatar.src = av;
+  };
 
   // ===== ROUTER =====
   window.RB.vaiA = function(pageId) {
@@ -93,6 +130,7 @@ function avviaGioco() {
     if (pageId === 'classifica' && window.RB.aggiornaClassifica) window.RB.aggiornaClassifica();
     if (pageId === 'banca' && window.RB.aggiornaBanca) window.RB.aggiornaBanca();
     if (pageId === 'codici' && window.RB.aggiornaCodici) window.RB.aggiornaCodici();
+    if (pageId === 'gemme' && window.RB.aggiornaValute) window.RB.aggiornaValute();
   };
 
   document.querySelectorAll('.nav-page').forEach(btn => {
@@ -129,7 +167,6 @@ function avviaGioco() {
       const snapshot = await get(r);
       if (snapshot.exists()) {
         const dati = snapshot.val();
-        // Completa campi mancanti senza sovrascrivere esistenti
         window.RB.profiloCorrente = {
           saldo: dati.saldo !== undefined ? dati.saldo : 500,
           nome: dati.nome || user.displayName || 'Giocatore',
@@ -139,12 +176,33 @@ function avviaGioco() {
           coloreNome: dati.coloreNome || '#ffd966',
           badge: dati.badge || '',
           codiciSbloccati: dati.codiciSbloccati || [],
+
+          // Valute
+          gemme: dati.gemme || 0,
+          gemmeTotali: dati.gemmeTotali || 0,
+          zucche: dati.zucche || 0,
+          zuccheTotali: dati.zuccheTotali || 0,
+
+          // Moltiplicatori
+          moltiplicatore: dati.moltiplicatore || { tipo: null, scadenza: 0 },
+
+          // Case
+          case: dati.case || { baracca: 0, villa: 0, castello: 0 },
+          ultimoRiscattoCase: dati.ultimoRiscattoCase || Date.now(),
+
+          // Halloween
+          ultimoDolcetto: dati.ultimoDolcetto || 0,
+          cosmeticiSbloccati: dati.cosmeticiSbloccati || [],
+
+          // Banca
           deposito: dati.deposito || 0,
           prestito: dati.prestito || 0,
           ultimoInteresseDeposito: dati.ultimoInteresseDeposito || Date.now(),
           ultimaVisitaFedelta: dati.ultimaVisitaFedelta || '',
           giorniFedelta: dati.giorniFedelta || 0,
           bonusFedeltaRiscattato: dati.bonusFedeltaRiscattato === true,
+
+          // Stats
           stats: dati.stats || {
             calcio: { giocate: 0, vinte: 0 },
             fantasmini: { giocate: 0, vinte: 0 },
@@ -164,6 +222,15 @@ function avviaGioco() {
           coloreNome: '#ffd966',
           badge: '',
           codiciSbloccati: [],
+          gemme: 0,
+          gemmeTotali: 0,
+          zucche: 0,
+          zuccheTotali: 0,
+          moltiplicatore: { tipo: null, scadenza: 0 },
+          case: { baracca: 0, villa: 0, castello: 0 },
+          ultimoRiscattoCase: Date.now(),
+          ultimoDolcetto: 0,
+          cosmeticiSbloccati: [],
           deposito: 0,
           prestito: 0,
           ultimoInteresseDeposito: Date.now(),
@@ -179,19 +246,19 @@ function avviaGioco() {
         await set(r, window.RB.profiloCorrente);
       }
       window.RB.aggiornaSaldo();
+      window.RB.aggiornaValute();
       window.RB.aggiornaNomeUI();
     } catch (e) {
       console.error('Errore caricamento profilo:', e);
     }
   };
 
-  // ===== REGISTRA VISITA FEDELTÀ (versione robusta) =====
+  // ===== REGISTRA VISITA FEDELTÀ =====
   window.RB.registraVisitaFedelta = async function() {
     if (!window.RB.utenteCorrente || !window.RB.profiloCorrente) return;
     const oggi = new Date().toISOString().slice(0, 10);
     const p = window.RB.profiloCorrente;
 
-    // Se già registrato oggi, esci
     if (p.ultimaVisitaFedelta === oggi) return;
 
     const ieri = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
@@ -220,6 +287,71 @@ function avviaGioco() {
     }
   };
 
+  // ===== INTERESSE DEPOSITO =====
+  window.RB.applicaInteresseDeposito = async function() {
+    if (!window.RB.utenteCorrente || !window.RB.profiloCorrente) return;
+    const p = window.RB.profiloCorrente;
+    if (!p.deposito || p.deposito <= 0) return;
+    const ora = Date.now();
+    const ultimo = p.ultimoInteresseDeposito || ora;
+    const orePassate = (ora - ultimo) / 3600000;
+    if (orePassate >= 24) {
+      const cicli = Math.floor(orePassate / 24);
+      const interesse = Math.floor(p.deposito * 0.02 * cicli);
+      p.deposito += interesse;
+      p.ultimoInteresseDeposito = ultimo + cicli * 86400000;
+      try {
+        const r = ref(db, 'utenti/' + window.RB.utenteCorrente.uid);
+        await update(r, {
+          deposito: p.deposito,
+          ultimoInteresseDeposito: p.ultimoInteresseDeposito
+        });
+      } catch (e) {
+        console.error('Errore interesse:', e);
+      }
+    }
+  };
+
+  // ===== CASE: GENERAZIONE AUTOMATICA DI CREDITI =====
+  window.RB.riscuotiCase = async function() {
+    if (!window.RB.utenteCorrente || !window.RB.profiloCorrente) return;
+    const p = window.RB.profiloCorrente;
+    if (!p.case) return;
+
+    const ora = Date.now();
+    const ultimo = p.ultimoRiscattoCase || ora;
+    const minutiPassati = Math.floor((ora - ultimo) / 60000);
+    if (minutiPassati < 1) return;
+
+    const produzioneMin = (p.case.baracca || 0) * 1 + (p.case.villa || 0) * 5 + (p.case.castello || 0) * 20;
+    if (produzioneMin <= 0) {
+      p.ultimoRiscattoCase = ora;
+      return;
+    }
+
+    const guadagno = produzioneMin * minutiPassati;
+    window.RB.saldo += guadagno;
+    p.ultimoRiscattoCase = ora;
+
+    window.RB.aggiornaSaldo();
+    try {
+      const r = ref(db, 'utenti/' + window.RB.utenteCorrente.uid);
+      await update(r, {
+        saldo: window.RB.saldo,
+        ultimoRiscattoCase: p.ultimoRiscattoCase
+      });
+    } catch (e) {
+      console.error('Errore riscossione case:', e);
+    }
+  };
+
+  // Timer automatico ogni 60 secondi
+  setInterval(() => {
+    if (window.RB.utenteCorrente && window.RB.riscuotiCase) {
+      window.RB.riscuotiCase();
+    }
+  }, 60000);
+
   // ===== AUTH STATE =====
   onAuthStateChanged(auth, async (user) => {
     if (user) {
@@ -233,12 +365,16 @@ function avviaGioco() {
 
       await window.RB.caricaProfilo(user);
       await window.RB.registraVisitaFedelta();
+      await window.RB.applicaInteresseDeposito();
+      await window.RB.riscuotiCase();
 
       if (window.RB.aggiornaStatoRuota) window.RB.aggiornaStatoRuota();
       if (window.RB.renderCalcio) window.RB.renderCalcio();
       if (window.RB.renderFantasmini) window.RB.renderFantasmini();
       if (window.RB.aggiornaBanca) window.RB.aggiornaBanca();
       if (window.RB.aggiornaCodici) window.RB.aggiornaCodici();
+      if (window.RB.renderizzaCase) window.RB.renderizzaCase();
+      if (window.RB.initNegozio) window.RB.initNegozio();
     } else {
       window.RB.utenteCorrente = null;
       window.RB.profiloCorrente = null;
@@ -333,6 +469,10 @@ function avviaGioco() {
       popupIcon.textContent = '🎟️';
       popupTitle.style.color = '#ffd966';
       lanciaConfetti();
+    } else if (tipo === 'gemma') {
+      popupIcon.textContent = '💎';
+      popupTitle.style.color = '#d0a0ff';
+      lanciaConfetti();
     } else {
       popupIcon.textContent = '🎰';
       popupTitle.style.color = '#ffd966';
@@ -346,36 +486,16 @@ function avviaGioco() {
     });
   }
 
-  // ===== APPLICA INTERESSE DEPOSITO =====
-  window.RB.applicaInteresseDeposito = async function() {
-    if (!window.RB.utenteCorrente || !window.RB.profiloCorrente) return;
+  // ===== UTILITY MOLTIPLICATORE ATTIVO =====
+  window.RB.getMoltiplicatoreAttivo = function() {
     const p = window.RB.profiloCorrente;
-    if (!p.deposito || p.deposito <= 0) return;
-    const ora = Date.now();
-    const ultimo = p.ultimoInteresseDeposito || ora;
-    const orePassate = (ora - ultimo) / 3600000;
-    if (orePassate >= 24) {
-      const cicli = Math.floor(orePassate / 24);
-      const interesse = Math.floor(p.deposito * 0.02 * cicli);
-      p.deposito += interesse;
-      p.ultimoInteresseDeposito = ultimo + cicli * 86400000;
-      try {
-        const r = ref(db, 'utenti/' + window.RB.utenteCorrente.uid);
-        await update(r, {
-          deposito: p.deposito,
-          ultimoInteresseDeposito: p.ultimoInteresseDeposito
-        });
-      } catch (e) {
-        console.error('Errore interesse:', e);
-      }
+    if (!p || !p.moltiplicatore) return 1;
+    if (p.moltiplicatore.tipo && p.moltiplicatore.scadenza > Date.now()) {
+      return p.moltiplicatore.tipo === 'x5' ? 5 : 2;
     }
+    return 1;
   };
 
   // ===== AVVIO =====
   window.RB.aggiornaSaldo();
-
-  // Applica interesse deposito al login
-  setTimeout(() => {
-    if (window.RB.applicaInteresseDeposito) window.RB.applicaInteresseDeposito();
-  }, 2000);
 }
