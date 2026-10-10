@@ -10,17 +10,51 @@
 <body>
 <div class="casino-container">
 
-  <div style="text-align:center; margin-bottom:12px;">
+  <div class="logo-wrap">
     <img src="https://i.imgur.com/wIAdYpR.jpeg"
          alt="RoyalBet Palace"
-         style="height:140px; border-radius:16px; box-shadow: 0 8px 20px black;">
+         class="logo-img">
   </div>
   <div class="brand-subtitle">Schedine &amp; Corse Reali</div>
 
-  <div class="credit-bar">
-    <img src="https://cdn-icons-png.flaticon.com/128/2331/2331941.png" alt="gettoni">
-    CREDITO: <span id="saldoDisplay" class="saldo">500</span>
-    <img src="https://cdn-icons-png.flaticon.com/128/2331/2331941.png" alt="gettoni">
+  <div class="top-bar">
+    <div class="credit-bar">
+      <img src="https://cdn-icons-png.flaticon.com/128/2331/2331941.png" alt="gettoni">
+      CREDITO: <span id="saldoDisplay" class="saldo">500</span>
+      <img src="https://cdn-icons-png.flaticon.com/128/2331/2331941.png" alt="gettoni">
+    </div>
+  </div>
+
+  <!-- RUOTA DELLA FORTUNA -->
+  <div class="ruota-section">
+    <div class="ruota-header">
+      <h2>RUOTA DELLA FORTUNA</h2>
+      <p class="ruota-info">Un giro gratis ogni giorno · Tenta la sorte!</p>
+    </div>
+
+    <div class="ruota-container">
+      <div class="wheel-wrap">
+        <div class="wheel-pointer"></div>
+        <canvas id="wheelCanvas" width="500" height="500"></canvas>
+      </div>
+
+      <div class="ruota-controls">
+        <button class="play-btn big-btn" id="giraRuota">GIRA LA RUOTA</button>
+        <div class="ruota-messaggio" id="ruotaMessaggio">Premi per girare</div>
+        <div class="ruota-timer" id="ruotaTimer"></div>
+      </div>
+    </div>
+
+    <div class="premi-legend">
+      <div class="premio-tag">+50 crediti</div>
+      <div class="premio-tag">+100 crediti</div>
+      <div class="premio-tag">+250 crediti</div>
+      <div class="premio-tag">x2 moltiplicatore</div>
+      <div class="premio-tag">+500 crediti</div>
+      <div class="premio-tag">Tenta ancora</div>
+      <div class="premio-tag">+1000 crediti</div>
+      <div class="premio-tag">Niente</div>
+    </div>
   </div>
 
   <div class="section-grid">
@@ -58,8 +92,8 @@
 
   </div>
 
-  <div style="text-align:center; padding:20px 0 0; color:#c9a95c; font-size:0.85rem;">
-    Icone: Flaticon - Freepik
+  <div class="footer-credits">
+    Icone: Flaticon - Freepik · Logo: RoyalBet Palace
   </div>
 </div>
 
