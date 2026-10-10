@@ -1,3 +1,7 @@
+// ============================================================
+//  ROYALBET PALACE — SCRIPT PRINCIPALE (v2)
+// ============================================================
+
 window.addEventListener('firebaseReady', () => {
   avviaGioco();
 });
@@ -5,17 +9,20 @@ window.addEventListener('firebaseReady', () => {
 function avviaGioco() {
   const { auth, db, provider, signInWithPopup, signOut, onAuthStateChanged, ref, get, set, update } = window.FB;
 
-  let saldo = 500;
-  let utenteCorrente = null;
-  let salvataggioInCorso = false;
-  let profiloCorrente = null;
+  // ===== STATO GLOBALE =====
+  window.RB = {
+    saldo: 500,
+    utenteCorrente: null,
+    profiloCorrente: null,
+    db, ref, get, set, update, auth
+  };
 
   const IMG_PALLONE = 'https://cdn-icons-png.flaticon.com/128/12065/12065246.png';
   const IMG_FANTASMINO = 'https://cdn-icons-png.flaticon.com/128/706/706023.png';
+  window.RB.IMG_PALLONE = IMG_PALLONE;
+  window.RB.IMG_FANTASMINO = IMG_FANTASMINO;
 
-  // ============================================================
-  //  RIFERIMENTI DOM
-  // ============================================================
+  // ===== RIFERIMENTI DOM =====
   const schermataLogin = document.getElementById('schermataLogin');
   const contenutoGioco = document.getElementById('contenutoGioco');
   const userLoggedOut = document.getElementById('userLoggedOut');
@@ -26,57 +33,54 @@ function avviaGioco() {
   const userAvatar = document.getElementById('userAvatar');
   const userName = document.getElementById('userName');
   const btnProfilo = document.getElementById('btnProfilo');
-  const btnClassifica = document.getElementById('btnClassifica');
   const saldoDisplay = document.getElementById('saldoDisplay');
 
-  // ============================================================
-  //  DATABASE — CARICA / SALVA
-  // ============================================================
-  async function caricaProfilo(user) {
-    try {
-      const r = ref(db, 'utenti/' + user.uid);
-      const snapshot = await get(r);
-      if (snapshot.exists()) {
-        profiloCorrente = snapshot.val();
-        saldo = profiloCorrente.saldo ?? 500;
-      } else {
-        saldo = 500;
-        profiloCorrente = {
-          saldo: 500,
-          nome: user.displayName || 'Giocatore',
-          email: user.email,
-          avatarUrl: user.photoURL || '',
-          bio: '',
-          ultimoAccesso: Date.now()
-        };
-        await set(r, profiloCorrente);
-      }
-      aggiornaSaldo();
-      aggiornaClassifica();
-    } catch (e) {
-      console.error('Errore caricamento profilo:', e);
-    }
-  }
+  window.RB.saldoDisplay = saldoDisplay;
+  window.RB.userAvatar = userAvatar;
+  window.RB.userName = userName;
 
-  async function salvaSaldo() {
-    if (!utenteCorrente || salvataggioInCorso) return;
-    salvataggioInCorso = true;
+  // ===== FUNZIONI ESPOSTE =====
+  window.RB.aggiornaSaldo = function() {
+    saldoDisplay.textContent = window.RB.saldo;
+  };
+
+  window.RB.salvaSaldo = async function() {
+    if (!window.RB.utenteCorrente) return;
     try {
-      const r = ref(db, 'utenti/' + utenteCorrente.uid);
+      const r = ref(db, 'utenti/' + window.RB.utenteCorrente.uid);
       await update(r, {
-        saldo: saldo,
+        saldo: window.RB.saldo,
         ultimoAccesso: Date.now()
       });
     } catch (e) {
-      console.error('Errore salvataggio:', e);
-    } finally {
-      salvataggioInCorso = false;
+      console.error('Errore salvataggio saldo:', e);
     }
-  }
+  };
 
-  // ============================================================
-  //  LOGIN / LOGOUT
-  // ============================================================
+  // ===== ROUTER =====
+  window.RB.vaiA = function(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const page = document.getElementById('page-' + pageId);
+    if (page) page.classList.add('active');
+
+    document.querySelectorAll('.nav-page').forEach(b => {
+      b.classList.toggle('active', b.dataset.page === pageId);
+    });
+
+    if (pageId === 'classifica' && window.RB.aggiornaClassifica) window.RB.aggiornaClassifica();
+    if (pageId === 'banca' && window.RB.aggiornaBanca) window.RB.aggiornaBanca();
+    if (pageId === 'codici' && window.RB.aggiornaCodici) window.RB.aggiornaCodici();
+  };
+
+  document.querySelectorAll('.nav-page').forEach(btn => {
+    btn.addEventListener('click', () => window.RB.vaiA(btn.dataset.page));
+  });
+
+  document.querySelectorAll('.home-card').forEach(card => {
+    card.addEventListener('click', () => window.RB.vaiA(card.dataset.goto));
+  });
+
+  // ===== LOGIN / LOGOUT =====
   async function faiLogin() {
     try {
       await signInWithPopup(auth, provider);
@@ -89,36 +93,94 @@ function avviaGioco() {
   if (loginBtnWall) loginBtnWall.addEventListener('click', faiLogin);
 
   logoutBtn.addEventListener('click', async () => {
-    await salvaSaldo();
+    await window.RB.salvaSaldo();
     await signOut(auth);
   });
 
+  // ===== CARICA PROFILO =====
+  window.RB.caricaProfilo = async function(user) {
+    try {
+      const r = ref(db, 'utenti/' + user.uid);
+      const snapshot = await get(r);
+      if (snapshot.exists()) {
+        window.RB.profiloCorrente = snapshot.val();
+        window.RB.saldo = window.RB.profiloCorrente.saldo ?? 500;
+      } else {
+        window.RB.saldo = 500;
+        window.RB.profiloCorrente = {
+          saldo: 500,
+          nome: user.displayName || 'Giocatore',
+          email: user.email,
+          avatarUrl: user.photoURL || '',
+          bio: '',
+          coloreNome: '#ffd966',
+          badge: '',
+          codiciSbloccati: [],
+          deposito: 0,
+          prestito: 0,
+          ultimoInteresseDeposito: Date.now(),
+          ultimaVisitaFedelta: '',
+          giorniFedelta: 0,
+          bonusFedeltaRiscattato: false,
+          stats: {
+            calcio: { giocate: 0, vinte: 0 },
+            fantasmini: { giocate: 0, vinte: 0 },
+            ruota: { giri: 0, vinti: 0 }
+          }
+        };
+        await set(r, window.RB.profiloCorrente);
+      }
+      window.RB.aggiornaSaldo();
+      window.RB.aggiornaNomeUI();
+    } catch (e) {
+      console.error('Errore caricamento profilo:', e);
+    }
+  };
+
+  window.RB.aggiornaNomeUI = function() {
+    if (!window.RB.profiloCorrente) return;
+    const p = window.RB.profiloCorrente;
+    userName.textContent = (p.nome || 'Giocatore') + (p.badge ? ' ' + p.badge : '');
+    userName.style.color = p.coloreNome || '#ffd966';
+    const av = p.avatarUrl || window.RB.utenteCorrente?.photoURL;
+    if (av) {
+      userAvatar.src = av;
+    }
+  };
+
+  // ===== AUTH STATE =====
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      utenteCorrente = user;
+      window.RB.utenteCorrente = user;
       schermataLogin.style.display = 'none';
       contenutoGioco.style.display = 'block';
       userLoggedOut.style.display = 'none';
       userLoggedIn.style.display = 'flex';
       userAvatar.src = user.photoURL || 'https://cdn-icons-png.flaticon.com/512/1077/1077114.png';
       userName.textContent = user.displayName || user.email;
-      await caricaProfilo(user);
-      aggiornaStatoRuota();
+
+      await window.RB.caricaProfilo(user);
+      await window.RB.registraVisitaFedelta();
+
+      if (window.RB.aggiornaStatoRuota) window.RB.aggiornaStatoRuota();
+      if (window.RB.renderCalcio) window.RB.renderCalcio();
+      if (window.RB.renderFantasmini) window.RB.renderFantasmini();
+      if (window.RB.aggiornaBanca) window.RB.aggiornaBanca();
+      if (window.RB.aggiornaCodici) window.RB.aggiornaCodici();
+      if (window.RB.aggiornaClassifica) window.RB.aggiornaClassifica();
     } else {
-      utenteCorrente = null;
-      profiloCorrente = null;
+      window.RB.utenteCorrente = null;
+      window.RB.profiloCorrente = null;
       schermataLogin.style.display = 'flex';
       contenutoGioco.style.display = 'none';
       userLoggedOut.style.display = 'block';
       userLoggedIn.style.display = 'none';
-      saldo = 500;
-      aggiornaSaldo();
+      window.RB.saldo = 500;
+      window.RB.aggiornaSaldo();
     }
   });
 
-  // ============================================================
-  //  POPUP + CONFETTI
-  // ============================================================
+  // ===== POPUP + CONFETTI =====
   const popupOverlay = document.getElementById('popupOverlay');
   const popupTitle = document.getElementById('popupTitle');
   const popupIcon = document.getElementById('popupIcon');
@@ -151,8 +213,7 @@ function avviaGioco() {
         dy: 2 + Math.random() * 4,
         rot: Math.random() * Math.PI * 2,
         rotSpeed: -0.15 + Math.random() * 0.3,
-        colore: colori[Math.floor(Math.random() * colori.length)],
-        vita: 1
+        colore: colori[Math.floor(Math.random() * colori.length)]
       });
     }
     if (confettiAnim) cancelAnimationFrame(confettiAnim);
@@ -164,7 +225,7 @@ function avviaGioco() {
     let attivi = 0;
     confettiParticles.forEach(p => {
       p.x += p.dx; p.y += p.dy; p.dy += 0.06; p.rot += p.rotSpeed;
-      if (p.y > confettiCanvas.height + 40) { p.vita = 0; }
+      if (p.y > confettiCanvas.height + 40) { /* morto */ }
       else {
         attivi++;
         confettiCtx.save();
@@ -179,7 +240,7 @@ function avviaGioco() {
     else confettiCanvas.style.display = 'none';
   }
 
-  function mostraPopup(titolo, testo, tipo) {
+  window.RB.mostraPopup = function(titolo, testo, tipo) {
     popupTitle.textContent = titolo;
     popupText.textContent = testo;
     if (tipo === 'vittoria') {
@@ -189,481 +250,66 @@ function avviaGioco() {
     } else if (tipo === 'sconfitta') {
       popupIcon.textContent = '😞';
       popupTitle.style.color = '#ff8a8a';
+    } else if (tipo === 'codice') {
+      popupIcon.textContent = '🎟️';
+      popupTitle.style.color = '#ffd966';
+      lanciaConfetti();
     } else {
       popupIcon.textContent = '🎰';
       popupTitle.style.color = '#ffd966';
     }
     popupOverlay.classList.add('show');
-  }
+  };
 
   popupBtn.addEventListener('click', () => {
     popupOverlay.classList.remove('show');
   });
 
-  // ============================================================
-  //  RUOTA
-  // ============================================================
-  const premi = [
-    { label: '+50', valore: 50, tipo: 'crediti', angolo: 22.5 },
-    { label: 'x2', valore: 2, tipo: 'moltiplicatore', angolo: 67.5 },
-    { label: '+100', valore: 100, tipo: 'crediti', angolo: 112.5 },
-    { label: 'Tenta', valore: 0, tipo: 'ritenta', angolo: 157.5 },
-    { label: '+250', valore: 250, tipo: 'crediti', angolo: 202.5 },
-    { label: 'Niente', valore: 0, tipo: 'niente', angolo: 247.5 },
-    { label: '+500', valore: 500, tipo: 'crediti', angolo: 292.5 },
-    { label: '+1000', valore: 1000, tipo: 'crediti', angolo: 337.5 }
-  ];
+  // ===== REGISTRA VISITA FEDELTÀ =====
+  window.RB.registraVisitaFedelta = async function() {
+    if (!window.RB.utenteCorrente || !window.RB.profiloCorrente) return;
+    const oggi = new Date().toISOString().slice(0, 10);
+    const p = window.RB.profiloCorrente;
+    if (p.ultimaVisitaFedelta === oggi) return;
 
-  const wheel = document.getElementById('wheel');
-  const btnGira = document.getElementById('giraRuota');
-  const messaggioRuota = document.getElementById('ruotaMessaggio');
-  const timerRuota = document.getElementById('ruotaTimer');
+    const ieri = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    if (p.ultimaVisitaFedelta === ieri) {
+      p.giorniFedelta = (p.giorniFedelta || 0) + 1;
+    } else {
+      p.giorniFedelta = 1;
+    }
+    p.ultimaVisitaFedelta = oggi;
+    if (p.giorniFedelta >= 7) p.bonusFedeltaRiscattato = false;
 
-  let rotazioneAttuale = 0;
-  let inRotazione = false;
-
-  function creaEtichette() {
-    wheel.querySelectorAll('.label').forEach(el => el.remove());
-    const raggio = 150;
-    premi.forEach((premio) => {
-      const label = document.createElement('div');
-      label.className = 'label';
-      label.textContent = premio.label;
-      const rad = (premio.angolo - 90) * Math.PI / 180;
-      const x = Math.cos(rad) * raggio;
-      const y = Math.sin(rad) * raggio;
-      label.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
-      wheel.appendChild(label);
+    const r = ref(db, 'utenti/' + window.RB.utenteCorrente.uid);
+    await update(r, {
+      ultimaVisitaFedelta: p.ultimaVisitaFedelta,
+      giorniFedelta: p.giorniFedelta,
+      bonusFedeltaRiscattato: p.bonusFedeltaRiscattato
     });
-  }
+  };
 
-  function getDataOggi() {
-    const d = new Date();
-    return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
-  }
-
-  function chiaveUltimoGiro() {
-    return utenteCorrente ? 'ultimoGiroRuota_' + utenteCorrente.uid : 'ultimoGiroRuota_ospite';
-  }
-
-  function puoGirare() {
-    return localStorage.getItem(chiaveUltimoGiro()) !== getDataOggi();
-  }
-
-  function aggiornaStatoRuota() {
-    if (!utenteCorrente) return;
-    if (puoGirare()) {
-      btnGira.disabled = false;
-      btnGira.textContent = 'GIRA LA RUOTA';
-      timerRuota.textContent = 'Hai 1 giro disponibile oggi';
-    } else {
-      btnGira.disabled = true;
-      btnGira.textContent = 'GIRO GIÀ USATO';
-      timerRuota.textContent = 'Torna domani per un nuovo giro';
-      messaggioRuota.textContent = 'Ci sei già passato oggi!';
-    }
-  }
-
-  function giraRuota() {
-    if (!utenteCorrente) return;
-    if (inRotazione || !puoGirare()) return;
-    inRotazione = true;
-    btnGira.disabled = true;
-    messaggioRuota.textContent = 'La ruota sta girando...';
-
-    const indice = Math.floor(Math.random() * premi.length);
-    const premio = premi[indice];
-    const giriExtra = 6 + Math.floor(Math.random() * 3);
-    const angoloTarget = 360 * giriExtra + (360 - premio.angolo);
-    const partenza = rotazioneAttuale % 360;
-    rotazioneAttuale += (angoloTarget - partenza);
-    if (rotazioneAttuale < 0) rotazioneAttuale += 360 * giriExtra;
-
-    wheel.style.transform = 'rotate(' + rotazioneAttuale + 'deg)';
-    setTimeout(() => fineGiro(premio), 5100);
-  }
-
-  function fineGiro(premio) {
-    inRotazione = false;
-    if (premio.tipo === 'crediti') {
-      saldo += premio.valore;
-      messaggioRuota.textContent = 'HAI VINTO ' + premio.valore + ' CREDITI!';
-      mostraPopup('HAI VINTO!', '+' + premio.valore + ' crediti', 'vittoria');
-    } else if (premio.tipo === 'moltiplicatore') {
-      const bonus = saldo;
-      saldo += bonus;
-      messaggioRuota.textContent = 'MOLTIPLICATORE x2! +' + bonus + ' crediti';
-      mostraPopup('MOLTIPLICATORE x2!', '+' + bonus + ' crediti', 'vittoria');
-    } else if (premio.tipo === 'ritenta') {
-      messaggioRuota.textContent = 'RITENTA! Torna domani';
-      mostraPopup('RITENTA!', 'Torna domani per un altro giro', 'neutro');
-    } else {
-      messaggioRuota.textContent = 'NIENTE! Riprova domani';
-      mostraPopup('NIENTE', 'Riprova domani!', 'sconfitta');
-    }
-    saldoDisplay.textContent = saldo;
-    localStorage.setItem(chiaveUltimoGiro(), getDataOggi());
-    aggiornaStatoRuota();
-    salvaSaldo();
-    if (saldo <= 0) {
-      saldo = 500;
-      saldoDisplay.textContent = saldo;
-      salvaSaldo();
-    }
-  }
-
-  btnGira.addEventListener('click', giraRuota);
-  creaEtichette();
-
-  // ============================================================
-  //  CALCIO
-  // ============================================================
-  const squadre = [
-    { nome: 'Juventus', img: IMG_PALLONE },
-    { nome: 'Inter', img: IMG_PALLONE },
-    { nome: 'Milan', img: IMG_PALLONE },
-    { nome: 'Roma', img: IMG_PALLONE },
-    { nome: 'Napoli', img: IMG_PALLONE },
-    { nome: 'Lazio', img: IMG_PALLONE }
-  ];
-
-  function generaPartite() {
-    const partite = [];
-    const copia = [...squadre];
-    for (let i = copia.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [copia[i], copia[j]] = [copia[j], copia[i]];
-    }
-    for (let i = 0; i < 3; i++) {
-      partite.push({
-        casa: copia[i * 2],
-        trasferta: copia[i * 2 + 1],
-        quote: {
-          1: (1.5 + Math.random() * 3).toFixed(2),
-          X: (2.8 + Math.random() * 2.5).toFixed(2),
-          2: (1.8 + Math.random() * 3.5).toFixed(2)
-        }
-      });
-    }
-    return partite;
-  }
-
-  let partite = generaPartite();
-
-  const matchList = document.getElementById('matchList');
-  const horseList = document.getElementById('horseList');
-  const messaggioCavalli = document.getElementById('messaggioCavalli');
-
-  function aggiornaSaldo() {
-    saldoDisplay.textContent = saldo;
-  }
-
-  function renderCalcio() {
-    matchList.innerHTML = '';
-    partite.forEach((partita) => {
-      const row = document.createElement('div');
-      row.className = 'match-row';
-      const teamCasa = document.createElement('div');
-      teamCasa.className = 'team';
-      const imgCasa = document.createElement('img');
-      imgCasa.src = partita.casa.img;
-      imgCasa.alt = partita.casa.nome;
-      const spanCasa = document.createElement('span');
-      spanCasa.textContent = partita.casa.nome;
-      teamCasa.appendChild(imgCasa); teamCasa.appendChild(spanCasa);
-
-      const teamTrasf = document.createElement('div');
-      teamTrasf.className = 'team';
-      const imgTrasf = document.createElement('img');
-      imgTrasf.src = partita.trasferta.img;
-      imgTrasf.alt = partita.trasferta.nome;
-      const spanTrasf = document.createElement('span');
-      spanTrasf.textContent = partita.trasferta.nome;
-      teamTrasf.appendChild(imgTrasf); teamTrasf.appendChild(spanTrasf);
-
-      const oddsDiv = document.createElement('div');
-      oddsDiv.className = 'odds-buttons';
-      ['1', 'X', '2'].forEach(esito => {
-        const btn = document.createElement('button');
-        btn.className = 'odds-btn';
-        if (partita.selected === esito) btn.classList.add('selected');
-        btn.textContent = esito + ' ' + partita.quote[esito];
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          partita.selected = (partita.selected === esito) ? null : esito;
-          renderCalcio();
-        });
-        oddsDiv.appendChild(btn);
-      });
-
-      row.appendChild(teamCasa);
-      row.appendChild(teamTrasf);
-      row.appendChild(oddsDiv);
-      matchList.appendChild(row);
-    });
-  }
-
-  // ============================================================
-  //  FANTASMINI
-  // ============================================================
-  const fantasmini = [
-    { nome: 'Blinky', img: IMG_FANTASMINO, quota: 2.5 },
-    { nome: 'Pinky', img: IMG_FANTASMINO, quota: 3.2 },
-    { nome: 'Inky', img: IMG_FANTASMINO, quota: 4.0 },
-    { nome: 'Clyde', img: IMG_FANTASMINO, quota: 5.5 },
-    { nome: 'Spettro', img: IMG_FANTASMINO, quota: 6.0 }
-  ];
-  let fantasminoSelezionato = null;
-
-  function renderFantasmini() {
-    horseList.innerHTML = '';
-    fantasmini.forEach((fantasmino, idx) => {
-      const card = document.createElement('div');
-      card.className = 'horse-card';
-      if (fantasminoSelezionato === idx) card.classList.add('selected');
-
-      const infoDiv = document.createElement('div');
-      infoDiv.className = 'horse-info';
-      const img = document.createElement('img');
-      img.src = fantasmino.img;
-      img.alt = fantasmino.nome;
-      const nomeSpan = document.createElement('span');
-      nomeSpan.className = 'horse-name';
-      nomeSpan.textContent = fantasmino.nome;
-      infoDiv.appendChild(img); infoDiv.appendChild(nomeSpan);
-
-      const quotaSpan = document.createElement('span');
-      quotaSpan.className = 'horse-quota';
-      quotaSpan.textContent = 'x' + fantasmino.quota.toFixed(2);
-
-      card.appendChild(infoDiv);
-      card.appendChild(quotaSpan);
-
-      card.addEventListener('click', () => {
-        fantasminoSelezionato = (fantasminoSelezionato === idx) ? null : idx;
-        renderFantasmini();
-        messaggioCavalli.textContent = fantasminoSelezionato !== null
-          ? 'Hai puntato su ' + fantasmini[fantasminoSelezionato].nome
-          : 'Seleziona un fantasmino e punta';
-      });
-
-      horseList.appendChild(card);
-    });
-  }
-
-  // ============================================================
-  //  GIOCO CALCIO
-  // ============================================================
-  document.getElementById('giocaCalcio').addEventListener('click', () => {
-    if (!utenteCorrente) return;
-    const puntataInput = document.getElementById('puntataCalcio');
-    const puntata = parseInt(puntataInput.value, 10);
-    if (isNaN(puntata) || puntata < 1) { mostraPopup('ATTENZIONE', 'Inserisci una puntata valida', 'sconfitta'); return; }
-    if (puntata > saldo) { mostraPopup('CREDITO INSUFFICIENTE', 'Non hai abbastanza crediti', 'sconfitta'); return; }
-
-    const selezioni = partite.filter(p => p.selected !== null);
-    if (selezioni.length === 0) { mostraPopup('ATTENZIONE', 'Seleziona almeno un esito', 'sconfitta'); return; }
-
-    let quotaTotale = 1;
-    selezioni.forEach(p => quotaTotale *= parseFloat(p.quote[p.selected]));
-    quotaTotale = Math.round(quotaTotale * 100) / 100;
-
-    let vittoria = true;
-    for (const p of partite) {
-      if (p.selected) {
-        const esiti = ['1', 'X', '2'];
-        const risultato = esiti[Math.floor(Math.random() * 3)];
-        if (risultato !== p.selected) { vittoria = false; break; }
-      }
-    }
-
-    saldo -= puntata;
-    if (vittoria) {
-      const vincita = Math.floor(puntata * quotaTotale);
-      saldo += vincita;
-      mostraPopup('HAI VINTO!', '+' + vincita + ' crediti (quota ' + quotaTotale + ')', 'vittoria');
-    } else {
-      mostraPopup('HAI PERSO', 'Riprova con una nuova schedina', 'sconfitta');
-    }
-
-    partite = generaPartite();
-    renderCalcio();
-    aggiornaSaldo();
-    salvaSaldo();
-    puntataInput.value = Math.min(20, saldo) || 1;
-    if (saldo <= 0) { saldo = 500; aggiornaSaldo(); salvaSaldo(); }
-  });
-
-  // ============================================================
-  //  GIOCO FANTASMINI
-  // ============================================================
-  document.getElementById('giocaCavalli').addEventListener('click', () => {
-    if (!utenteCorrente) return;
-    const puntataInput = document.getElementById('puntataCavalli');
-    const puntata = parseInt(puntataInput.value, 10);
-    if (isNaN(puntata) || puntata < 1) { mostraPopup('ATTENZIONE', 'Inserisci una puntata valida', 'sconfitta'); return; }
-    if (puntata > saldo) { mostraPopup('CREDITO INSUFFICIENTE', 'Non hai abbastanza crediti', 'sconfitta'); return; }
-    if (fantasminoSelezionato === null) { mostraPopup('ATTENZIONE', 'Seleziona un fantasmino', 'sconfitta'); return; }
-
-    const f = fantasmini[fantasminoSelezionato];
-    const esito = Math.random() < (1 / f.quota);
-
-    saldo -= puntata;
-    if (esito) {
-      const vincita = Math.floor(puntata * f.quota);
-      saldo += vincita;
-      messaggioCavalli.textContent = f.nome + ' ha vinto! +' + vincita + ' crediti';
-      mostraPopup('HAI VINTO!', f.nome + ' è arrivato primo! +' + vincita + ' crediti', 'vittoria');
-    } else {
-      messaggioCavalli.textContent = f.nome + ' non ha vinto. Riprova!';
-      mostraPopup('HAI PERSO', f.nome + ' non ha vinto. Riprova!', 'sconfitta');
-    }
-
-    aggiornaSaldo();
-    salvaSaldo();
-    fantasminoSelezionato = null;
-    renderFantasmini();
-    puntataInput.value = Math.min(20, saldo) || 1;
-    if (saldo <= 0) { saldo = 500; aggiornaSaldo(); salvaSaldo(); }
-  });
-
-  // ============================================================
-  //  MODALE PROFILO
-  // ============================================================
-  const modaleProfilo = document.getElementById('modaleProfilo');
-  const profiloAvatarImg = document.getElementById('profiloAvatarImg');
-  const profiloNome = document.getElementById('profiloNome');
-  const profiloAvatarUrl = document.getElementById('profiloAvatarUrl');
-  const profiloBio = document.getElementById('profiloBio');
-  const profiloCrediti = document.getElementById('profiloCrediti');
-
-  btnProfilo.addEventListener('click', () => {
-    if (!profiloCorrente) return;
-    profiloAvatarImg.src = profiloCorrente.avatarUrl || utenteCorrente.photoURL || 'https://cdn-icons-png.flaticon.com/512/1077/1077114.png';
-    profiloNome.value = profiloCorrente.nome || '';
-    profiloAvatarUrl.value = profiloCorrente.avatarUrl || '';
-    profiloBio.value = profiloCorrente.bio || '';
-    profiloCrediti.textContent = saldo;
-    modaleProfilo.classList.add('show');
-  });
-
-  document.getElementById('chiudiProfilo').addEventListener('click', () => {
-    modaleProfilo.classList.remove('show');
-  });
-
-  document.getElementById('salvaProfilo').addEventListener('click', async () => {
-    if (!utenteCorrente) return;
-    try {
-      const r = ref(db, 'utenti/' + utenteCorrente.uid);
+  // ===== APPLICA INTERESSE DEPOSITO =====
+  window.RB.applicaInteresseDeposito = async function() {
+    if (!window.RB.utenteCorrente || !window.RB.profiloCorrente) return;
+    const p = window.RB.profiloCorrente;
+    if (!p.deposito || p.deposito <= 0) return;
+    const ora = Date.now();
+    const ultimo = p.ultimoInteresseDeposito || ora;
+    const orePassate = (ora - ultimo) / 3600000;
+    if (orePassate >= 24) {
+      const cicli = Math.floor(orePassate / 24);
+      const interesse = Math.floor(p.deposito * 0.02 * cicli);
+      p.deposito += interesse;
+      p.ultimoInteresseDeposito = ultimo + cicli * 86400000;
+      const r = ref(db, 'utenti/' + window.RB.utenteCorrente.uid);
       await update(r, {
-        nome: profiloNome.value.trim() || 'Giocatore',
-        avatarUrl: profiloAvatarUrl.value.trim(),
-        bio: profiloBio.value.trim(),
-        saldo: saldo
+        deposito: p.deposito,
+        ultimoInteresseDeposito: p.ultimoInteresseDeposito
       });
-      profiloCorrente.nome = profiloNome.value.trim() || 'Giocatore';
-      profiloCorrente.avatarUrl = profiloAvatarUrl.value.trim();
-      profiloCorrente.bio = profiloBio.value.trim();
-      userName.textContent = profiloCorrente.nome;
-      if (profiloCorrente.avatarUrl) {
-        userAvatar.src = profiloCorrente.avatarUrl;
-        profiloAvatarImg.src = profiloCorrente.avatarUrl;
-      }
-      mostraPopup('PROFILO SALVATO', 'Le tue modifiche sono online', 'vittoria');
-      modaleProfilo.classList.remove('show');
-      aggiornaClassifica();
-    } catch (e) {
-      console.error('Errore salvataggio profilo:', e);
     }
-  });
+  };
 
-  // ============================================================
-  //  MODALE CLASSIFICA
-  // ============================================================
-  const modaleClassifica = document.getElementById('modaleClassifica');
-  const classificaList = document.getElementById('classificaList');
-
-  btnClassifica.addEventListener('click', () => {
-    aggiornaClassifica();
-    modaleClassifica.classList.add('show');
-  });
-
-  document.getElementById('chiudiClassifica').addEventListener('click', () => {
-    modaleClassifica.classList.remove('show');
-  });
-
-  async function aggiornaClassifica() {
-    if (!utenteCorrente) return;
-    try {
-      const r = ref(db, 'utenti');
-      const snapshot = await get(r);
-      if (!snapshot.exists()) {
-        classificaList.innerHTML = '<div class="classifica-vuota">Nessun giocatore ancora</div>';
-        return;
-      }
-      const utenti = [];
-      snapshot.forEach(child => {
-        const u = child.val();
-        utenti.push({
-          uid: child.key,
-          nome: u.nome || 'Anonimo',
-          bio: u.bio || '',
-          avatarUrl: u.avatarUrl || '',
-          saldo: u.saldo || 0
-        });
-      });
-      utenti.sort((a, b) => b.saldo - a.saldo);
-      classificaList.innerHTML = '';
-      utenti.slice(0, 50).forEach((u, i) => {
-        const row = document.createElement('div');
-        row.className = 'classifica-row';
-        if (i === 0) row.classList.add('top1');
-        if (i === 1) row.classList.add('top2');
-        if (i === 2) row.classList.add('top3');
-        if (u.uid === utenteCorrente.uid) row.classList.add('tu');
-
-        const pos = document.createElement('div');
-        pos.className = 'classifica-pos';
-        pos.textContent = '#' + (i + 1);
-
-        const av = document.createElement('img');
-        av.className = 'classifica-avatar';
-        av.src = u.avatarUrl || 'https://cdn-icons-png.flaticon.com/512/1077/1077114.png';
-        av.alt = u.nome;
-
-        const info = document.createElement('div');
-        info.className = 'classifica-info';
-        const nome = document.createElement('div');
-        nome.className = 'classifica-nome';
-        nome.textContent = u.nome + (u.uid === utenteCorrente.uid ? ' (tu)' : '');
-        info.appendChild(nome);
-        if (u.bio) {
-          const bio = document.createElement('div');
-          bio.className = 'classifica-bio';
-          bio.textContent = u.bio;
-          info.appendChild(bio);
-        }
-
-        const crediti = document.createElement('div');
-        crediti.className = 'classifica-crediti';
-        crediti.textContent = u.saldo + ' cr.';
-
-        row.appendChild(pos);
-        row.appendChild(av);
-        row.appendChild(info);
-        row.appendChild(crediti);
-        classificaList.appendChild(row);
-      });
-    } catch (e) {
-      console.error('Errore classifica:', e);
-      classificaList.innerHTML = '<div class="classifica-vuota">Errore caricamento</div>';
-    }
-  }
-
-  // ============================================================
-  //  AVVIO
-  // ============================================================
-  aggiornaSaldo();
-  renderCalcio();
-  renderFantasmini();
+  // ===== AVVIO =====
+  window.RB.aggiornaSaldo();
 }
