@@ -335,4 +335,74 @@
   document.getElementById('giocaCalcio').addEventListener('click', () => {
     const puntataInput = document.getElementById('puntataCalcio');
     const puntata = parseInt(puntataInput.value, 10);
-    if (isNaN(puntata)
+    if (isNaN(puntata) || puntata < 1) { alert('Puntata non valida'); return; }
+    if (puntata > saldo) { alert('Credito insufficiente!'); return; }
+
+    const selezioni = partite.filter(p => p.selected !== null);
+    if (selezioni.length === 0) { alert('Seleziona almeno un esito'); return; }
+
+    let quotaTotale = 1;
+    selezioni.forEach(p => quotaTotale *= parseFloat(p.quote[p.selected]));
+    quotaTotale = Math.round(quotaTotale * 100) / 100;
+
+    let vittoria = true;
+    for (const p of partite) {
+      if (p.selected) {
+        const esiti = ['1', 'X', '2'];
+        const risultato = esiti[Math.floor(Math.random() * 3)];
+        if (risultato !== p.selected) { vittoria = false; break; }
+      }
+    }
+
+    saldo -= puntata;
+    if (vittoria) {
+      const vincita = Math.floor(puntata * quotaTotale);
+      saldo += vincita;
+      alert('HAI VINTO! +' + vincita + ' crediti (quota ' + quotaTotale + ')');
+    } else {
+      alert('Hai perso la schedina.');
+    }
+
+    partite = generaPartite();
+    renderCalcio();
+    aggiornaSaldo();
+    puntataInput.value = Math.min(20, saldo) || 1;
+    if (saldo <= 0) { saldo = 500; aggiornaSaldo(); alert('Ricarica a 500'); }
+  });
+
+  // ============================================================
+  //  GIOCO FANTASMINI
+  // ============================================================
+  document.getElementById('giocaCavalli').addEventListener('click', () => {
+    const puntataInput = document.getElementById('puntataCavalli');
+    const puntata = parseInt(puntataInput.value, 10);
+    if (isNaN(puntata) || puntata < 1) { alert('Puntata non valida'); return; }
+    if (puntata > saldo) { alert('Credito insufficiente!'); return; }
+    if (fantasminoSelezionato === null) { alert('Seleziona un fantasmino'); return; }
+
+    const f = fantasmini[fantasminoSelezionato];
+    const esito = Math.random() < (1 / f.quota);
+
+    saldo -= puntata;
+    if (esito) {
+      const vincita = Math.floor(puntata * f.quota);
+      saldo += vincita;
+      messaggioCavalli.textContent = f.nome + ' ha vinto! +' + vincita + ' crediti';
+    } else {
+      messaggioCavalli.textContent = f.nome + ' non ha vinto. Riprova!';
+    }
+
+    aggiornaSaldo();
+    fantasminoSelezionato = null;
+    renderFantasmini();
+    puntataInput.value = Math.min(20, saldo) || 1;
+    if (saldo <= 0) { saldo = 500; aggiornaSaldo(); alert('Ricarica a 500'); }
+  });
+
+  // ============================================================
+  //  AVVIO
+  // ============================================================
+  aggiornaSaldo();
+  renderCalcio();
+  renderFantasmini();
+})();
