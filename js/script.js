@@ -58,15 +58,27 @@ function avviaGioco() {
   };
 
   window.RB.aggiornaNomeUI = function() {
-    if (!window.RB.profiloCorrente) return;
-    const p = window.RB.profiloCorrente;
-    if (userName) {
-      userName.textContent = (p.nome || 'Giocatore') + (p.badge ? ' ' + p.badge : '');
+  if (!window.RB.profiloCorrente) return;
+  const p = window.RB.profiloCorrente;
+  if (userName) {
+    userName.textContent = (p.nome || 'Giocatore') + (p.badge ? ' ' + p.badge : '');
+    // Reset classi/stili precedenti
+    userName.classList.remove('rainbow');
+    userName.style.background = '';
+    userName.style.webkitBackgroundClip = '';
+    userName.style.backgroundClip = '';
+    userName.style.webkitTextFillColor = '';
+    userName.style.color = '';
+
+    if (p.coloreNome === 'rainbow') {
+      userName.classList.add('rainbow');
+    } else {
       userName.style.color = p.coloreNome || '#ffd966';
     }
-    const av = p.avatarUrl || (window.RB.utenteCorrente && window.RB.utenteCorrente.photoURL);
-    if (av && userAvatar) userAvatar.src = av;
-  };
+  }
+  const av = p.avatarUrl || (window.RB.utenteCorrente && window.RB.utenteCorrente.photoURL);
+  if (av && userAvatar) userAvatar.src = av;
+};
 
   // ===== ROUTER =====
   window.RB.vaiA = function(pageId) {
