@@ -1,5 +1,6 @@
 // ============================================================
-//  CHAT GLOBALE — v2 (fix flicker + rainbow)
+//  CHAT GLOBALE — v3 definitiva
+//  Fix flicker + rainbow + admin + ban
 // ============================================================
 (function() {
 
@@ -9,7 +10,6 @@
   const COOLDOWN_INVIO = 1500;
   let unsubscribeMessages = null;
   let utentiBannati = {};
-  let controlloAttivazione = null;
 
   // ===== INIT =====
   function initChat() {
@@ -29,7 +29,7 @@
     });
   }
 
-  // ===== ATTIVA LA CHAT (una sola volta) =====
+  // ===== ATTIVA CHAT (una sola volta) =====
   async function attivaChat() {
     if (chatAttiva) return;
     if (!window.RB || !window.RB.utenteCorrente) return;
@@ -38,11 +38,12 @@
     const messagesEl = document.getElementById('chatMessages');
     if (!messagesEl) return;
 
-    messagesEl.innerHTML = '<div class="chat-loading">Caricamento messaggi...</div>';
+    if (!messagesEl.dataset.caricato) {
+      messagesEl.innerHTML = '<div class="chat-loading">Caricamento messaggi...</div>';
+    }
 
     await caricaBanList();
 
-    // Se c'era già un listener, staccalo prima di ricrearlo
     if (unsubscribeMessages) {
       unsubscribeMessages();
       unsubscribeMessages = null;
@@ -63,6 +64,7 @@
         });
       }
       renderMessaggi(messaggi);
+      messagesEl.dataset.caricato = '1';
     }, (error) => {
       console.error('Errore lettura chat:', error);
       messagesEl.innerHTML = '<div class="chat-empty">Errore caricamento messaggi</div>';
@@ -71,26 +73,7 @@
     aggiornaContatoreOnline();
   }
 
-  // ===== DISATTIVA (per quando esci dalla chat) =====
-  function disattivaChat() {
-    if (!chatAttiva) return;
-    chatAttiva = false;
-    // NON stacchiamo il listener, così quando torni in chat i messaggi sono già lì
-    // (va bene, occupa poca memoria)
-  }
-
-  // ===== CONTROLLA SE SEI IN CHAT =====
-  function controllaPaginaChat() {
-    const pageChat = document.getElementById('page-chat');
-    if (!pageChat) return;
-    if (pageChat.classList.contains('active')) {
-      attivaChat();
-    } else {
-      disattivaChat();
-    }
-  }
-
-  // ===== RENDER MESSAGGI =====
+  // ===== RENDER =====
   function renderMessaggi(messaggi) {
     const messagesEl = document.getElementById('chatMessages');
     if (!messagesEl) return;
@@ -107,28 +90,25 @@
 
     messaggi.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
 
-    // Era già scrollato in fondo?
     const eraInFondo = messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight < 120;
 
-    // Costruiamo i nuovi nodi in un fragment (più veloce, meno flicker)
     const fragment = document.createDocumentFragment();
 
     messaggi.forEach(msg => {
       if (!isAdmin && utentiBannati[msg.uid]) return;
-
       fragment.appendChild(creaMessaggioElement(msg, utenteCorrente, isAdmin));
     });
 
-    // Sostituisci tutto in una volta sola (meno flicker)
     messagesEl.innerHTML = '';
     messagesEl.appendChild(fragment);
 
-    if (eraInFondo) {
+    if (eraInFondo || !messagesEl.dataset.scrollato) {
       messagesEl.scrollTop = messagesEl.scrollHeight;
+      messagesEl.dataset.scrollato = '1';
     }
   }
 
-  // ===== CREA UN SINGOLO MESSAGGIO =====
+  // ===== CREA MESSAGGIO =====
   function creaMessaggioElement(msg, utenteCorrente, isAdmin) {
     const div = document.createElement('div');
     div.className = 'chat-msg';
@@ -168,8 +148,10 @@
     const nome = document.createElement('span');
     nome.className = 'chat-msg-nome';
 
-    // FIX RAINBOW
-    if (msg.coloreNome === 'rainbow') {
+    // FIX RAINBOW (usa classe CSS)
+    if (isMsgAdmin) {
+      nome.classList.add('rainbow');
+    } else if (msg.coloreNome === 'rainbow') {
       nome.classList.add('rainbow');
     } else if (msg.coloreNome) {
       nome.style.color = msg.coloreNome;
@@ -194,7 +176,7 @@
 
     content.appendChild(header);
 
-    // Testo con menzioni
+    // Testo
     const testo = document.createElement('div');
     testo.className = 'chat-msg-testo';
     testo.innerHTML = evidenziaMenzioni(msg.testo || '');
@@ -202,7 +184,7 @@
 
     div.appendChild(content);
 
-    // Pulsante cancella
+    // Cancella
     const puoCancellare = isMio || isAdmin;
     if (puoCancellare) {
       const btnDel = document.createElement('button');
@@ -228,7 +210,7 @@
     return ore + ':' + min;
   }
 
-  // ===== EVIDENZIA MENZIONI =====
+  // ===== MENZIONI =====
   function evidenziaMenzioni(testo) {
     const esc = testo
       .replace(/&/g, '&amp;')
@@ -361,8 +343,5 @@
     } else {
       initChat();
     }
-
-    // Controlla ogni 500ms se sei in chat, e attivala/disattivala di conseguenza
-    controlloAttivazione = setInterval(controllaPaginaChat, 500);
   });
 })();
