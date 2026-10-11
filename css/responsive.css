@@ -1,0 +1,32 @@
+/* ============================================================
+   ROYALBET PALACE — RESPONSIVE.CSS
+   Media query per tablet e mobile
+   ============================================================ */
+
+@media (max-width: 1100px) {
+  .ruota-container {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .wheel-wrap {
+    width: 320px;
+    height: 320px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 900px) {
+  .casino-container { padding: 20px; }
+  .page-title h2 { font-size: 1.4rem; letter-spacing: 2px; }
+  .wheel-wrap { width: 280px; height: 280px; }
+  .login-features { grid-template-columns: 1fr; }
+  .login-wall-box h1 { font-size: 1.6rem; }
+  .login-logo { height: 80px !important; }
+  .main-nav { padding: 10px; }
+  .nav-page { font-size: 0.8rem; padding: 7px 12px; }
+  .creatore-avatar { width: 140px; height: 140px; }
+  .creatore-nome { font-size: 1.6rem; }
+  .currency-item { min-width: 110px; padding: 6px 14px; }
+  .currency-value { font-size: 1.1rem; }
+  .currency-icon { width: 34px !important; height: 34px !important; }
+}
