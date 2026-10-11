@@ -1,5 +1,5 @@
 // ============================================================
-//  PROFILO UTENTE — v4
+//  PROFILO UTENTE — v5 con skin fantasmini
 // ============================================================
 (function() {
 
@@ -60,7 +60,8 @@
         bio: p.bio,
         coloreNome: p.coloreNome || '#ffd966',
         badge: p.badge || '',
-        corniceAvatar: p.corniceAvatar || ''
+        corniceAvatar: p.corniceAvatar || '',
+        skinFantasmini: p.skinFantasmini || 'classici'
       });
 
       window.RB.aggiornaNomeUI();
@@ -70,6 +71,7 @@
       if (modale) modale.classList.remove('show');
 
       if (window.RB.aggiornaClassifica) window.RB.aggiornaClassifica();
+      if (window.RB.renderFantasmini) window.RB.renderFantasmini();
     } catch (e) {
       console.error('Errore salvataggio profilo:', e);
     }
