@@ -1,6 +1,6 @@
 // ============================================================
-//  ROYALBET PALACE — SCRIPT PRINCIPALE (v5)
-//  Router + Login + Firebase + Valute + Popup + Case
+//  ROYALBET PALACE — SCRIPT PRINCIPALE (v6)
+//  Router + Login + Firebase + Valute + Popup + Case + Skin
 // ============================================================
 
 window.addEventListener('firebaseReady', () => {
@@ -10,7 +10,6 @@ window.addEventListener('firebaseReady', () => {
 function avviaGioco() {
   const { auth, db, provider, signInWithPopup, signOut, onAuthStateChanged, ref, get, set, update } = window.FB;
 
-  // ===== STATO GLOBALE =====
   window.RB = {
     saldo: 500,
     utenteCorrente: null,
@@ -23,7 +22,6 @@ function avviaGioco() {
   window.RB.IMG_PALLONE = IMG_PALLONE;
   window.RB.IMG_FANTASMINO = IMG_FANTASMINO;
 
-  // ===== RIFERIMENTI DOM =====
   const schermataLogin = document.getElementById('schermataLogin');
   const contenutoGioco = document.getElementById('contenutoGioco');
   const userLoggedOut = document.getElementById('userLoggedOut');
@@ -43,11 +41,12 @@ function avviaGioco() {
   window.RB.userAvatar = userAvatar;
   window.RB.userName = userName;
 
-  // ===== FUNZIONI BASE =====
+  // ===== AGGIORNA SALDO =====
   window.RB.aggiornaSaldo = function() {
     if (saldoDisplay) saldoDisplay.textContent = window.RB.saldo;
   };
 
+  // ===== AGGIORNA VALUTE =====
   window.RB.aggiornaValute = function() {
     const p = window.RB.profiloCorrente;
     if (!p) return;
@@ -62,7 +61,6 @@ function avviaGioco() {
     const zuccheBig = document.getElementById('zuccheGrandiDisplay');
     if (zuccheBig) zuccheBig.textContent = p.zucche || 0;
 
-    // Mostra barra zucche solo a ottobre
     if (zuccheBar) {
       const mese = new Date().getMonth();
       zuccheBar.style.display = (mese === 9) ? 'flex' : 'none';
@@ -71,6 +69,7 @@ function avviaGioco() {
     if (window.RB.renderizzaCase) window.RB.renderizzaCase();
   };
 
+  // ===== SALVA SALDO =====
   window.RB.salvaSaldo = async function() {
     if (!window.RB.utenteCorrente) return;
     try {
@@ -84,6 +83,7 @@ function avviaGioco() {
     }
   };
 
+  // ===== SALVA PROFILO =====
   window.RB.salvaProfilo = async function(campiExtra) {
     if (!window.RB.utenteCorrente) return;
     try {
@@ -97,11 +97,11 @@ function avviaGioco() {
     }
   };
 
+  // ===== AGGIORNA NOME UI =====
   window.RB.aggiornaNomeUI = function() {
     if (!window.RB.profiloCorrente) return;
     const p = window.RB.profiloCorrente;
 
-    // Nome + badge
     if (userName) {
       userName.textContent = (p.nome || 'Giocatore') + (p.badge ? ' ' + p.badge : '');
       userName.classList.remove('rainbow');
@@ -118,11 +118,9 @@ function avviaGioco() {
       }
     }
 
-    // Avatar
     const av = p.avatarUrl || (window.RB.utenteCorrente && window.RB.utenteCorrente.photoURL);
     if (av && userAvatar) userAvatar.src = av;
 
-    // Cornice avatar
     if (userAvatar) {
       userAvatar.classList.remove('avatar-cornice-zucca', 'avatar-cornice-ragno');
       if (p.corniceAvatar === 'cornice-zucca') userAvatar.classList.add('avatar-cornice-zucca');
@@ -190,6 +188,7 @@ function avviaGioco() {
           coloreNome: dati.coloreNome || '#ffd966',
           badge: dati.badge || '',
           corniceAvatar: dati.corniceAvatar || '',
+          skinFantasmini: dati.skinFantasmini || 'classici',
           codiciSbloccati: dati.codiciSbloccati || [],
 
           gemme: dati.gemme || 0,
@@ -230,6 +229,7 @@ function avviaGioco() {
           coloreNome: '#ffd966',
           badge: '',
           corniceAvatar: '',
+          skinFantasmini: 'classici',
           codiciSbloccati: [],
           gemme: 0,
           gemmeTotali: 0,
@@ -503,6 +503,5 @@ function avviaGioco() {
     return 1;
   };
 
-  // ===== AVVIO =====
   window.RB.aggiornaSaldo();
 }
