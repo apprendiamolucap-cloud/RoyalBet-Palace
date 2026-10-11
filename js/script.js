@@ -1,6 +1,6 @@
 // ============================================================
-//  ROYALBET PALACE — SCRIPT PRINCIPALE (v6)
-//  Router + Login + Firebase + Valute + Popup + Case + Skin
+//  ROYALBET PALACE — SCRIPT PRINCIPALE (v7)
+//  Router + Login + Firebase + Valute + Popup + Case + Skin + Admin
 // ============================================================
 
 window.addEventListener('firebaseReady', () => {
@@ -97,21 +97,26 @@ function avviaGioco() {
     }
   };
 
-  // ===== AGGIORNA NOME UI =====
+  // ===== AGGIORNA NOME UI (con badge admin) =====
   window.RB.aggiornaNomeUI = function() {
     if (!window.RB.profiloCorrente) return;
     const p = window.RB.profiloCorrente;
 
     if (userName) {
-      userName.textContent = (p.nome || 'Giocatore') + (p.badge ? ' ' + p.badge : '');
-      userName.classList.remove('rainbow');
+      const adminBadge = p.isAdmin ? ' 👨‍💻' : '';
+      userName.textContent = (p.nome || 'Giocatore') + (p.badge ? ' ' + p.badge : '') + adminBadge;
+
+      userName.classList.remove('rainbow', 'admin-nome');
       userName.style.background = '';
       userName.style.webkitBackgroundClip = '';
       userName.style.backgroundClip = '';
       userName.style.webkitTextFillColor = '';
       userName.style.color = '';
 
-      if (p.coloreNome === 'rainbow') {
+      // Admin ha effetto speciale hacker
+      if (p.isAdmin) {
+        userName.classList.add('admin-nome');
+      } else if (p.coloreNome === 'rainbow') {
         userName.classList.add('rainbow');
       } else {
         userName.style.color = p.coloreNome || '#ffd966';
@@ -122,7 +127,8 @@ function avviaGioco() {
     if (av && userAvatar) userAvatar.src = av;
 
     if (userAvatar) {
-      userAvatar.classList.remove('avatar-cornice-zucca', 'avatar-cornice-ragno');
+      userAvatar.classList.remove('avatar-cornice-zucca', 'avatar-cornice-ragno', 'avatar-admin');
+      if (p.isAdmin) userAvatar.classList.add('avatar-admin');
       if (p.corniceAvatar === 'cornice-zucca') userAvatar.classList.add('avatar-cornice-zucca');
       if (p.corniceAvatar === 'cornice-ragno') userAvatar.classList.add('avatar-cornice-ragno');
     }
@@ -143,6 +149,10 @@ function avviaGioco() {
     if (pageId === 'codici' && window.RB.aggiornaCodici) window.RB.aggiornaCodici();
     if (pageId === 'gemme' && window.RB.aggiornaValute) window.RB.aggiornaValute();
     if (pageId === 'halloween' && window.RB.aggiornaHalloween) window.RB.aggiornaHalloween();
+    if (pageId === 'chat' && window.RB.avviaChat) window.RB.avviaChat();
+    if (pageId === 'admin' && window.RB.CODICE_ADMIN) {
+      // Se sei admin, il pulsante è visibile, altrimenti è nascosto
+    }
   };
 
   document.querySelectorAll('.nav-page').forEach(btn => {
@@ -189,6 +199,7 @@ function avviaGioco() {
           badge: dati.badge || '',
           corniceAvatar: dati.corniceAvatar || '',
           skinFantasmini: dati.skinFantasmini || 'classici',
+          isAdmin: dati.isAdmin === true,
           codiciSbloccati: dati.codiciSbloccati || [],
 
           gemme: dati.gemme || 0,
@@ -230,6 +241,7 @@ function avviaGioco() {
           badge: '',
           corniceAvatar: '',
           skinFantasmini: 'classici',
+          isAdmin: false,
           codiciSbloccati: [],
           gemme: 0,
           gemmeTotali: 0,
@@ -382,6 +394,12 @@ function avviaGioco() {
       if (window.RB.renderizzaCase) window.RB.renderizzaCase();
       if (window.RB.aggiornaHalloween) window.RB.aggiornaHalloween();
       if (window.RB.initNegozio) window.RB.initNegozio();
+      if (window.RB.initChat) window.RB.initChat();
+
+      // Se sei admin, mostra pulsante admin
+      if (window.RB.profiloCorrente.isAdmin === true && window.RB.attivaAdmin) {
+        window.RB.attivaAdmin();
+      }
     } else {
       window.RB.utenteCorrente = null;
       window.RB.profiloCorrente = null;
