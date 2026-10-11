@@ -1,5 +1,5 @@
 // ============================================================
-//  CODICI SEGRETI + PERSONALIZZAZIONI — v4 con cornici
+//  CODICI SEGRETI + PERSONALIZZAZIONI — v5 con skin fantasmini
 // ============================================================
 (function() {
 
@@ -220,6 +220,41 @@
           });
         }
         corniciCont.appendChild(btn);
+      });
+    }
+
+    // ===== SKIN FANTASMINI =====
+    const skinCont = document.getElementById('profiloSkin');
+    if (skinCont) {
+      const SKIN = [
+        { id: 'classici', label: '👻 Classici', daShop: null, sempreDisponibile: true },
+        { id: 'cavalli', label: '🐴 Cavalli', daShop: 'skin-cavalli' },
+        { id: 'halloween', label: '🎃 Halloween', daShop: 'skin-fantasmino' }
+      ];
+      skinCont.innerHTML = '';
+      SKIN.forEach(s => {
+        const btn = document.createElement('button');
+        btn.className = 'badge-btn';
+        btn.textContent = s.label;
+        btn.style.width = 'auto';
+        btn.style.padding = '0 14px';
+        btn.style.fontSize = '0.85rem';
+
+        let ha = s.sempreDisponibile;
+        if (s.daShop) ha = cosmeticiGemme.includes(s.daShop);
+
+        if (!ha) {
+          btn.style.opacity = '0.25';
+          btn.disabled = true;
+        } else {
+          if ((p.skinFantasmini || 'classici') === s.id) btn.classList.add('selected');
+          btn.addEventListener('click', () => {
+            p.skinFantasmini = s.id;
+            window.RB.aggiornaNomeUI();
+            renderizzaPersonalizzazioni();
+          });
+        }
+        skinCont.appendChild(btn);
       });
     }
   }
