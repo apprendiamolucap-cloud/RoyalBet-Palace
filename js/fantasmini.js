@@ -1,10 +1,11 @@
 // ============================================================
-//  CORSA FANTASMINI — v4 con skin fantasma e moltiplicatori
+//  CORSA FANTASMINI — v5 con skin dinamica
 // ============================================================
 (function() {
 
   const IMG_FANTASMINO = 'https://cdn-icons-png.flaticon.com/128/706/706023.png';
-  const IMG_FANTASMA = 'https://cdn-icons-png.flaticon.com/128/854/854878.png';
+  const IMG_CAVALLO = 'https://i.imgur.com/wurnSn6.png';
+  const IMG_HALLOWEEN = 'https://i.imgur.com/2TtotRD.png';
 
   const fantasmini = [
     { nome: 'Blinky',  quota: 2.5, colore: '#ff4040' },
@@ -17,14 +18,16 @@
   let fantasminoSelezionato = null;
   let inCorsa = false;
 
-  function usaSkinFantasma() {
+  function getSkinAttiva() {
     const p = window.RB.profiloCorrente || {};
-    const cosmetici = p.cosmeticiSbloccati || [];
-    return cosmetici.includes('skin-fantasmino');
+    return p.skinFantasmini || 'classici';
   }
 
   function getImgFantasmino() {
-    return usaSkinFantasma() ? IMG_FANTASMA : IMG_FANTASMINO;
+    const skin = getSkinAttiva();
+    if (skin === 'cavalli') return IMG_CAVALLO;
+    if (skin === 'halloween') return IMG_HALLOWEEN;
+    return IMG_FANTASMINO;
   }
 
   function initFantasmini() {
