@@ -1,10 +1,10 @@
 // ============================================================
-//  EVENTO HALLOWEEN — v4 con cosmetici applicabili
+//  EVENTO HALLOWEEN — v5 con skin applicabile
 // ============================================================
 (function() {
 
   function eventoAttivo() {
-    return new Date().getMonth() === 9; // 9 = ottobre
+    return new Date().getMonth() === 9;
   }
 
   const PRODOTTI_HALLOWEEN = {
@@ -19,7 +19,7 @@
     'badge-pipistrello': { nome: 'Badge Pipistrello',       costo: 80,  tipo: 'cosmetico', id: 'badge-pipistrello' },
     'badge-teschio':     { nome: 'Badge Teschio Halloween', costo: 100, tipo: 'cosmetico', id: 'badge-teschio' },
     'tema-scuro':        { nome: 'Tema Scuro',              costo: 150, tipo: 'cosmetico', id: 'tema-halloween' },
-    'skin-fantasmino':   { nome: 'Skin Fantasma',           costo: 200, tipo: 'cosmetico', id: 'skin-fantasmino' }
+    'skin-fantasmino':   { nome: 'Skin Halloween',          costo: 200, tipo: 'cosmetico', id: 'skin-fantasmino' }
   };
 
   function initHalloween() {
@@ -65,22 +65,19 @@
     p.ultimoDolcetto = ora;
     const r = Math.random();
     let aggiornamenti = { ultimoDolcetto: ora };
-    let messaggio = '';
 
     if (r < 0.60) {
       p.zucche = (p.zucche || 0) + 10;
       p.zuccheTotali = (p.zuccheTotali || 0) + 10;
       aggiornamenti.zucche = p.zucche;
       aggiornamenti.zuccheTotali = p.zuccheTotali;
-      messaggio = '+10 Zucche!';
-      window.RB.mostraPopup('🍬 DOLCETTO', messaggio, 'gemma');
+      window.RB.mostraPopup('🍬 DOLCETTO', '+10 Zucche!', 'gemma');
     } else if (r < 0.85) {
       p.zucche = (p.zucche || 0) + 25;
       p.zuccheTotali = (p.zuccheTotali || 0) + 25;
       aggiornamenti.zucche = p.zucche;
       aggiornamenti.zuccheTotali = p.zuccheTotali;
-      messaggio = '+25 Zucche!';
-      window.RB.mostraPopup('🍫 DOLCETTO GRANDE', messaggio, 'gemma');
+      window.RB.mostraPopup('🍫 DOLCETTO GRANDE', '+25 Zucche!', 'gemma');
     } else {
       const perdita = Math.min(10, window.RB.saldo);
       window.RB.saldo -= perdita;
@@ -184,9 +181,18 @@
       if (!p.cosmeticiSbloccati) p.cosmeticiSbloccati = [];
       p.cosmeticiSbloccati.push(prod.id);
       aggiornamenti.cosmeticiSbloccati = p.cosmeticiSbloccati;
-      window.RB.mostraPopup('SBLOCCATO!', prod.nome + ' è ora disponibile nel profilo', 'gemma');
 
-      // Se è un badge, lo attivo subito (opzionale)
+      // Se è una skin, la attivo subito
+      if (prod.id === 'skin-fantasmino') {
+        p.skinFantasmini = 'halloween';
+        aggiornamenti.skinFantasmini = 'halloween';
+        window.RB.mostraPopup('SKIN SBLOCCATA', 'Ora puoi usare la skin Halloween!', 'gemma');
+        if (window.RB.renderFantasmini) window.RB.renderFantasmini();
+      } else {
+        window.RB.mostraPopup('SBLOCCATO!', prod.nome + ' è ora disponibile nel profilo', 'gemma');
+      }
+
+      // Se è un badge, lo attivo subito
       if (prod.id === 'badge-pipistrello') {
         p.badge = '🦇';
         aggiornamenti.badge = '🦇';
