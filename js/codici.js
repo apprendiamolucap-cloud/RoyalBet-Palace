@@ -1,5 +1,6 @@
 // ============================================================
-//  CODICI SEGRETI + PERSONALIZZAZIONI — v5 con skin fantasmini
+//  CODICI SEGRETI + PERSONALIZZAZIONI — v6
+//  Aggiunto: codice admin case-sensitive
 // ============================================================
 (function() {
 
@@ -76,7 +77,8 @@
   async function riscattaCodice() {
     const input = document.getElementById('inputCodice');
     const msg = document.getElementById('codiciMessaggio');
-    const codice = input.value.trim().toLowerCase();
+    const codice = input.value.trim();
+    const codiceLower = codice.toLowerCase();
 
     if (!codice) {
       msg.style.color = '#ff8a8a';
@@ -84,7 +86,18 @@
       return;
     }
 
-    const info = CODICI_VALIDI[codice];
+    // ⚡ CONTROLLO CODICE ADMIN (case-sensitive!)
+    if (window.RB.verificaCodiceAdmin) {
+      const isAdmin = await window.RB.verificaCodiceAdmin(codice);
+      if (isAdmin) {
+        msg.style.color = '#ff4040';
+        msg.textContent = '⚡ MODALITÀ ADMIN ATTIVATA';
+        input.value = '';
+        return;
+      }
+    }
+
+    const info = CODICI_VALIDI[codiceLower];
     if (!info) {
       msg.style.color = '#ff8a8a';
       msg.textContent = '❌ Codice non valido';
@@ -92,13 +105,13 @@
     }
 
     const sbloccati = window.RB.profiloCorrente.codiciSbloccati || [];
-    if (sbloccati.includes(codice)) {
+    if (sbloccati.includes(codiceLower)) {
       msg.style.color = '#ffdb8e';
       msg.textContent = '⚠️ Codice già riscattato';
       return;
     }
 
-    sbloccati.push(codice);
+    sbloccati.push(codiceLower);
     window.RB.profiloCorrente.codiciSbloccati = sbloccati;
 
     await window.RB.salvaProfilo({ codiciSbloccati: sbloccati });
