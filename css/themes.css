@@ -1029,3 +1029,38 @@
   0%, 100% { box-shadow: 0 0 10px #ff404066; }
   50% { box-shadow: 0 0 25px #ff4040; }
 }
+/* Nome rainbow in chat */
+.chat-msg-nome.rainbow {
+  background: linear-gradient(90deg,
+    #ff0000, #ff7f00, #ffff00, #00ff00,
+    #0000ff, #4b0082, #9400d3, #ff0000);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: rainbow-slide 3s linear infinite;
+  font-weight: 800;
+}
+
+/* Nome admin nella barra in alto (effetto hacker) */
+.user-name.admin-nome {
+  background: linear-gradient(90deg,
+    #ff0000, #ff6060, #ffb050, #ff6060, #ff0000);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: rainbow-slide 1.5s linear infinite;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px #ff0000;
+}
+
+/* Avatar admin con bordo rosso pulsante */
+.user-avatar.avatar-admin {
+  border: 3px solid #ff4040;
+  box-shadow: 0 0 15px #ff4040, inset 0 0 10px #ff4040;
+  animation: cornice-pulse 1s infinite alternate;
+}
