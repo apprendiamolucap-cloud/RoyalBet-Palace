@@ -1,5 +1,5 @@
 // ============================================================
-//  NEGOZIO GEMME — v4
+//  NEGOZIO GEMME — v5 con skin cavalli
 // ============================================================
 (function() {
 
@@ -31,6 +31,12 @@
       tipo: 'cosmetico',
       cosmeticoId: 'badge-corona',
       badge: '👑'
+    },
+    'skin-cavalli': {
+      nome: 'Cavallo da Corsa',
+      costo: 50,
+      tipo: 'cosmetico',
+      cosmeticoId: 'skin-cavalli'
     },
     'casa-baracca': {
       nome: 'Baracca',
@@ -114,7 +120,21 @@
       if (!p.cosmeticiSbloccati) p.cosmeticiSbloccati = [];
       p.cosmeticiSbloccati.push(prodotto.cosmeticoId);
       aggiornamenti.cosmeticiSbloccati = p.cosmeticiSbloccati;
-      window.RB.mostraPopup('COSMETICO SBLOCCATO', prodotto.nome + ' è ora disponibile nel profilo', 'gemma');
+
+      // Se è una skin cavalli, la attivo subito
+      if (prodotto.cosmeticoId === 'skin-cavalli') {
+        p.skinFantasmini = 'cavalli';
+        aggiornamenti.skinFantasmini = 'cavalli';
+        window.RB.mostraPopup('SKIN SBLOCCATA', 'Ora puoi usare i Cavalli da Corsa!', 'gemma');
+      } else {
+        window.RB.mostraPopup('COSMETICO SBLOCCATO', prodotto.nome + ' è ora disponibile nel profilo', 'gemma');
+      }
+
+      // Se è un badge, lo attivo subito
+      if (prodotto.badge) {
+        p.badge = prodotto.badge;
+        aggiornamenti.badge = prodotto.badge;
+      }
 
     } else if (prodotto.tipo === 'casa') {
       if (!p.case) p.case = { baracca: 0, villa: 0, castello: 0 };
@@ -140,6 +160,7 @@
     }
 
     window.RB.aggiornaValute();
+    window.RB.aggiornaNomeUI();
     if (window.RB.renderizzaCase) window.RB.renderizzaCase();
     if (window.RB.renderizzaPersonalizzazioni) window.RB.renderizzaPersonalizzazioni();
   }
