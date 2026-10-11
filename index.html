@@ -63,9 +63,9 @@
           <div class="feature-desc">Scommetti sul fantasmino vincente con animazione</div>
         </div>
         <div class="feature-card">
-          <div class="feature-icon">🏦</div>
-          <div class="feature-title">Banca RoyalBet</div>
-          <div class="feature-desc">Deposita, investi e guadagna interessi</div>
+          <div class="feature-icon">💬</div>
+          <div class="feature-title">Chat Globale</div>
+          <div class="feature-desc">Parla con tutti i giocatori in tempo reale</div>
         </div>
         <div class="feature-card">
           <div class="feature-icon">💎</div>
@@ -136,12 +136,14 @@
         <button class="nav-page" data-page="ruota">🎰 Ruota</button>
         <button class="nav-page" data-page="calcio">⚽ Calcio</button>
         <button class="nav-page" data-page="fantasmini">👻 Fantasmini</button>
+        <button class="nav-page" data-page="chat">💬 Chat</button>
         <button class="nav-page" data-page="banca">🏦 Banca</button>
         <button class="nav-page" data-page="gemme">💎 Gemme</button>
         <button class="nav-page" data-page="halloween">🎃 Halloween</button>
         <button class="nav-page" data-page="classifica">🏆 Classifica</button>
         <button class="nav-page" data-page="codici">🎟️ Codici</button>
         <button class="nav-page" data-page="creatore">👑 Creatore</button>
+        <button class="nav-page nav-admin" data-page="admin" id="navAdmin" style="display:none;">👨‍💻 Admin</button>
       </nav>
     </header>
 
@@ -167,6 +169,11 @@
           <div class="home-card-icon">👻</div>
           <h3>Corsa Fantasmini</h3>
           <p>Scommetti sul fantasmino più veloce</p>
+        </div>
+        <div class="home-card" data-goto="chat">
+          <div class="home-card-icon">💬</div>
+          <h3>Chat Globale</h3>
+          <p>Parla con tutti i giocatori del Palazzo</p>
         </div>
         <div class="home-card" data-goto="banca">
           <div class="home-card-icon">🏦</div>
@@ -260,6 +267,34 @@
       </div>
 
       <div class="gioco-stats" id="statsFantasmini"></div>
+    </section>
+
+    <!-- ===== CHAT ===== -->
+    <section class="page" id="page-chat">
+      <div class="page-title">
+        <h2>💬 CHAT GLOBALE</h2>
+        <p>Parla con tutti i giocatori del Palazzo</p>
+      </div>
+
+      <div class="chat-container">
+        <div class="chat-header">
+          <div class="chat-title">💬 Stanza Generale</div>
+          <div class="chat-online">
+            <span class="chat-online-dot"></span>
+            <span id="chatOnlineCount">0</span> online
+          </div>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+          <div class="chat-loading">Caricamento messaggi...</div>
+        </div>
+
+        <div class="chat-input-bar">
+          <input type="text" id="chatInput" placeholder="Scrivi un messaggio..." maxlength="200" autocomplete="off">
+          <button class="chat-send-btn" id="chatSendBtn">➤</button>
+        </div>
+        <div class="chat-hint">Premi <strong>Invio</strong> per inviare · Max 200 caratteri</div>
+      </div>
     </section>
 
     <!-- ===== BANCA ===== -->
@@ -494,7 +529,7 @@
             <button class="play-btn small btn-halloween" data-halloween="tema-scuro">COMPRA</button>
           </div>
           <div class="halloween-card">
-            <div class="halloween-card-title">👻 Skin Fantasma</div>
+            <div class="halloween-card-title">👻 Skin Halloween</div>
             <div class="halloween-card-price">200 🎃</div>
             <button class="play-btn small btn-halloween" data-halloween="skin-fantasmino">COMPRA</button>
           </div>
@@ -526,7 +561,7 @@
 
       <div class="codici-panel">
         <div class="codici-input-wrap">
-          <input type="text" id="inputCodice" placeholder="ROYAL-XXXX-XXXX" maxlength="20">
+          <input type="text" id="inputCodice" placeholder="ROYAL-XXXX-XXXX" maxlength="30">
           <button class="play-btn" id="btnRiscattaCodice">RISCATTA</button>
         </div>
         <div class="codici-messaggio" id="codiciMessaggio"></div>
@@ -565,7 +600,7 @@
 
         <div class="creatore-stats">
           <div class="creatore-stat">
-            <div class="stat-num">10</div>
+            <div class="stat-num">11</div>
             <div class="stat-label">Giochi</div>
           </div>
           <div class="creatore-stat">
@@ -579,6 +614,70 @@
         </div>
 
         <button class="play-btn follow-btn" id="btnSegui">SEGUI</button>
+      </div>
+    </section>
+
+    <!-- ===== ADMIN (nascosta finché non attivi il codice) ===== -->
+    <section class="page" id="page-admin">
+      <div class="page-title">
+        <h2>👨‍💻 PANNELLO ADMIN</h2>
+        <p>Accesso riservato · Santos_Lukas</p>
+      </div>
+
+      <div class="admin-container">
+        <div class="admin-banner">
+          <div class="admin-banner-icon">⚡</div>
+          <div>
+            <div class="admin-banner-title">MODALITÀ ADMIN ATTIVA</div>
+            <div class="admin-banner-sub">Benvenuto nel pannello di controllo segreto</div>
+          </div>
+        </div>
+
+        <h3 class="admin-titolo">💎 GENERATORE RISORSE</h3>
+        <div class="admin-actions-grid">
+          <button class="admin-action-btn admin-gold" id="adminCrediti">
+            <div class="admin-action-icon">🪙</div>
+            <div class="admin-action-title">+1.000.000 Crediti</div>
+            <div class="admin-action-desc">Crediti infiniti istantanei</div>
+          </button>
+          <button class="admin-action-btn admin-purple" id="adminGemme">
+            <div class="admin-action-icon">💎</div>
+            <div class="admin-action-title">+10.000 Gemme</div>
+            <div class="admin-action-desc">Gemme premium illimitate</div>
+          </button>
+          <button class="admin-action-btn admin-orange" id="adminZucche">
+            <div class="admin-action-icon">🎃</div>
+            <div class="admin-action-title">+10.000 Zucche</div>
+            <div class="admin-action-desc">Zucche Halloween illimitate</div>
+          </button>
+          <button class="admin-action-btn admin-red" id="adminReset">
+            <div class="admin-action-icon">💥</div>
+            <div class="admin-action-title">Reset Saldo</div>
+            <div class="admin-action-desc">Azzera crediti e gemme</div>
+          </button>
+        </div>
+
+        <h3 class="admin-titolo">👥 LISTA UTENTI</h3>
+        <div class="admin-users" id="adminUsers">
+          <div class="admin-loading">Caricamento utenti...</div>
+        </div>
+
+        <h3 class="admin-titolo">🚫 BAN & MODERAZIONE</h3>
+        <div class="admin-ban-box">
+          <p class="admin-ban-desc">Inserisci l'UID di un utente per bannarlo dalla chat (o per sbannarlo)</p>
+          <div class="admin-ban-input">
+            <input type="text" id="adminBanUid" placeholder="UID utente (es: skO8NCol5oQKHq1vRTKWSU9TEk82)">
+            <button class="play-btn small" id="adminBanBtn">BANNA</button>
+            <button class="play-btn small" id="adminUnbanBtn">SBANNA</button>
+          </div>
+          <div class="admin-ban-list" id="adminBanList">
+            <p class="admin-empty">Nessun utente bannato</p>
+          </div>
+        </div>
+
+        <div class="admin-footer">
+          <button class="play-btn small admin-exit-btn" id="adminExit">DISATTIVA MODALITÀ ADMIN</button>
+        </div>
       </div>
     </section>
 
@@ -659,7 +758,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  import { getDatabase, ref, get, set, update, push, onValue, remove, serverTimestamp, query, limitToLast, off } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAuxFBaMQxn9aFuRD5TqTnLOjELQB4EWZE",
@@ -680,7 +779,8 @@
   window.FB = {
     auth, db, provider,
     signInWithPopup, signOut, onAuthStateChanged,
-    ref, get, set, update
+    ref, get, set, update, push, onValue, remove, serverTimestamp,
+    query, limitToLast, off
   };
 
   window.dispatchEvent(new Event('firebaseReady'));
@@ -695,6 +795,8 @@
 <script src="js/fantasmini.js"></script>
 <script src="js/negozio.js"></script>
 <script src="js/halloween.js"></script>
+<script src="js/chat.js"></script>
+<script src="js/admin.js"></script>
 <script src="js/script.js"></script>
 </body>
 </html>
