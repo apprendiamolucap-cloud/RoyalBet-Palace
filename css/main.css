@@ -1,0 +1,328 @@
+/* ============================================================
+   ROYALBET PALACE — MAIN.CSS
+   Reset, base, layout, header, valute, menu
+   ============================================================ */
+
+/* ===== RESET ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: linear-gradient(145deg, #0b2b1e 0%, #1a4a2e 100%);
+  font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.casino-container {
+  max-width: 1500px;
+  width: 100%;
+  background: #1e3b2b;
+  border-radius: 48px;
+  padding: 32px 40px;
+  box-shadow: 0 25px 40px rgba(0, 0, 0, 0.7), inset 0 0 0 2px #b89b5e, inset 0 0 20px #00000055;
+  border: 1px solid #c9a95c;
+}
+
+/* ===== BARRA UTENTE ===== */
+.user-bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 12px;
+  min-height: 50px;
+}
+
+.login-btn {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 40px;
+  padding: 10px 22px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  font-family: inherit;
+  transition: 0.15s;
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+}
+
+#userLoggedIn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #0d1f12;
+  border: 1px solid #b1964b;
+  border-radius: 60px;
+  padding: 8px 18px 8px 8px;
+  box-shadow: inset 0 0 15px black;
+}
+
+.user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid #ffd966;
+  object-fit: cover;
+  background: #0a1a10;
+  transition: 0.3s;
+}
+
+.user-name {
+  color: #ffd966;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 3px black;
+}
+
+.logout-btn {
+  background: #7a2c2c;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  padding: 8px 18px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.logout-btn:hover {
+  background: #a33636;
+}
+
+.nav-btn {
+  background: #2b4b33;
+  color: #ffd966;
+  border: 1px solid #b1964b;
+  border-radius: 30px;
+  padding: 8px 18px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.nav-btn:hover {
+  background: #3d6b48;
+}
+
+/* ===== HEADER ===== */
+.main-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.logo-wrap {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.logo-img {
+  height: 100px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px black;
+}
+
+.brand-subtitle {
+  text-align: center;
+  font-size: 0.95rem;
+  letter-spacing: 6px;
+  color: #c9a95c;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  text-shadow: 0 2px 4px black;
+  font-weight: 600;
+}
+
+/* ===== BARRA VALUTE ===== */
+.currency-bar {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.currency-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #0d1f12;
+  padding: 8px 20px;
+  border-radius: 60px;
+  border: 1px solid #b1964b;
+  box-shadow: inset 0 0 15px black;
+  min-width: 140px;
+}
+
+.currency-icon {
+  width: 44px !important;
+  height: 44px !important;
+  max-width: 44px;
+  max-height: 44px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 2px 4px black);
+}
+
+.currency-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.1;
+}
+
+.currency-label {
+  font-size: 0.65rem;
+  color: #d6c38b;
+  letter-spacing: 2px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.currency-value {
+  font-weight: 900;
+  font-size: 1.35rem;
+  color: #ffd966;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 3px black;
+}
+
+/* ===== MENU ===== */
+.main-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 18px;
+  background: #14281c;
+  border-radius: 30px;
+  border: 1px solid #8f7a4b;
+  box-shadow: inset 0 0 15px #00000088;
+}
+
+.nav-page {
+  background: #0d2317;
+  color: #f5e7b0;
+  border: 1px solid #5b7a4b;
+  border-radius: 40px;
+  padding: 9px 18px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: 0.15s;
+}
+
+.nav-page:hover {
+  background: #1e3d28;
+  border-color: #ffd966;
+}
+
+.nav-page.active {
+  background: #c9a74b;
+  color: #152010;
+  border-color: #fff5d0;
+  box-shadow: 0 0 15px #ffd96655;
+}
+
+/* ===== PAGINE (router) ===== */
+.page {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.page.active {
+  display: block;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.page-title h2 {
+  font-size: 2rem;
+  color: #ffd966;
+  letter-spacing: 3px;
+  text-shadow: 0 4px 0 #3a2e1b, 0 8px 12px black;
+  margin-bottom: 8px;
+}
+
+.page-title p {
+  color: #d6c38b;
+  font-size: 0.95rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+/* ===== ANIMAZIONI BASE ===== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  60% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+@keyframes rainbow-slide {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes gemma-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+@keyframes zucca-pulse {
+  0%, 100% { transform: scale(1) rotate(-3deg); }
+  50% { transform: scale(1.08) rotate(3deg); }
+}
+
+@keyframes fantasmino-bob {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-6px); }
+}
+
+@keyframes cornice-pulse {
+  from { box-shadow: 0 0 15px #ff8020; }
+  to   { box-shadow: 0 0 25px #ffb050, 0 0 40px #ff8020; }
+}
+
+/* ===== CONFETTI CANVAS ===== */
+#confettiCanvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  display: none;
+}
+
+/* ===== FOOTER ===== */
+.footer-credits {
+  text-align: center;
+  padding: 24px 0 0;
+  color: #c9a95c;
+  font-size: 0.85rem;
+}
